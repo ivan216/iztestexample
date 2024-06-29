@@ -48,15 +48,15 @@ def fun(ctler: Controller):
         await delay(92)
         if not xg.is_dead:
             await delay(143)
-        iz_test.game_board.zombie_list.set_next_idx(3)
+        iz_test.game_board.zombie_list.set_next_idx(4)
         iz_test.game_board.iz_place_zombie(0,5,ZombieType.imp)
 
         await delay(48)
-        iz_test.game_board.zombie_list.set_next_idx(2)
+        iz_test.game_board.zombie_list.set_next_idx(3)
         iz_test.game_board.iz_place_zombie(0,5,ZombieType.imp)
 
         await delay(118)
-        iz_test.game_board.zombie_list.set_next_idx(1)
+        iz_test.game_board.zombie_list.set_next_idx(2)
         iz_test.game_board.iz_place_zombie(0,5,ZombieType.imp)
 
     iz_test.start_test(jump_frame=1, speed_rate=2)
