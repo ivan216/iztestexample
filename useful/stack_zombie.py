@@ -1,12 +1,10 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
-from rpze.structs.zombie import ZombieType
-from rpze.iztest.cond_funcs import until_plant_last_shoot
-from rpze.flow.utils import delay
+from rpze.rp_extend import Controller
 from rpze.flow.flow import FlowManager
 from rpze.flow.utils import AwaitableCondFunc, VariablePool
 from rpze.structs.plant import Plant
-from rpze.rp_extend import Controller
+from rpze.flow.utils import delay
 from rpze.iztest.operations import place
 
 def until_plant_n_shoot(plant: Plant, n:int = 1) -> AwaitableCondFunc:
@@ -34,32 +32,27 @@ def fun(ctler: Controller):
         .....
         lz
         0
-        5-9''')
+        5-9''') #2024图九；2021特殊一
     
-    #2024图九；2021特殊一
-
     @iz_test.flow_factory.add_flow()
     async def place_zombies(_):
-        ts = iz_test.ground["1-4"]
-        xg = place("xg 2-6")
-        # await until_plant_n_shoot(ts)
-        # await until_plant_last_shoot(ts)
-        await until_plant_n_shoot(ts).after(34) #豌豆生成
+        tp = iz_test.ground["1-4"]
+        place("xg 2-6")
+        await until_plant_n_shoot(tp).after(34) #豌豆生成
         await delay(92)
-        if not xg.is_dead:
-            await delay(143)
+
         iz_test.game_board.zombie_list.set_next_idx(4)
-        iz_test.game_board.iz_place_zombie(0,5,ZombieType.imp)
+        place("xg 1-6")
 
         await delay(48)
         iz_test.game_board.zombie_list.set_next_idx(3)
-        iz_test.game_board.iz_place_zombie(0,5,ZombieType.imp)
+        place("xg 1-6")
 
         await delay(118)
         iz_test.game_board.zombie_list.set_next_idx(2)
-        iz_test.game_board.iz_place_zombie(0,5,ZombieType.imp)
+        place("xg 1-6")
 
-    iz_test.start_test(jump_frame=1, speed_rate=2)
+    iz_test.start_test(jump_frame=1, speed_rate=1)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
     fun(game.controller)

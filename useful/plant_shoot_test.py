@@ -1,11 +1,10 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
+from rpze.rp_extend import Controller
 from rpze.iztest.operations import place
-from rpze.flow.utils import until ,AwaitableCondFunc, VariablePool
+from rpze.flow.utils import AwaitableCondFunc, VariablePool
 from rpze.flow.flow import FlowManager
 from rpze.structs.plant import Plant
-from random import randint
-from rpze.rp_extend import Controller
 
 def until_plant_n_shoot(plant: Plant, n:int = 1) -> AwaitableCondFunc:
     def _cond_func(fm: FlowManager,
@@ -26,7 +25,7 @@ def fun(ctler: Controller):
         1000 -1
         2-0
         .....
-        d...o
+        dbl5o
         .....
         .....
         .....
@@ -36,12 +35,11 @@ def fun(ctler: Controller):
     
     @iz_test.flow_factory.add_flow()
     async def place_zombie(_):
-        tz = iz_test.game_board.zombie_list[0]
         d = iz_test.ground["2-1"]
-        await until_plant_n_shoot(d,1).after(30)
+        await until_plant_n_shoot(d,2).after(30)
         place("tz 2-6")
 
-    iz_test.start_test(jump_frame=False, speed_rate=1)
+    iz_test.start_test(jump_frame=1, speed_rate=1)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
     fun(game.controller)
