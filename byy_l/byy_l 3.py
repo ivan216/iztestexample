@@ -16,8 +16,8 @@ def fun(ctler: Controller):
         byy_l
         .....
         .....
-        gl lz 
-        0  20
+        lz  gl 
+        20  0
         3-6 3-6''')
     
     _75_count = 0
@@ -27,7 +27,7 @@ def fun(ctler: Controller):
         nonlocal _75_count
         y = iz_test.ground["3-3"]
         b = iz_test.ground["3-1"]
-        gl = iz_test.ground.zombie(0)
+        gl = iz_test.ground.zombie(0)   #释放顺序而非书写顺序
         await delay(20)
         lz = iz_test.ground.zombie(1)
         

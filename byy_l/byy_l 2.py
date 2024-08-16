@@ -69,11 +69,11 @@ def fun(ctler: Controller):
                     await until(lambda _:cg1.butter_cd >0)
                     place("cg 3-6")
                     _75_count += 1
-            else:
-                await (until(lambda _:b.is_dead) | until(lambda _:len(list(~iz_test.game_board.zombie_list)) == 0))
-                if not b.is_dead:
-                    await repeat("cg 3-6")
-                    _75_count += 2
+            # else:
+                # await (until(lambda _:b.is_dead) | until(lambda _:len(list(~iz_test.game_board.zombie_list)) == 0))
+                # if not b.is_dead:
+                #     await repeat("cg 3-6")
+                #     _75_count += 2
             
     
     iz_test.start_test(jump_frame=1, speed_rate=5)

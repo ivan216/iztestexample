@@ -1,11 +1,8 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
+from rpze.rp_extend import Controller
 from rpze.flow.utils import until, delay
 from rpze.iztest.operations import place ,repeat
-from rpze.rp_extend import Controller
-from random import randint
-
-##总共花费3.7倍的75，276期望，不佳。
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
@@ -25,14 +22,13 @@ def fun(ctler: Controller):
     @iz_test.flow_factory.add_flow()
     async def place_zombie(_):
         nonlocal _75_count
-        plist = iz_test.ground
-        lie = plist["3-5"]
-        b = plist["3-1"]
-        zlist = iz_test.game_board.zombie_list
-        lz = zlist[0]
-        while not lie.is_dead:
-            await (until(lambda _:lz.hp < 90) | until(lambda _:lie.is_dead))
-            if not lie.is_dead :
+        l = iz_test.ground["3-5"]
+        b = iz_test.ground["3-1"]
+        lz = iz_test.game_board.zombie_list[0]
+        
+        while not l.is_dead:
+            await (until(lambda _:lz.hp < 90) | until(lambda _:l.is_dead))
+            if not l.is_dead :
                 lz = place("lz 3-6")
                 _75_count += 1
 
@@ -60,8 +56,13 @@ def fun(ctler: Controller):
                 place("cg 3-6")
                 _75_count += 1
         else:
-            await (until(lambda _:b.is_dead) | until(lambda _:len(list(~iz_test.game_board.zombie_list)) == 0))
-            if not b.is_dead:
+            await (until(lambda _:cg1.hp < 170) | until(lambda _:cg2.hp < 170))
+            if cg1.hp < 170:
+                await until(lambda _:cg2.hp < 170)
+                await repeat("cg 3-6")
+                _75_count += 2
+            else :
+                await until(lambda _:cg1.hp < 170)
                 await repeat("cg 3-6")
                 _75_count += 2
 

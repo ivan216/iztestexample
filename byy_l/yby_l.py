@@ -57,10 +57,10 @@ def fun(ctler: Controller):
                     place("cg 3-6")
                     _75_count += 1
                 
-        await (until(lambda _:y.is_dead) | until(lambda _:len(list(~iz_test.game_board.zombie_list)) == 0))
-        if not y.is_dead:
-            place("cg 3-6")
-            _75_count += 1
+        # await (until(lambda _:y.is_dead) | until(lambda _:len(list(~iz_test.game_board.zombie_list)) == 0))
+        # if not y.is_dead:
+        #     place("cg 3-6")
+        #     _75_count += 1
 
     iz_test.start_test(jump_frame=1, speed_rate=10)
     print(_75_count)
