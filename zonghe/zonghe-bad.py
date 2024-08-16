@@ -4,24 +4,7 @@ from rpze.flow.utils import until, delay
 from rpze.iztest.operations import place ,repeat
 from rpze.rp_extend import Controller
 from random import randint
-from rpze.flow.utils import AwaitableCondFunc, VariablePool
-from rpze.flow.flow import FlowManager
-from rpze.structs.plant import Plant
 from rpze.structs.zombie import ZombieStatus
-
-def until_pea_last_shoot(plant: Plant) -> AwaitableCondFunc:
-    def _cond_func(fm: FlowManager,
-                   v=VariablePool(try_to_shoot_time=None, wait_time = 0)):
-        if plant.generate_cd == 1:  # 下一帧开打
-            v.try_to_shoot_time = fm.time + 1
-        if v.try_to_shoot_time != fm.time:
-            v.wait_time += 1
-        if v.try_to_shoot_time == fm.time and plant.launch_cd != 0:  # 在攻击时
-            v.wait_time = 0     #重置等待时间
-        if v.wait_time > 150:
-            return True
-        return False
-    return AwaitableCondFunc(_cond_func)
 
 def print_fail_clock_result(clock_result:list):
     for i in range(0,46):

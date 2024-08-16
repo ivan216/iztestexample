@@ -31,7 +31,7 @@ def fun(ctler: Controller):
         place("cg 3-6")
         kg.die_no_loot()
     
-    iz_test.start_test(jump_frame=1, speed_rate=5)
+    iz_test.start_test(jump_frame=0, speed_rate=5)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
     fun(game.controller)
