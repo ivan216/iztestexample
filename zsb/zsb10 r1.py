@@ -51,10 +51,10 @@ def fun(ctler: Controller):
             if len(list(~iz_test.game_board.zombie_list)) <=1:  #场上小于等于1个僵尸那么才需要补
                 cg = place("cg 1-6")
                 cg_count += 1
-            else:
-                await until(lambda _:len(list(~iz_test.game_board.zombie_list)) == 0)   #等到都死了，就要补杆
-                cg = place("cg 1-6")
-                cg_count += 1
+            # else:
+                # await until(lambda _:len(list(~iz_test.game_board.zombie_list)) == 0)   #等到都死了，就要补杆
+                # cg = place("cg 1-6")
+                # cg_count += 1
 
         # while not y.is_dead:
         #     await until(lambda _:cg.hp <= 170)
