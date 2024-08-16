@@ -8,31 +8,30 @@ from rpze.iztest.operations import delay , place
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
         1000 -1
-        1-5
+        5-5
+        .....
+        .....
+        .....
+        .....
         ....t
-        .....
-        .....
-        .....
-        .....
         lz
         0  
-        1-7''')
+        5-9''')
     
     spawned = 0
+    last_len = now_len = 1
 
     @iz_test.flow_factory.add_flow()
     async def place_zombie(fm:FlowManager):
+        iz_test.game_board.sun_num = 9876
         nonlocal spawned
-        await delay(randint(200,300))
+        await delay(randint(200,700))
         place("lz 2-6")
         spawned = fm.time
         print("spawn: ",fm.time)
 
-    last_len = now_len = 1
-
     @iz_test.flow_factory.add_tick_runner()
     def print_time(fm:FlowManager):
-        iz_test.game_board.sun_num = 9876
         nonlocal last_len,now_len,spawned
         last_len = now_len
         now_len = len(list(~iz_test.game_board.zombie_list))
