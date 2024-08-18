@@ -2,6 +2,7 @@ from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.structs.plant import PlantType
 from rpze.rp_extend import Controller
+from rpze.iztest.plant_modifier import randomize_generate_cd
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
@@ -26,8 +27,11 @@ def fun(ctler: Controller):
         iz_test.game_board.plant_list.set_next_idx(8)
         hs1 = iz_test.game_board.iz_new_plant(2,2,PlantType.torchwood)
         hs1.hp = 6000
+        
         iz_test.game_board.plant_list.set_next_idx(7)
-        iz_test.game_board.iz_new_plant(3,2,PlantType.threepeater)
+        tp = iz_test.game_board.iz_new_plant(3,2,PlantType.threepeater)
+        randomize_generate_cd(tp)
+
         iz_test.game_board.plant_list.set_next_idx(6)
         hs2 = iz_test.game_board.iz_new_plant(4,2,PlantType.torchwood)
         hs2.hp = 6000
