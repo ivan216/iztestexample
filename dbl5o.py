@@ -2,6 +2,7 @@ from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.flow.utils import until, delay
 from rpze.iztest.operations import place ,repeat
+from rpze.iztest.cond_funcs import until_plant_last_shoot
 from rpze.rp_extend import Controller
 from random import randint
 from rpze.flow.utils import AwaitableCondFunc, VariablePool
@@ -25,30 +26,33 @@ def until_plant_n_shoot(plant: Plant, n:int = 1) -> AwaitableCondFunc:
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
         1000 -1
-        2-0
+        
         .....
         dbl5o
         .....
         .....
         .....
-        tz 
+        xt 
         0  
-        2-6''')
+        2-2''')
     
     @iz_test.flow_factory.add_flow()
     async def place_zombie(_):
-        zlist = iz_test.game_board.zombie_list
-        tz = zlist[0]        
-        plist = iz_test.ground
-        star = plist["2-4"]
-        d = plist["2-1"]
-        # await until_plant_n_shoot(star,1).after(0)
-        # await until(lambda _:tz.int_x <= 320)
-        await until_plant_n_shoot(d,2).after(30)
-        # await delay(240)
-        place("tz 2-6")
+        star = iz_test.ground["2-4"]
+        await delay(400)
+        await until_plant_last_shoot(star).after(50)
+        # await until_plant_n_shoot(star,2).after(80)
+        await repeat("cg 2-6")
 
-    iz_test.start_test(jump_frame=0, speed_rate=3)
+    @iz_test.flow_factory.add_tick_runner()
+    def check_end(fm:FlowManager):
+        if iz_test.ground["2-0"] is None:
+            return iz_test.end(True)
+        if fm.time > 1000:
+            if iz_test.game_board.zombie_list.obj_num == 0:
+                return iz_test.end(False)
+
+    iz_test.start_test(jump_frame=1, speed_rate=2)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
     fun(game.controller)
