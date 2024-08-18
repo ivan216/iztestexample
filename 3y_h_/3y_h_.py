@@ -3,6 +3,7 @@ from rpze.iztest.iztest import IzTest
 from rpze.rp_extend import Controller
 from rpze.iztest.operations import place
 from rpze.flow.utils import until
+from rpze.iztest.cond_funcs import until_plant_die
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
@@ -31,7 +32,7 @@ def fun(ctler: Controller):
         s = iz_test.ground["3-4"]
 
         while not s.is_dead:
-            await (until(lambda _:s.is_dead) | until(lambda _:tt.hp <= 89)) #伞先死还是桶先死
+            await (until_plant_die(s) | until(lambda _:tt.hp <= 89)) #伞先死还是桶先死
             if not s.is_dead :
                 tt = place("tt 3-6") #补桶补到啃完为止
                 _125_count += 1     
@@ -45,15 +46,15 @@ def fun(ctler: Controller):
                 _75_count += 1
         else :
             await until(lambda _:tt.accessories_hp_1 <= 280)
-            if tt.int_x >= 210 :         #补障不太靠谱，凭感觉增加一个补杆的判断点，减少补障的概率，大概在铁桶走到3列4列间
-                cg = place("cg 3-6")        #铁桶已经下到一定血量，且比较靠后，那么直接补杆 280
+            if tt.int_x >= 210 :         #增加一个补杆的判断点，减少补障的概率，大概在铁桶走到3列4列间
+                cg = place("cg 3-6")        #铁桶已经下到一定血量，且比较靠后，那么直接补杆
                 _75_count += 1
                 await until(lambda _:cg.hp <= 210) 
                 if tp.hp >=300:     #杆也过不去
                     place("cg 3-6") #补第二杆
                     _75_count += 1
             else :
-                await (until(lambda _:y.is_dead) | until(lambda _:tt.hp <= 89)) #玉米先死还是桶先死
+                await (until_plant_die(y) | until(lambda _:tt.hp <= 89)) #玉米先死还是桶先死
                 if (tt.hp <= 89) & (not y.is_dead) :    #桶先死
                     cg = place("cg 3-6")     #补杆
                     _75_count += 1
