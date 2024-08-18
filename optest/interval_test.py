@@ -23,7 +23,7 @@ def fun(ctler: Controller):
         iz_test.game_board.sun_num = 9876
         nonlocal no_pause_time,record,last_len,now_len
         last_len = now_len
-        now_len = len(list(~iz_test.game_board.zombie_list))
+        now_len = iz_test.game_board.zombie_list.obj_num
         if (now_len == 2) and (last_len == 1) :
             record = no_pause_time
             print("first zombie: ",no_pause_time)

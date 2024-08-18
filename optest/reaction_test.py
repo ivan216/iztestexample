@@ -34,7 +34,7 @@ def fun(ctler: Controller):
     def print_time(fm:FlowManager):
         nonlocal last_len,now_len,spawned
         last_len = now_len
-        now_len = len(list(~iz_test.game_board.zombie_list))
+        now_len = iz_test.game_board.zombie_list.obj_num
 
         if (now_len == 3) and (last_len == 2) :
             print("placed: ",fm.time)

@@ -26,7 +26,7 @@ def fun(ctler: Controller):
         c = iz_test.ground["3-4"]
         nonlocal no_pause_time,record,last_len,now_len
         last_len = now_len
-        now_len = len(list(~iz_test.game_board.zombie_list))
+        now_len = iz_test.game_board.zombie_list.obj_num
 
         if c.status_cd == 1500 :
             record = no_pause_time
