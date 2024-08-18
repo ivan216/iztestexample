@@ -42,12 +42,13 @@ def fun(ctler: Controller):
         nonlocal d_die
         if iz_test.ground["1-0"] is None:
             return iz_test.end(True)
-        if fm.time > 6000:
-            if iz_test.ground["1-2"] is None:
-                d_die += 1
-            return iz_test.end(False)
+        if fm.time > 1000:
+            if iz_test.game_board.zombie_list.obj_num == 0:
+                if iz_test.ground["1-2"] is None:
+                    d_die += 1
+                return iz_test.end(False)
 
-    iz_test.start_test(jump_frame=1, speed_rate=2)
+    iz_test.start_test(jump_frame=1, speed_rate=3)
     print(dz_eat)
     print(d_die)
 
