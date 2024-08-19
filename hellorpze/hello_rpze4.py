@@ -23,8 +23,9 @@ def fun(ctler: Controller):
     def check_end(fm:FlowManager):
         if iz_test.ground["3-0"] is None:
             return iz_test.end(True)
-        if fm.time > 5000:
-            return iz_test.end(False)
+        if fm.time > 0:
+            if iz_test.game_board.zombie_list.obj_num == 0:
+                return iz_test.end(False)
     
     iz_test.start_test(jump_frame=1, speed_rate=5)
 
