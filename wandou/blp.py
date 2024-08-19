@@ -24,7 +24,7 @@ def until_plant_n_shoot(plant: Plant, n:int = 1) -> AwaitableCondFunc:
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
-        1000 -1
+        2000 -1
         3-0
         .....
         .....
@@ -44,8 +44,7 @@ def fun(ctler: Controller):
 
         await until_plant_n_shoot(b)
         if fm.time < 136:
-            if t:= randint(0,10):
-                await delay(t)
+            await delay(randint(20,30))
             place("xg 3-6")
             xg_count += 1
         

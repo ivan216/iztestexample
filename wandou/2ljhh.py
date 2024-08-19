@@ -45,7 +45,7 @@ def fun(ctler: Controller):
 
         await until_plant_n_shoot(rp)
         if fm.time < 140:
-            await until(lambda _:j.hp < 216)  #216
+            await until(lambda _:j.hp < 216).after(randint(0,10))  #216
             place("xg 3-6")
             xg_count += 1
         
