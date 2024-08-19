@@ -24,11 +24,11 @@ def until_plant_n_shoot(plant: Plant, n:int = 1) -> AwaitableCondFunc:
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
-        1000 -1
+        2000 -1
         3-0
         .....
         .....
-        blphh
+        2ljhh
         .....
         .....
         gl 
@@ -40,12 +40,12 @@ def fun(ctler: Controller):
     @iz_test.flow_factory.add_flow()
     async def place_zombie(fm: FlowManager):
         nonlocal xg_count
-        b = iz_test.ground["3-1"]
+        rp = iz_test.ground["3-1"]
+        j = iz_test.ground["3-3"]
 
-        await until_plant_n_shoot(b)
-        if fm.time < 136:
-            if t:= randint(0,10):
-                await delay(t)
+        await until_plant_n_shoot(rp)
+        if fm.time < 140:
+            await until(lambda _:j.hp < 216)  #216
             place("xg 3-6")
             xg_count += 1
         
