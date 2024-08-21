@@ -25,8 +25,8 @@ def fun(ctler: Controller):
             print("不含暂停时间：",no_pause_time)
             print("真实时间",fm.time)
         else:
-            print("\033[2A\r"+"不含暂停时间：",no_pause_time)
-            print("真实时间",fm.time)
+            print("\033[2A\r\033[K"+"不含暂停时间：",no_pause_time)
+            print("\033[K"+"真实时间",fm.time)
         if not ctler.read_bool(0x6a9ec0, 0x768, 0x164) :
             no_pause_time += 1
 
