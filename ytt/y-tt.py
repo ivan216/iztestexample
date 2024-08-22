@@ -18,9 +18,9 @@ def fun(ctler: Controller):
     
     full_hp = 70
     test_count = 10000
-    hp_count = [0 for x in range(0,full_hp)]
-    # hp_count2 = [0 for x in range(0,full_hp)]
-    x = [x for x in range(0,full_hp)]
+    hp_count = [0 for _ in range(full_hp)]
+    # hp_count2 = [0 for _ in range(full_hp)]
+    x = list(range(full_hp))
     sum = 0
     zb = None
     
