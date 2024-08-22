@@ -25,7 +25,7 @@ def fun(ctler: Controller):
     
     ## 3mj,<1075
 
-    clock_result = [0 for x in range(0,46)]
+    clock_result = [0 for _ in range(0,46)]
     i = 0
     
     @iz_test.flow_factory.add_flow()
