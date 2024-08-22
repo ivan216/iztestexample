@@ -4,6 +4,7 @@ from rpze.rp_extend import Controller
 from random import randint
 from rpze.flow.flow import FlowManager
 from rpze.iztest.operations import delay , place
+from rpze.flow.utils import until
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
@@ -19,7 +20,6 @@ def fun(ctler: Controller):
         5-9''')
     
     spawned = 0
-    last_len = now_len = 1
 
     @iz_test.flow_factory.add_flow()
     async def place_zombie(fm:FlowManager):
@@ -29,21 +29,16 @@ def fun(ctler: Controller):
         place("lz 2-6")
         spawned = fm.time
         print("spawn: ",fm.time)
-
-    @iz_test.flow_factory.add_tick_runner()
-    def print_time(fm:FlowManager):
-        nonlocal last_len,now_len,spawned
-        last_len = now_len
-        now_len = iz_test.game_board.zombie_list.obj_num
-
-        if (now_len == 3) and (last_len == 2) :
-            print("placed: ",fm.time)
-            print("reaction",fm.time - spawned - 1) # 刚放下看不到，认为反应为再减1cs
-
+    
+    @iz_test.flow_factory.add_flow()
+    async def place_zombie(fm:FlowManager):
+        await until(lambda _:iz_test.game_board.zombie_list.obj_num == 3)
+        print("placed: ",fm.time)
+        print("reaction",fm.time - spawned - 1) # 刚放下看不到，认为反应为再减1cs
+            
     @iz_test.on_game_end()
     def clean(_):
-        nonlocal last_len,now_len,spawned
-        last_len = now_len = 1
+        nonlocal spawned
         spawned = 0
         print()
     
