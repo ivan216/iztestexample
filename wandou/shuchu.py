@@ -23,8 +23,8 @@ def fun(ctler: Controller):
     # mj = None
     h1 = None
     h2 = None
-    h1_record = [0 for i in range(0,9)]
-    h2_record = [0 for i in range(0,9)]
+    h1_record = [0 for _ in range(9)]
+    h2_record = [0 for _ in range(9)]
 
     @iz_test.flow_factory.add_flow()
     async def place_zombie(fm: FlowManager):

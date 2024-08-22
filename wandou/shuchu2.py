@@ -21,10 +21,10 @@ def fun(ctler: Controller):
         2-6''') #滑5列，漏花（75*0.67+50*0.29+50*0.03）+（75*0.12+25*0.07+50*0.79）= 118
     
     h1 = h2 = l1 = l2 = mj2= None
-    h1_ = [0 for i in range(0,9)]
-    h2_ = [0 for i in range(0,9)]
-    h1_l = [0 for i in range(0,9)]
-    h2_l = [0 for i in range(0,9)]
+    h1_ = [0 for _ in range(9)]
+    h2_ = [0 for _ in range(9)]
+    h1_l = [0 for _ in range(9)]
+    h2_l = [0 for _ in range(9)]
 
     @iz_test.flow_factory.add_flow()
     async def place_zombie(fm: FlowManager):

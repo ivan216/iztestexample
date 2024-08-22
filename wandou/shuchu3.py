@@ -21,10 +21,10 @@ def fun(ctler: Controller):
         2-6''') # (25*0.08+50*0.2+0.02*25+0.03*50+75*0.62)+(25*0.28+50*0.3+75*0.02) = 84
     
     h1 = h2 = h3 = l1 = mj = mj2 = None
-    h1_ = [0 for i in range(0,9)]
-    h1_l = [0 for i in range(0,9)]
-    h2_ = [0 for i in range(0,9)]
-    h3_ = [0 for i in range(0,9)]
+    h1_ = [0 for _ in range(9)]
+    h1_l = [0 for _ in range(9)]
+    h2_ = [0 for _ in range(9)]
+    h3_ = [0 for _ in range(9)]
 
     @iz_test.flow_factory.add_flow()
     async def place_zombie(fm: FlowManager):
