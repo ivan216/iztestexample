@@ -17,7 +17,7 @@ def fun(ctler: Controller):
     
     full_hp = 40    #给铁桶多少血
     test_count = 1000   #测试次数
-    hp_record = [0 for x in range(0,full_hp)]    #记录伤害情况
+    hp_record = [0 for _ in range(full_hp)]    #记录伤害情况
     sum = 0     #受伤总数，用来最后求平均
     zb = None
 
