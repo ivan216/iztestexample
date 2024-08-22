@@ -39,47 +39,39 @@ def fun(ctler: Controller):
                 _125_count += 1     
 
         if tt.accessories_hp_1 <= 420 : #啃完伞但铁桶已经比较残
-            await (until(lambda _:tt.hp <= 130) | until(lambda _:tt.int_x <= 210))
-            cg = place("cg 3-6")     #等到铁桶快死或者比较近补杆
-            _75_count += 1
+            await (until(lambda _:tt.hp <= 130) | until(lambda _:tt.int_x <= 210))  #等到铁桶快死或者比较近补杆
             bu_gan = True   # 进入循环补杆阶段
         else :
-            await until(lambda _:tt.accessories_hp_1 <= 280)
-            if tt.int_x >= 210 :         #增加一个补杆的判断点，减少补障的概率，大概在铁桶走到3列4列间
-                cg = place("cg 3-6")        #铁桶已经下到一定血量，且比较靠后，那么直接补杆
-                _75_count += 1
+            await until(lambda _:tt.accessories_hp_1 <= 280)#增加一个补杆的判断点，减少补障的概率，大概在铁桶走到3列4列间
+            if tt.int_x >= 210 :         #铁桶已经下到一定血量，且比较靠后，那么直接补杆
                 bu_gan = True
             else :
                 await (until_plant_die(y) | until(lambda _:tt.hp <= 89)) #玉米先死还是桶先死
                 if (tt.hp <= 89) & (not y.is_dead) :    #桶先死
-                    cg = place("cg 3-6")     #补杆
-                    _75_count += 1
                     bu_gan = True
                 elif tt.hp <= 210:    #啃完玉米但铁桶已经比较残
-                    lz = place("lz 3-6")     #补障
-                    _75_count += 1
                     bu_zhang = True
                 else:
                     await until(lambda _:tt.hp <= 190) 
                     if (tp.hp >=300) & (tt.int_x >= 120) :  #看是否需要补障
-                        lz = place("lz 3-6")     #补障
-                        _75_count += 1
                         bu_zhang = True
 
         if bu_gan :
             while not tp.is_dead:
+                cg = place("cg 3-6")    #继续补杆
+                _75_count += 1
                 await until(lambda _:cg.hp <= 210) 
-                if tp.hp >=300 :     #杆也过不去
-                    cg = place("cg 3-6") #继续补杆
-                    _75_count += 1
+                if tp.hp < 300 :     #不用再补了
+                    break           
 
         if bu_zhang :
             while not tp.is_dead:
+                lz = place("lz 3-6")     #继续补障
+                _75_count += 1
                 await until(lambda _:lz.hp <= 190) 
-                if (tp.hp >=300) & (lz.int_x >= 120) :    #障也过不去
-                    lz = place("lz 3-6")     #继续补障
-                    _75_count += 1
-        
+                if (tp.hp < 300) | (lz.int_x < 120) :  #不用再补
+                    break
+                    
     @iz_test.on_game_end()
     def end_callback(result: bool):
         nonlocal tp_fail_count
