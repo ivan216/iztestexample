@@ -5,7 +5,7 @@ from rpze.iztest.operations import place ,repeat
 from rpze.rp_extend import Controller
 from random import randint
 
-##3.5倍75，共263
+##3.58倍75，共269
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
