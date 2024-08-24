@@ -29,14 +29,13 @@ def fun(ctler: Controller):
 
     @iz_test.on_game_end()
     def end_callback(result: bool):
-        nonlocal hp_record,sum
+        nonlocal sum
         i = (full_hp * 20 - zb.accessories_hp_1) // 20
         sum += i
         hp_record[i] += 1
 
     @iz_test.check_tests_end()
     def end_test_callback(n, ns):
-        nonlocal test_count,sum
         if n%100 == 0:
             print("每100次输出当前期望： ",sum / n)
         if n < test_count:
