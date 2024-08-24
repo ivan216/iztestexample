@@ -81,7 +81,7 @@ def fun(ctler: Controller):
         elif tz.x > 220 :   #刺上
             await (until(lambda _:tz.accessories_hp_2 < 1) | count_butter2(y))
             if tz.accessories_hp_2 == 0:    #没再出黄油
-                if l.hp > 130 :     #不可补杆
+                if l.hp > 140 :     #不可补杆
                     place("tz 3-6")
                     _150_count += 1
                 else:               #可补杆
