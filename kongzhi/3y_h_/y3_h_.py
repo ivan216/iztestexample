@@ -19,6 +19,8 @@ def fun(ctler: Controller):
         3-6''')
     
     ts_fail_count = 0 #没吃掉三线的次数
+    tp_fail_2zb = 0
+    tp_fail_tt = 0
     _125_count = 0 #补铁桶次数
     _75_count = 0 #补75的次数
 
@@ -33,37 +35,35 @@ def fun(ctler: Controller):
 
     @iz_test.flow_factory.add_flow()
     async def place_zombie(_):
-        nonlocal _75_count , _125_count
-        zlist = iz_test.game_board.zombie_list
-        plist = iz_test.ground
-        tt = zlist[0]
-        ts = plist["3-2"]
-        y = plist["3-1"]
-        s = plist["3-4"]
+        nonlocal _75_count , _125_count,tp_fail_2zb,tp_fail_tt
+        tt = iz_test.game_board.zombie_list[0]
+        tp = iz_test.ground["3-2"]
+        y = iz_test.ground["3-1"]
+        s = iz_test.ground["3-4"]
 
-        await until(lambda _:tt.accessories_hp_1 <= 360)
+        await until(lambda _:tt.accessories_hp_1 <= 340)
         if tt.int_x >=300 :
             lz = place("lz 3-6")
             _75_count += 1
             await (until(lambda _:lz.hp < 90) & until(lambda _:tt.hp < 90))
-            place("cg 3-6")
-            _75_count += 1
+            if not tp.is_dead:
+                tp_fail_2zb += 1
         else:
             await until(lambda _:tt.accessories_hp_1 <= 220)
             if tt.int_x >= 220 :
                 lz = place("lz 3-6")
                 _75_count += 1
                 await (until(lambda _:lz.hp < 90) & until(lambda _:tt.hp < 90))
-                place("cg 3-6")
-                _75_count += 1
+                if not tp.is_dead:
+                    tp_fail_2zb += 1
             else :
-                await (until(lambda _:tt.hp < 90) | until(lambda _:ts.is_dead))
-                if not ts.is_dead :
+                await (until(lambda _:tt.hp < 90) | until(lambda _:tp.is_dead))
+                if not tp.is_dead :
                     tt = place("tt 3-6")
                     _125_count += 1
                     await until(lambda _:tt.hp < 90)
-                    place("cg 3-6")
-                    _75_count += 1
+                    if not tp.is_dead:
+                        tp_fail_tt += 1
                 else :
                     await until(lambda _:tt.hp < 90)
                     place("cg 3-6")
@@ -76,10 +76,13 @@ def fun(ctler: Controller):
         if plant_list["3-2"] is not None:
             ts_fail_count += 1
 
-    iz_test.start_test(jump_frame=0, speed_rate=10)
-    print("漏三线:",ts_fail_count)
+    iz_test.start_test(jump_frame=1, speed_rate=3)
+
     print("补桶:",_125_count)
     print("补75:",_75_count)
+    print("漏三线(算作补150):",ts_fail_count)
+    print("其中 障桶死亡:",tp_fail_2zb)
+    print("     补桶死亡:",tp_fail_tt)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
     fun(game.controller)
