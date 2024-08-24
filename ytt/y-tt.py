@@ -19,7 +19,6 @@ def fun(ctler: Controller):
     full_hp = 70
     test_count = 10000
     hp_count = [0 for _ in range(full_hp)]
-    # hp_count2 = [0 for _ in range(full_hp)]
     x = list(range(full_hp))
     sum = 0
     zb = None
@@ -32,22 +31,16 @@ def fun(ctler: Controller):
 
     @iz_test.on_game_end()
     def end_callback(result: bool):
-        nonlocal hp_count,sum   #,hp_count2
+        nonlocal sum
         plist = iz_test.ground
         if plist["3-1"] is None:
             i = (full_hp * 20 - zb.accessories_hp_1) // 20
-            # if i%2 == 0:
-            #     hp_count[i] += 1
-            # else:
-            #     hp_count2[i] += 1
             sum += i
-            hp_count[i] += 1 ##
+            hp_count[i] += 1 
         
     @iz_test.check_tests_end()
     def end_test_callback(n, ns):
-        nonlocal test_count,sum
         if n%100 == 0:
-            aver = 0
             print("每100次输出当前期望： ",sum / n)
         if n < test_count:
             return None
@@ -60,7 +53,6 @@ def fun(ctler: Controller):
 
     plt.figure(1)
     plt.bar(x,hp_count,color='blue')
-    # plt.bar(x,hp_count2,color= 'red')
 
     plt.show()
 
