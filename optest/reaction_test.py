@@ -33,8 +33,11 @@ def fun(ctler: Controller):
     @iz_test.flow_factory.add_flow()
     async def place_zombie(fm:FlowManager):
         await until(lambda _:iz_test.game_board.zombie_list.obj_num == 3)
-        print("placed: ",fm.time)
-        print("reaction",fm.time - spawned - 1) # 刚放下看不到，认为反应为再减1cs
+        if fm.time - spawned - 1 >= 0:
+            print("placed: ",fm.time)
+            print("reaction",fm.time - spawned - 1) # 刚放下看不到，认为反应为再减1cs
+        else:
+            print("fail")
             
     @iz_test.on_game_end()
     def clean(_):
