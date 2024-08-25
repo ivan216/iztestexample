@@ -39,13 +39,18 @@ def fun(ctler: Controller):
     @iz_test.flow_factory.add_flow()
     async def place_zombie(_):
         nonlocal _75_count
-        plist = iz_test.ground
-        y = plist["3-1"]
+        y = iz_test.ground["3-1"]
+        l = iz_test.ground["3-2"]
+
         await count_butter(y,2)
-        place("lz 3-6")
+        if l.is_dead :
+            place("cg 3-6")
+        else:
+            place("lz 3-6")
         _75_count += 1
 
-    iz_test.start_test(jump_frame=0, speed_rate=3)
+    iz_test.start_test(jump_frame=1, speed_rate=3)
+    print(_75_count)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
     fun(game.controller)
