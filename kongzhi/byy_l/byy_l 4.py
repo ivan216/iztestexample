@@ -5,11 +5,11 @@ from rpze.iztest.operations import place ,repeat
 from rpze.rp_extend import Controller
 from random import randint
 
-## 期望267，最优解
+## 250+75*0.23 = 267，最优解1
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
-        5000 -1
+        10000 -1
         3-0
         .....
         .....
@@ -25,10 +25,8 @@ def fun(ctler: Controller):
     @iz_test.flow_factory.add_flow()
     async def place_zombie(_):
         nonlocal _75_count
-        plist = iz_test.ground
-        l = plist["3-5"]
-        zlist = iz_test.game_board.zombie_list
-        tt = zlist[0]
+        l = iz_test.ground["3-5"]
+        tt = iz_test.game_board.zombie_list[0]
 
         await until(lambda _:l.hp < 270)    #270
         kg = place("kg 3-6")
