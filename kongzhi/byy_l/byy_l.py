@@ -5,6 +5,8 @@ from rpze.flow.utils import until, delay
 from rpze.iztest.operations import place ,repeat
 from rpze.iztest.cond_funcs import until_plant_die
 
+# 3.7倍75 = 277
+
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
         1000 -1
@@ -70,7 +72,7 @@ def fun(ctler: Controller):
             await repeat("cg 3-6")  #zb2挂了说明没僵尸了，补双杆
             _75_count += 2  #没再考虑后续补刀
 
-    iz_test.start_test(jump_frame=1, speed_rate=5)
+    iz_test.start_test(jump_frame=0, speed_rate=3)
     print(_75_count)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:

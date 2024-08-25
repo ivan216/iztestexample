@@ -9,7 +9,7 @@ from random import randint
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
-        1000 -1
+        10000 -1
         3-0
         .....
         .....
