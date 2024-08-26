@@ -57,7 +57,14 @@ def fun(ctler: Controller):
                 bu = True
         
         if not bu:
-            if (zb1.int_x > 270) & (zb1.int_x < 300):
+            if zb1.int_x >= 295:
+                await until(lambda _:zb2.butter_cd >0)
+                if (zb2.int_x > 270) & (zb2.int_x < 295):
+                    place("cg 3-6")
+                    _75_count += 1 
+                else:
+                    fu = True
+            elif (zb1.int_x > 270) & (zb1.int_x < 295):
                 await until(lambda _:zb2.butter_cd >0)
                 if not b.is_dead:
                     place("cg 3-6")

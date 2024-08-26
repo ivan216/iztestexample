@@ -63,7 +63,7 @@ def fun(ctler: Controller):
             if y1.is_dead & y2.is_dead :
                 clear_count += 1
 
-    iz_test.start_test(jump_frame=1, speed_rate=3)
+    iz_test.start_test(jump_frame=0, speed_rate=5)
     print(_175_count)
     print(_75_count)
     print(_50_count)
