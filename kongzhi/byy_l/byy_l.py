@@ -5,7 +5,7 @@ from rpze.flow.utils import until, delay
 from rpze.iztest.operations import place ,repeat
 from rpze.iztest.cond_funcs import until_plant_die
 
-# 3.72倍75 = 279
+# 3.78倍75 = 283.5
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
