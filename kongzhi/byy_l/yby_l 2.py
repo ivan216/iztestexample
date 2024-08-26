@@ -45,7 +45,7 @@ def fun(ctler: Controller):
             _125_count += 1
             return iz_test.end(True) 
 
-        await (until(lambda _:lz.hp <= 110) | until(lambda _:lz.int_x <= 320))
+        await (until(lambda _:lz.hp <= 110) | until(lambda _:lz.int_x <= 310))
         [cg1, cg2] = await repeat("cg 3-6")     #合适时机放双杆
         _75_count += 2
 
