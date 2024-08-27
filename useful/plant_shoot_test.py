@@ -13,8 +13,8 @@ def until_plant_n_shoot(plant: Plant, n:int = 1, non_stop :bool = True) -> Await
             v.try_to_shoot_time = fm.time + 1
         if v.try_to_shoot_time == fm.time and plant.launch_cd != 0:  # 在攻击时
             v.shots += 1
-        if non_stop:
-            if v.try_to_shoot_time == fm.time and plant.launch_cd == 0: #不再攻击时，计数清零
+        if v.try_to_shoot_time == fm.time and plant.launch_cd == 0: #不再攻击时，计数清零
+            if non_stop:
                 v.shots = 0
         if v.shots == n:
             return True
