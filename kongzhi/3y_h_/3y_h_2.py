@@ -7,15 +7,19 @@ from rpze.structs.plant import Plant, PlantStatus
 from rpze.rp_extend import Controller
 from random import randint
 
-def count_butter(plant: Plant, n:int = 1) -> AwaitableCondFunc:
-    def _cond_func(fm: FlowManager,v = VariablePool( projs = 0, try_to_shoot_time=None )):
-        if plant.generate_cd == 1:
+def count_butter(plant: Plant, n:int = 1, non_stop: bool = True, continuous: bool = False) -> AwaitableCondFunc:         #通过状态数黄油数量
+    def _cond_func(fm: FlowManager,v = VariablePool(projs = 0, try_to_shoot_time=None)):
+        if plant.generate_cd == 1:                                      # 下一帧开打
             v.try_to_shoot_time = fm.time + 1
         if v.try_to_shoot_time == fm.time :
             if plant.status is PlantStatus.kernelpult_launch_butter :
                 v.projs += 1
             elif plant.launch_cd == 0 :
-                v.projs = 0
+                if non_stop or continuous:
+                    v.projs = 0
+            else:
+                if continuous:
+                    v.projs = 0
         if v.projs == n:
             return True 
         return False
@@ -44,7 +48,8 @@ def fun(ctler: Controller):
         y = iz_test.ground["3-2"]
         s = iz_test.ground["3-4"]
 
-        await (count_butter(y,2).after(142) | until(lambda _:s.is_dead) | until(lambda _:lz.hp < 90))
+        await (count_butter(y,2).after(142) | until(lambda _:s.is_dead or lz.hp < 90))  
+
         if not s.is_dead:
             place("lz 3-6")
             _75_count += 1
@@ -56,7 +61,7 @@ def fun(ctler: Controller):
             place("cg 3-6") #补第二杆
             _75_count += 1
 
-    iz_test.start_test(jump_frame=1, speed_rate=5)
+    iz_test.start_test(jump_frame=1, speed_rate=3)
     print("补75:",_75_count)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
