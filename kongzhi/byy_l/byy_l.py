@@ -5,7 +5,7 @@ from rpze.flow.utils import until, delay
 from rpze.iztest.operations import place ,repeat
 from rpze.iztest.cond_funcs import until_plant_die
 
-# 3.78倍75 = 283.5
+# 3.7倍75 = 277.5
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
@@ -26,25 +26,24 @@ def fun(ctler: Controller):
     async def place_zombie(_):
         nonlocal _75_count
         bu = False      #补刀标志
-        pan = True
+        pan = False
         x_c = 295   #地刺攻击撑杆的边界
         l = iz_test.ground["3-5"]
         lz = iz_test.game_board.zombie_list[0]
         
         while not l.is_dead:    #裂荚没吃掉就一直补障
-            await (until(lambda _:lz.hp < 90) | until_plant_die(l))
+            await until(lambda _: lz.hp < 90 or l.is_dead ) 
             if not l.is_dead :
                 lz = place("lz 3-6")
                 _75_count += 1
 
-        await (until(lambda _:lz.hp <= 110) | until(lambda _:lz.int_x <= 320))
+        await until(lambda _: lz.hp <= 110 or lz.int_x <= 320)
         [cg1, cg2] = await repeat("cg 3-6")     #合适时机放双杆
         _75_count += 2
 
-        await (until(lambda _:cg1.butter_cd == 400) | until(lambda _:cg2.butter_cd == 400)
-               | until(lambda _:cg1.hp < 170) | until(lambda _:cg2.hp < 170) )
+        await until(lambda _: cg1.butter_cd == 400 or cg2.butter_cd == 400 or cg1.hp < 170 or cg2.hp < 170)
             
-        if (cg1.butter_cd > 0) | (cg1.hp < 170) :
+        if cg1.butter_cd > 0 or cg1.hp < 170 :
             zb1 = cg1   #保证zb1是第一个中黄油，或者第一个挂的僵尸
             zb2 = cg2
             if cg1.butter_cd == 0:  #没中过黄油，直接进入补刀阶段
@@ -56,13 +55,12 @@ def fun(ctler: Controller):
                 bu = True
 
         if not bu:  #还没到补刀阶段
-            if (zb1.int_x > 270) & (zb1.int_x < x_c):   #刺上中黄油，补杆
+            if  270 < zb1.int_x < x_c:   #刺上中黄油，补杆
                 place("cg 3-6")     #没有再考虑后续补刀
                 _75_count += 1
             elif zb1.int_x >= x_c:  #刺外中黄油
-                await (until(lambda _:zb2.butter_cd == 400)|until(lambda _:zb1.butter_cd == 400))  #中第二黄油
-                if ((zb1.butter_cd == 400) & (zb1.int_x > 270)) \
-                    | ((zb2.butter_cd == 400) & (zb2.int_x > 270)): #起跳前中
+                await until(lambda _:zb2.butter_cd == 400 or zb1.butter_cd == 400)  #中第二黄油
+                if zb1.butter_cd == 400 and zb1.int_x > 270 or zb2.butter_cd == 400 and zb2.int_x > 270 : #起跳前中
                     place("cg 3-6")
                     _75_count += 1
                 else:   #第二黄油不在起跳前中，可以继续等待
@@ -71,7 +69,7 @@ def fun(ctler: Controller):
                 pan = True
 
         if pan: #把血最多的僵尸赋值给zb2
-            await (until(lambda _:zb1.hp < 170) | until(lambda _:zb2.hp < 170))
+            await until(lambda _:zb1.hp < 170 or zb2.hp < 170)
             if zb2.hp < 170:
                 zb2 = zb1  #保证活着的僵尸是 zb2
             bu = True   #进入补刀阶段
