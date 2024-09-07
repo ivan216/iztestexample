@@ -7,7 +7,7 @@ from random import randint
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
-        5000 -1
+        1000 -1
         3-0
         .....
         .....
@@ -23,7 +23,7 @@ def fun(ctler: Controller):
         kg = iz_test.game_board.zombie_list[0]
         b = iz_test.ground["3-1"]
         await (until(lambda _: kg.hp <= 230).after(45) 
-               | until(lambda _: b.hp <= 4)).after(randint(0,10))
+               | until(lambda _: b.hp <= 32)).after(randint(0,10))
         place("lz 3-6")
 
     iz_test.start_test(jump_frame=1, speed_rate=2)
