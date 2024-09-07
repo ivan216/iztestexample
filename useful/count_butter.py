@@ -7,7 +7,7 @@ from rpze.structs.plant import Plant , PlantStatus
 from rpze.structs.projectile import ProjectileType
 from rpze.rp_extend import Controller
 
-def count_butter(plant: Plant, n:int = 1, non_stop: bool = True, continuous: bool = False) -> AwaitableCondFunc:         #通过状态数黄油数量
+def count_butter(plant: Plant, n:int = 1, non_stop: bool = True, continuous: bool = False) -> AwaitableCondFunc[None]:         #通过状态数黄油数量
     def _cond_func(fm: FlowManager,v = VariablePool(projs = 0, try_to_shoot_time=None)):
         if plant.generate_cd == 1:                                      # 下一帧开打
             v.try_to_shoot_time = fm.time + 1
@@ -15,7 +15,7 @@ def count_butter(plant: Plant, n:int = 1, non_stop: bool = True, continuous: boo
             if plant.status is PlantStatus.kernelpult_launch_butter :
                 v.projs += 1
             elif plant.launch_cd == 0 :
-                if non_stop | continuous:
+                if non_stop or continuous:
                     v.projs = 0
             else:
                 if continuous:
@@ -38,12 +38,12 @@ def fun(ctler: Controller):
         0  0  1200
         2-9 4-9 2-9''')
     
-    def count_butter2(plant: Plant, n:int = 1, non_stop: bool = True, continuous:bool = False) -> AwaitableCondFunc:         #通过子弹数黄油数量
+    def count_butter2(plant: Plant, n:int = 1, non_stop: bool = True, continuous:bool = False) -> AwaitableCondFunc[None]:         #通过子弹数黄油数量
         def _cond_func(fm: FlowManager,v = VariablePool( projs = 0, count_down = 0,try_to_shoot_time=None)):
             if plant.generate_cd == 1:                                      # 下一帧可能开打
                 v.try_to_shoot_time = fm.time + 1
             if (v.try_to_shoot_time == fm.time) and (plant.launch_cd == 0): #并没有攻击，计数重置
-                if non_stop | continuous:
+                if non_stop or continuous:
                     v.projs = 0
             if (v.try_to_shoot_time == fm.time) and (plant.launch_cd != 0): #确定要攻击，把launch_cd传给count_down
                 v.count_down = plant.launch_cd

@@ -16,22 +16,23 @@ def fun(ctler: Controller):
         0  20
         2-6 2-6''')
     
-    h1 = None
-    h2 = None
     h1_record = [0 for _ in range(9)]
     h2_record = [0 for _ in range(9)]
 
-    @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
-        nonlocal h1,h2
-        h1 = iz_test.ground["1-4"]
-        h2 = iz_test.ground["3-5"]        
-
     @iz_test.on_game_end()
     def count_sun(_):
-        i = get_sunflower_remaining_sun(h1) // 25
+        h1 = iz_test.ground["1-4"]
+        h2 = iz_test.ground["3-5"]
+        if h1 is None:
+            i = 0
+        else:
+            i = get_sunflower_remaining_sun(h1) // 25
         h1_record[i] += 1
-        i = get_sunflower_remaining_sun(h2) // 25
+
+        if h2 is None:
+            i = 0
+        else:
+            i = get_sunflower_remaining_sun(h2) // 25
         h2_record[i] += 1
 
     iz_test.start_test(jump_frame=1, speed_rate=1)
