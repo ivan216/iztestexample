@@ -6,6 +6,7 @@ from rpze.rp_extend import Controller
 from rpze.flow.utils import AwaitableCondFunc, VariablePool
 from rpze.flow.flow import FlowManager
 from rpze.structs.plant import Plant,PlantStatus
+from random import randint
 
 def until_plant_n_shoot(plant: Plant, n:int = 1, non_stop :bool = True) -> AwaitableCondFunc:
     def _cond_func(fm: FlowManager,
@@ -41,7 +42,7 @@ def fun(ctler: Controller):
         lz = iz_test.game_board.zombie_list[0]
 
         await until(lambda _:lz.x < 311)    #311
-        await until_plant_n_shoot(d).after(48)
+        await until_plant_n_shoot(d).after(48 + randint(0,10))
         place("xg 2-6")
 
     @iz_test.flow_factory.add_tick_runner()
