@@ -7,7 +7,7 @@ from rpze.rp_extend import Controller
 from random import randint
 from rpze.flow.utils import AwaitableCondFunc, VariablePool
 from rpze.flow.flow import FlowManager
-from rpze.structs.plant import Plant
+from rpze.structs.plant import Plant,PlantStatus
 
 def until_plant_n_shoot(plant: Plant, n:int = 1) -> AwaitableCondFunc:
     def _cond_func(fm: FlowManager,
@@ -23,15 +23,15 @@ def until_plant_n_shoot(plant: Plant, n:int = 1) -> AwaitableCondFunc:
         return False
     return AwaitableCondFunc(_cond_func)
 
-# 45%补杆，较差
+# 补21%杆
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
-        1000 -1
-        3-0 
+        5000 -1
+        3-0
         .....
         .....
-        dw_.s
+        dwpts
         .....
         .....
         lz 
@@ -41,12 +41,18 @@ def fun(ctler: Controller):
     @iz_test.flow_factory.add_flow()
     async def place_zombie(_):
         d = iz_test.ground["3-1"]
-        s = iz_test.ground["3-5"]
+        w = iz_test.ground["3-2"]
+        p = iz_test.ground["3-3"]
+        z = iz_test.ground["3-5"]
+        lz = iz_test.game_board.zombie_list[0]
 
-        await until(lambda _:s.is_dead)
-        await until_plant_n_shoot(d).after(40+randint(0,10))
+        await until(lambda _:z.hp < 20) #20
+        await until_plant_n_shoot(d).after(40 + randint(0,10)) #40
         place("xg 3-6")
-    
+
+        await until(lambda _:w.status is PlantStatus.squash_look)
+        return iz_test.end(True)
+
     iz_test.start_test(jump_frame=1, speed_rate=2)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:

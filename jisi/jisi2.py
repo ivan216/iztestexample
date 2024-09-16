@@ -8,8 +8,9 @@ from random import randint
 from rpze.flow.utils import AwaitableCondFunc, VariablePool
 from rpze.flow.flow import FlowManager
 from rpze.structs.plant import Plant
+from rpze.structs.zombie import ZombieStatus
 
-def until_plant_n_shoot(plant: Plant, n:int = 1) -> AwaitableCondFunc:
+def until_plant_n_shoot(plant: Plant, n:int = 1, non_stop :bool = True) -> AwaitableCondFunc:
     def _cond_func(fm: FlowManager,
                 v=VariablePool(try_to_shoot_time=None, shots = 0)):
         if plant.generate_cd == 1:  # 下一帧开打
@@ -17,37 +18,56 @@ def until_plant_n_shoot(plant: Plant, n:int = 1) -> AwaitableCondFunc:
         if v.try_to_shoot_time == fm.time and plant.launch_cd != 0:  # 在攻击时
             v.shots += 1
         if v.try_to_shoot_time == fm.time and plant.launch_cd == 0: #不再攻击时，计数清零
-            v.shots = 0
+            if non_stop:
+                v.shots = 0
         if v.shots == n:
             return True
         return False
     return AwaitableCondFunc(_cond_func)
 
-# 45%补杆，较差
+# 497
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
         1000 -1
-        3-0 
+        4-0 5-0
         .....
         .....
-        dw_.s
-        .....
-        .....
+        p__hw
+        dtp_s
+        dpwpt
         lz 
         0  
-        3-6''')
+        4-6''')
+    
+    _4_fail = 0
+    _52_fail = 0
+    _52_suc = 0
     
     @iz_test.flow_factory.add_flow()
     async def place_zombie(_):
-        d = iz_test.ground["3-1"]
-        s = iz_test.ground["3-5"]
+        d = iz_test.ground["4-1"]
+        lz = iz_test.game_board.zombie_list[0]
 
-        await until(lambda _:s.is_dead)
-        await until_plant_n_shoot(d).after(40+randint(0,10))
-        place("xg 3-6")
-    
-    iz_test.start_test(jump_frame=1, speed_rate=2)
+        await until(lambda _:lz.x < 310)    #310
+        await until_plant_n_shoot(d).after(33 + randint(0,10))
+        mj = place("mj 4-6")
+
+    @iz_test.on_game_end()
+    def count(res:bool):
+        nonlocal _4_fail,_52_fail,_52_suc
+        if iz_test.ground["4-0"] is not None:
+            _4_fail += 1
+        if iz_test.ground["5-0"] is not None:
+            if iz_test.ground["5-2"] is None:
+                _52_suc += 1
+            else:
+                _52_fail += 1
+
+    iz_test.start_test(jump_frame=1, speed_rate=4)
+    print("4补(75) ",_4_fail)
+    print("5补(175) ",_52_fail)
+    print("5补(125) ",_52_suc)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
     fun(game.controller)

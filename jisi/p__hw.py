@@ -38,7 +38,7 @@ def fun(ctler: Controller):
         if iz_test.ground["4-0"] is not None:
             r4 += 1
 
-    iz_test.start_test(jump_frame=0, speed_rate=3)
+    iz_test.start_test(jump_frame=1, speed_rate=3)
     print(r2,"\n",r3,"\n",r4)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:

@@ -23,6 +23,8 @@ def until_plant_n_shoot(plant: Plant, n:int = 1, non_stop :bool = True) -> Await
         return False
     return AwaitableCondFunc(_cond_func)
 
+#36%成功率
+
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
         1000 -1

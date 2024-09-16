@@ -6,6 +6,8 @@ from rpze.iztest.cond_funcs import until_plant_last_shoot
 from rpze.rp_extend import Controller
 from random import randint
 
+#补13%
+
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
         1000 -1
@@ -17,7 +19,7 @@ def fun(ctler: Controller):
         .....
         xg lz
         0  0
-        3-7 5-6''') #补13%
+        3-7 5-6''') 
     
     @iz_test.flow_factory.add_flow()
     async def place_zombie(_):
