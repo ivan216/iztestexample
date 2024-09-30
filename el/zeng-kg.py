@@ -9,14 +9,8 @@ from rpze.flow.utils import delay
 from random import randint
 
 def fun(ctler:Controller):
-    iz_test = IzTest(ctler).init_by_str('''
-        -1 -1
-        
-        .....
-        .....
-        .....
-        .....
-        .....''')
+    iz_test = IzTest(ctler)
+    iz_test.enable_default_check_end = False
     
     hurt_count = 0
     kg = yy = None
