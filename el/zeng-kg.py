@@ -19,17 +19,11 @@ def fun(ctler:Controller):
     @iz_test.flow_factory.add_flow()
     async def place_zombie(_):
         nonlocal kg, yy
-
         kg = iz_test.game_board.iz_place_zombie(2,5,ZombieType.digger)
-        
-        yy = iz_test.game_board.new_plant(2,0,PlantType.gloomshroom)
-        randomize_generate_cd(yy)
-        yy2 = iz_test.game_board.new_plant(2,1,PlantType.gloomshroom)
-        randomize_generate_cd(yy2)
-        yy3 = iz_test.game_board.new_plant(3,0,PlantType.gloomshroom)
-        randomize_generate_cd(yy3)
-        yy4 = iz_test.game_board.new_plant(3,1,PlantType.gloomshroom)
-        randomize_generate_cd(yy4)
+        yy = randomize_generate_cd(iz_test.game_board.new_plant(2,0,PlantType.gloomshroom))
+        randomize_generate_cd(iz_test.game_board.new_plant(2,1,PlantType.gloomshroom))
+        randomize_generate_cd(iz_test.game_board.new_plant(3,0,PlantType.gloomshroom))
+        randomize_generate_cd(iz_test.game_board.new_plant(3,1,PlantType.gloomshroom))
 
         await delay(randint(1,4))
         kg.x = 9.9
