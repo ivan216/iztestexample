@@ -7,23 +7,25 @@ from rpze.structs.plant import Plant, PlantStatus
 from rpze.rp_extend import Controller
 from random import randint
 
-def count_butter(plant: Plant, n:int = 1, non_stop: bool = True, continuous: bool = False) -> AwaitableCondFunc:         #通过状态数黄油数量
-    def _cond_func(fm: FlowManager,v = VariablePool(projs = 0, try_to_shoot_time=None)):
-        if plant.generate_cd == 1:                                      # 下一帧开打
+def until_n_butter(plant: Plant, n: int = 1, mode: int = 1) -> AwaitableCondFunc[None]:
+    "mode = 0 or 1 or 2"
+    def _await_func(fm: FlowManager, v=VariablePool(projs=0, try_to_shoot_time=None)):
+        if plant.generate_cd == 1:  # 下一帧开打
             v.try_to_shoot_time = fm.time + 1
-        if v.try_to_shoot_time == fm.time :
-            if plant.status is PlantStatus.kernelpult_launch_butter :
+        if v.try_to_shoot_time == fm.time:
+            if plant.status is PlantStatus.kernelpult_launch_butter:  # 出黄油
                 v.projs += 1
-            elif plant.launch_cd == 0 :
-                if non_stop or continuous:
+            elif plant.launch_cd == 0:  # 攻击停止
+                if mode != 0:
                     v.projs = 0
-            else:
-                if continuous:
+            else:  # 出玉米粒
+                if mode == 2:
                     v.projs = 0
         if v.projs == n:
             return True 
         return False
-    return AwaitableCondFunc(_cond_func)
+    
+    return AwaitableCondFunc(_await_func)
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
@@ -48,7 +50,7 @@ def fun(ctler: Controller):
         y = iz_test.ground["3-2"]
         s = iz_test.ground["3-4"]
 
-        await (count_butter(y,2).after(142) | until(lambda _:s.is_dead or lz.hp < 90))  
+        await (until_n_butter(y,2).after(142) | until(lambda _:s.is_dead or lz.hp < 90))  
 
         if not s.is_dead:
             place("lz 3-6")
