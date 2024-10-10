@@ -17,10 +17,10 @@ def until_l_right_last_shoot(plant: Plant, wait_until_mbd: bool = False) -> Awai
             if fm.time >= v.last_shooting_time + mbd:
                 return True, v.until_mbd_ret
             return False
-        if plant.generate_cd == 25 and plant.launch_cd == 26:
+        if plant.generate_cd == 25 and plant.launch_cd > 15:
             v.last_shooting_time = fm.time
             return False
-        if plant.generate_cd == 25 and plant.launch_cd != 26:
+        if plant.generate_cd == 25 and plant.launch_cd < 15:
             if v.last_shooting_time is not None:
                 if not wait_until_mbd or fm.time == v.last_shooting_time + mbd:
                     return True, fm.time - v.last_shooting_time
