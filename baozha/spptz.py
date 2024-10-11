@@ -3,27 +3,9 @@ from rpze.iztest.iztest import IzTest
 from rpze.rp_extend import Controller
 from rpze.flow.utils import until,delay
 from rpze.iztest.operations import place
-from rpze.structs.zombie import ZombieStatus
 from random import randint
-from rpze.flow.utils import AwaitableCondFunc, VariablePool
 from rpze.flow.flow import FlowManager
-from rpze.structs.plant import Plant
-from rpze.iztest.cond_funcs import until_plant_last_shoot
-
-def until_plant_n_shoot(plant: Plant, n:int = 1, non_stop :bool = True) -> AwaitableCondFunc:
-    def _cond_func(fm: FlowManager,
-                v=VariablePool(try_to_shoot_time=None, shots = 0)):
-        if plant.generate_cd == 1:  # 下一帧开打
-            v.try_to_shoot_time = fm.time + 1
-        if v.try_to_shoot_time == fm.time and plant.launch_cd != 0:  # 在攻击时
-            v.shots += 1
-        if v.try_to_shoot_time == fm.time and plant.launch_cd == 0: #不再攻击时，计数清零
-            if non_stop:
-                v.shots = 0
-        if v.shots == n:
-            return True
-        return False
-    return AwaitableCondFunc(_cond_func)
+from rpze.iztest.cond_funcs import until_plant_last_shoot, until_plant_n_shoot
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
