@@ -19,13 +19,6 @@ def fun(ctler: Controller):
         0  
         3-7 ''')
     
-    def has_ladder(row : int,col : int):
-        for item in ~iz_test.game_board.griditem_list :
-            if (item.type_ == GriditemType.ladder) \
-            and (item.row == row) and (item.col == col):
-                return True
-        return False
-    
     @iz_test.flow_factory.add_flow()
     async def place_zombie(_):
         y = iz_test.ground["3-2"]
@@ -36,12 +29,13 @@ def fun(ctler: Controller):
     def check_end(fm : FlowManager):
         if fm.time > 1000:
             if iz_test.game_board.zombie_list.obj_num == 0:
-                if has_ladder(2,3):
+                item = iz_test.game_board.get_griditem_at(2,3,GriditemType.ladder)
+                if item is not None:
                     return iz_test.end(True)
                 else:
                     return iz_test.end(False)
 
-    iz_test.start_test(jump_frame=1, speed_rate=1)
+    iz_test.start_test(jump_frame=1, speed_rate=2)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
     fun(game.controller)
