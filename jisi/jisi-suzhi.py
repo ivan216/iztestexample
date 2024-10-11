@@ -1,14 +1,9 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.flow.utils import until, delay
-from rpze.iztest.operations import place ,repeat
-from rpze.iztest.cond_funcs import until_plant_last_shoot
 from rpze.rp_extend import Controller
 from random import randint
-from rpze.flow.utils import AwaitableCondFunc, VariablePool
 from rpze.flow.flow import FlowManager
-from rpze.structs.plant import Plant
-from rpze.structs.zombie import ZombieStatus
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
