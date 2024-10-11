@@ -2,25 +2,9 @@ from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.rp_extend import Controller
 from rpze.iztest.operations import place 
-from rpze.iztest.cond_funcs import until_precise_digger
-from rpze.flow.flow import FlowManager
-from rpze.flow.utils import AwaitableCondFunc, VariablePool ,until 
-from rpze.structs.plant import Plant
+from rpze.iztest.cond_funcs import until_precise_digger, until_plant_n_shoot
+from rpze.flow.utils import until 
 from random import randint
-
-def until_plant_n_shoot(plant: Plant, n:int = 1) -> AwaitableCondFunc:
-    def _cond_func(fm: FlowManager,
-                   v=VariablePool(try_to_shoot_time=None, shots = 0)):
-        if plant.generate_cd == 1:  # 下一帧开打
-            v.try_to_shoot_time = fm.time + 1
-        if v.try_to_shoot_time == fm.time and plant.launch_cd != 0:  # 在攻击时
-            v.shots += 1
-        if v.try_to_shoot_time == fm.time and plant.launch_cd == 0: #不再攻击时，计数清零
-            v.shots = 0
-        if v.shots == n:
-            return True
-        return False
-    return AwaitableCondFunc(_cond_func)
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
