@@ -8,7 +8,6 @@ from rpze.iztest.plant_modifier import randomize_generate_cd
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler)
-    iz_test.enable_default_check_end = False
 
     @iz_test.flow_factory.add_flow()
     async def place_zombie(_):
@@ -23,7 +22,7 @@ def fun(ctler: Controller):
     @iz_test.flow_factory.add_tick_runner()
     def check_end(fm:FlowManager):
         if fm.time > 0:
-            if iz_test.game_board.plant_list[4].is_dead:
+            if iz_test.ground["3-0"] is None:
                 return iz_test.end(True)
             if iz_test.game_board.zombie_list.obj_num == 0:
                 return iz_test.end(False)
