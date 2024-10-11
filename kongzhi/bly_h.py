@@ -3,25 +3,10 @@ from rpze.iztest.iztest import IzTest
 from rpze.iztest.operations import place
 from rpze.flow.flow import FlowManager
 from rpze.flow.utils import AwaitableCondFunc, VariablePool ,until
-from rpze.structs.plant import Plant, PlantStatus
+from rpze.structs.plant import Plant
 from rpze.structs.projectile import ProjectileType
 from rpze.rp_extend import Controller
 from random import randint
-from rpze.iztest.cond_funcs import until_plant_die
-
-def count_butter(plant: Plant, n:int = 1) -> AwaitableCondFunc:
-    def _cond_func(fm: FlowManager,v = VariablePool( projs = 0, try_to_shoot_time=None )):
-        if plant.generate_cd == 1:
-            v.try_to_shoot_time = fm.time + 1
-        if v.try_to_shoot_time == fm.time :
-            if plant.status is PlantStatus.kernelpult_launch_butter :
-                v.projs += 1
-            elif plant.launch_cd == 0 :
-                v.projs = 0
-        if v.projs == n:
-            return True 
-        return False
-    return AwaitableCondFunc(_cond_func)
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
@@ -81,7 +66,7 @@ def fun(ctler: Controller):
         elif tz.x > 220 :   #刺上
             await (until(lambda _:tz.accessories_hp_2 < 1) | count_butter2(y))
             if tz.accessories_hp_2 == 0:    #没再出黄油
-                if l.hp > 140 :     #不可补杆
+                if l.hp > 140 :     #不可补杆 140
                     place("tz 3-6")
                     _150_count += 1
                 else:               #可补杆
@@ -95,7 +80,7 @@ def fun(ctler: Controller):
             place("cg 3-6")
             _75_count += 1
     
-    iz_test.start_test(jump_frame=1, speed_rate=3)
+    iz_test.start_test(jump_frame=1, speed_rate=2)
     print("补杆：",_75_count)
     print("补梯：",_150_count)
 
