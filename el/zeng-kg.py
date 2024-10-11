@@ -10,7 +10,6 @@ from random import randint
 
 def fun(ctler:Controller):
     iz_test = IzTest(ctler)
-    iz_test.enable_default_check_end = False
     
     hurt_count = 0
     kg = yy = None
