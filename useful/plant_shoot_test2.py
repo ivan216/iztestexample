@@ -8,20 +8,6 @@ from rpze.flow.flow import FlowManager
 from rpze.structs.plant import Plant
 
 def until_plant_last_shoot(plant: Plant, wait_until_mbd: bool = False) -> AwaitableCondFunc[int]:
-    """
-    生成一个 等到植物 "本段最后一次连续攻击结束后返回" 的函数.
-
-    await 调用后返回"开打帧距离上一次攻击的距离"
-
-    Args:
-        plant: 要判断的植物
-        wait_until_mbd: 是否等到 上次开打经过最大攻击间隔后 再返回
-    Examples:
-        >>> async def flow(_):
-        ...     plant = iz_test.ground["1-2"]  # noqa
-        ...     t = await until_plant_last_shoot(plant)
-        ...     assert plant.max_boot_delay - 14 <= t <= plant.max_boot_delay  # t 即为攻击间隔时长
-    """
 
     mbd = plant.max_boot_delay
 
