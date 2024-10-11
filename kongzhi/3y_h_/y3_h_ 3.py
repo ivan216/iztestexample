@@ -1,25 +1,9 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.iztest.operations import place
-from rpze.flow.utils import AwaitableCondFunc, VariablePool ,until,delay
-from rpze.flow.flow import FlowManager
-from rpze.structs.plant import Plant ,PlantStatus
 from rpze.rp_extend import Controller
+from rpze.iztest.cond_funcs import until_n_butter
 from random import randint
-
-def count_butter(plant: Plant, n:int = 1) -> AwaitableCondFunc:         #通过状态数黄油数量
-    def _cond_func(fm: FlowManager,v = VariablePool( projs = 0, try_to_shoot_time=None )):
-        if plant.generate_cd == 1:                                      # 下一帧开打
-            v.try_to_shoot_time = fm.time + 1
-        if v.try_to_shoot_time == fm.time :
-            if plant.status is PlantStatus.kernelpult_launch_butter :
-                v.projs += 1
-            elif plant.launch_cd == 0 :
-                v.projs = 0
-        if v.projs == n:
-            return True 
-        return False
-    return AwaitableCondFunc(_cond_func)
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
@@ -42,7 +26,7 @@ def fun(ctler: Controller):
         y = iz_test.ground["3-1"]
         l = iz_test.ground["3-2"]
 
-        await count_butter(y,2)
+        await until_n_butter(y,2)
         if l.is_dead :
             place("cg 3-6")
         else:

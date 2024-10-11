@@ -1,31 +1,10 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.iztest.operations import place
-from rpze.flow.flow import FlowManager
-from rpze.flow.utils import AwaitableCondFunc, VariablePool ,until
-from rpze.structs.plant import Plant, PlantStatus
+from rpze.flow.utils import until
 from rpze.rp_extend import Controller
+from rpze.iztest.cond_funcs import until_n_butter
 from random import randint
-
-def until_n_butter(plant: Plant, n: int = 1, mode: int = 1) -> AwaitableCondFunc[None]:
-    "mode = 0 or 1 or 2"
-    def _await_func(fm: FlowManager, v=VariablePool(projs=0, try_to_shoot_time=None)):
-        if plant.generate_cd == 1:  # 下一帧开打
-            v.try_to_shoot_time = fm.time + 1
-        if v.try_to_shoot_time == fm.time:
-            if plant.status is PlantStatus.kernelpult_launch_butter:  # 出黄油
-                v.projs += 1
-            elif plant.launch_cd == 0:  # 攻击停止
-                if mode != 0:
-                    v.projs = 0
-            else:  # 出玉米粒
-                if mode == 2:
-                    v.projs = 0
-        if v.projs == n:
-            return True 
-        return False
-    
-    return AwaitableCondFunc(_await_func)
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''

@@ -3,7 +3,6 @@ from rpze.iztest.iztest import IzTest
 from rpze.rp_extend import Controller
 from rpze.iztest.operations import place
 from rpze.flow.utils import until
-from rpze.iztest.cond_funcs import until_plant_die
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
