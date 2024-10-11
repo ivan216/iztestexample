@@ -9,6 +9,7 @@ from rpze.structs.plant import Plant, PlantType
 from rpze.iztest.plant_modifier import randomize_generate_cd
 
 def until_plant_last_shoot(plant: Plant, wait_until_mbd: bool = False) -> AwaitableCondFunc[int]:
+    shoot_next_gcd = 1 if plant.type_ is not PlantType.split_pea else 26  # 修正裂荚攻击时机
     mbd = plant.max_boot_delay
 
     def _await_func(fm: FlowManager, v=VariablePool(
@@ -19,7 +20,7 @@ def until_plant_last_shoot(plant: Plant, wait_until_mbd: bool = False) -> Awaita
             if fm.time >= v.last_shooting_time + mbd:
                 return True, v.until_mbd_ret
             return False
-        if plant.generate_cd == 1:  # 下一帧开打
+        if plant.generate_cd == shoot_next_gcd:  # 下一帧开打
             v.try_to_shoot_time = fm.time + 1
         if v.try_to_shoot_time == fm.time:
             if plant.launch_cd > 15:  # 判断大于15则处于攻击状态, 目的是兼容忧郁菇
@@ -55,14 +56,15 @@ def fun(ctler: Controller):
     #刺100->75;钢刺100->70->32
 
     plant = None
-    shoot = 0
+    shoot = adj = 0
 
     @iz_test.flow_factory.add_flow()
     async def place_zombie(fm:FlowManager):
-        nonlocal plant,shoot
+        nonlocal plant,shoot,adj
         shoot = 0
         print()
-        plant = randomize_generate_cd(iz_test.game_board.new_plant(2,2,PlantType.repeater))
+        plant = randomize_generate_cd(iz_test.game_board.new_plant(2,2,PlantType.split_pea))
+        adj = 1 if plant.type_ is not PlantType.split_pea else 26
 
         ti = await until_plant_last_shoot(plant,1)
         print("间隔 = ",ti)
@@ -73,7 +75,7 @@ def fun(ctler: Controller):
     def printfun(fm:FlowManager):
         nonlocal shoot
         if fm.time >0:
-            if plant.generate_cd == 1:
+            if plant.generate_cd == adj:
                 shoot = fm.time + 1
             if shoot == fm.time and plant.launch_cd > 15:
                 print("植物攻击 ",fm.time)
@@ -86,7 +88,7 @@ def fun(ctler: Controller):
             if iz_test.game_board.zombie_list.obj_num == 0:
                 return iz_test.end(False)
 
-    iz_test.start_test(jump_frame=0, speed_rate=2,print_interval=1e2)
+    iz_test.start_test(jump_frame=0, speed_rate=0.2,print_interval=1e2)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
     fun(game.controller)
