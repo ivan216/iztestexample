@@ -5,7 +5,6 @@ from rpze.iztest.operations import place ,repeat
 from rpze.iztest.cond_funcs import until_plant_last_shoot
 from rpze.rp_extend import Controller
 from random import randint
-from rpze.flow.flow import FlowManager
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
