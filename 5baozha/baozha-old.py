@@ -53,11 +53,7 @@ def fun(ctler: Controller):
 
     @iz_test.on_game_end()
     def count(_):
-        h = iz_test.ground["4-5"]
-        if h is None:
-            i = 0
-        else:
-            i = get_sunflower_remaining_sun(h) // 25
+        i = get_sunflower_remaining_sun(iz_test.ground["4-5"]) // 25
         h_r[i] += 1
 
     iz_test.start_test(jump_frame=1, speed_rate=10)
