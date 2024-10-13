@@ -8,23 +8,23 @@ from random import randint
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
         10000 -1
-        5-0
-        .....
-        .....
-        .....
-        sssss
+        1-0
         xpxxh
+        sssss
+        .....
+        .....
+        .....
         lz 
         0  
-        4-6  ''')
+        2-6  ''')
     
     @iz_test.flow_factory.add_flow()
     async def place_zombie(_):
         lz = iz_test.game_board.zombie_list[0]
-        xi = iz_test.ground["4-2"]
-        await until(lambda _:lz.x < 151).after(randint(0,10))    #151 93% 5k 93%
-        # await until(lambda _:xi.hp < 292)  #300 94%
-        place("lz 5-6")
+        xi = iz_test.ground["2-2"]
+        await until(lambda _:lz.x < 152).after(randint(0,10))    #152 93% 5k 91.5%
+        # await until(lambda _:xi.hp < 300)  #300 92%
+        place("lz 1-6")
     
     iz_test.start_test(jump_frame=1, speed_rate=3)
 
