@@ -3,12 +3,12 @@ from rpze.iztest.iztest import IzTest
 from rpze.flow.utils import until, delay
 from rpze.iztest.operations import place ,repeat
 from rpze.rp_extend import Controller
-from rpze.structs.zombie import ZombieStatus
+from rpze.structs.zombie import ZombieStatus,Zombie
 from rpze.iztest.sun_num_utils import get_sunflower_remaining_sun
 from rpze.iztest.dancing import partner
 from random import randint
 
-# 约 1115
+# 约 1110
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
@@ -29,7 +29,7 @@ def fun(ctler: Controller):
     lz1 = lz2 = mj = wbw = wbs = None                                       #僵尸
     b = tp = p2 = p3 = c = y = h1 = h3 = None                               #植物
     nao1 = nao2 = nao3 = None
-    bu1 = bu3 = can_end = bu_tou = False                                             #启用结束判断 标志
+    bu1 = bu3 = can_end = bu_tou = False                                    #启用结束判断 标志
     # h1_record = [0 for _ in range(9)]
     # h3_record = [0 for _ in range(9)]
 
@@ -63,9 +63,8 @@ def fun(ctler: Controller):
     async def place_zombie(_):
         nonlocal xt_count,bu_tou
         await delay(220)
-        # mj=iz_test.game_board.zombie_list[3]  #不加这句舞伴的智能提示出不来，不过不影响执行
         await until(lambda _:lz1.hp<90 and lz2.hp<90 or nao2.is_dead)
-        wb1 = partner(mj,"a")
+        wb1:Zombie = partner(mj,"a")
         await until(lambda _:wb1 is None or wb1.hp<90 or b.is_dead)
         
         if not b.is_dead:
@@ -79,12 +78,11 @@ def fun(ctler: Controller):
     async def place_zombie(_):
         nonlocal xt_count,bu_tou
         await delay(220)
-        # mj=iz_test.game_board.zombie_list[3]  #不加这句舞伴的智能提示出不来，不过不影响执行
         
         while not tp.is_dead:
             await until (lambda _:mj.status==ZombieStatus.dancing_summoning)
-            wbw2 = partner(mj,"w")
-            wbs2 = partner(mj,"s")
+            wbw2:Zombie = partner(mj,"w")
+            wbs2:Zombie = partner(mj,"s")
 
             if wbw2 is not None and wbs2 is not None:
                 if wbw2.status is ZombieStatus.backup_spawning and wbs2.status is ZombieStatus.backup_spawning:
@@ -101,9 +99,8 @@ def fun(ctler: Controller):
     async def place_zombie(_):
         nonlocal xg_count
         await delay(220)
-        # mj=iz_test.game_board.zombie_list[3]  #不加这句舞伴的智能提示出不来，不过不影响执行
         await until(lambda _:mj.int_x<240) 
-        wb = partner(mj,"s")
+        wb:Zombie = partner(mj,"s")
         i = get_sunflower_remaining_sun(h3)
         if i > 25:
             await until(lambda _:wb is None or wb.is_dead)
@@ -125,8 +122,8 @@ def fun(ctler: Controller):
         if nao1.is_dead and nao2.is_dead and nao3.is_dead :     #脑子全被吃完，直接判赢
             return iz_test.end(True)
         
-        wbw = partner(mj,"w")
-        wbs = partner(mj,"s")
+        wbw:Zombie = partner(mj,"w")
+        wbs:Zombie = partner(mj,"s")
         bu1 = True
         bu3 = True
         
@@ -239,6 +236,6 @@ def fun(ctler: Controller):
     # print("h1漏花情况 ",h1_record)
     # print("h3漏花情况 ",h3_record)
 
-
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
     fun(game.controller)
+    
