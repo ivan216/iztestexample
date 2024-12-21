@@ -5,7 +5,7 @@ from rpze.flow.utils import until, delay
 from rpze.rp_extend import Controller
 from random import randint
 
-## 200 + 50*0.62 + 75*0.47 + 50*0.008 = 266.7 最优
+## 200 + 50*0.62 + 75*0.47 + 50*0.008 = 266.7 
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''

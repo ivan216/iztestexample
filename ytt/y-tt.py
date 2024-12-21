@@ -1,60 +1,101 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.rp_extend import Controller
+from rpze.flow.utils import until
 import matplotlib.pyplot as plt
+
+full_hp = 70
+test_count = 20000
+hp_count = [0 for _ in range(full_hp)]
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
         -1 -1
-        3-0
-        .....
-        .....
+        1-0 2-0 3-0 4-0 5-0
         yssss
-        .....
-        .....
-        tt
-        0  
-        3-6 ''')
+        yssss
+        yssss
+        yssss
+        yssss
+        tt tt tt tt tt
+        0 0 0 0 0
+        1-6 2-6 3-6 4-6 5-6''')
     
-    full_hp = 70
-    test_count = 10000
-    hp_count = [0 for _ in range(full_hp)]
-    x = list(range(full_hp))
+    iz_test.controller.write_bool(False, 0x6a66f4)
+
     sum = 0
-    zb = None
+
+    @iz_test.flow_factory.add_flow()
+    async def place_zombie(_):
+        nonlocal sum
+        tt = iz_test.ground.zombie(0)
+        tt.accessories_hp_1 = full_hp * 20
+
+        await until(lambda _:tt.x < 10)
+        i = (full_hp * 20 - tt.accessories_hp_1) // 20
+        sum += i
+        hp_count[i] += 1
     
     @iz_test.flow_factory.add_flow()
     async def place_zombie(_):
-        nonlocal zb
-        zb = iz_test.game_board.zombie_list[0]
-        zb.accessories_hp_1 = full_hp * 20
-
-    @iz_test.on_game_end()
-    def end_callback(result: bool):
         nonlocal sum
-        plist = iz_test.ground
-        if plist["3-1"] is None:
-            i = (full_hp * 20 - zb.accessories_hp_1) // 20
-            sum += i
-            hp_count[i] += 1 
+        tt = iz_test.ground.zombie(1)
+        tt.accessories_hp_1 = full_hp * 20
+
+        await until(lambda _:tt.x < 10)
+        i = (full_hp * 20 - tt.accessories_hp_1) // 20
+        sum += i
+        hp_count[i] += 1
+
+    @iz_test.flow_factory.add_flow()
+    async def place_zombie(_):
+        nonlocal sum
+        tt = iz_test.ground.zombie(2)
+        tt.accessories_hp_1 = full_hp * 20
+
+        await until(lambda _:tt.x < 10)
+        i = (full_hp * 20 - tt.accessories_hp_1) // 20
+        sum += i
+        hp_count[i] += 1
+
+    @iz_test.flow_factory.add_flow()
+    async def place_zombie(_):
+        nonlocal sum
+        tt = iz_test.ground.zombie(3)
+        tt.accessories_hp_1 = full_hp * 20
+
+        await until(lambda _:tt.x < 10)
+        i = (full_hp * 20 - tt.accessories_hp_1) // 20
+        sum += i
+        hp_count[i] += 1
+
+    @iz_test.flow_factory.add_flow()
+    async def place_zombie(_):
+        nonlocal sum
+        tt = iz_test.ground.zombie(4)
+        tt.accessories_hp_1 = full_hp * 20
+
+        await until(lambda _:tt.x < 10)
+        i = (full_hp * 20 - tt.accessories_hp_1) // 20
+        sum += i
+        hp_count[i] += 1
         
     @iz_test.check_tests_end()
     def end_test_callback(n, ns):
-        if n%100 == 0:
-            print("每100次输出当前期望： ",sum / n)
+        if n % 200 == 0:
+            print("当前次数: ", n*5, " 当前期望: ",sum/n/5)
         if n < test_count:
             return None
         return True
 
-    iz_test.start_test(jump_frame=1, speed_rate=5)
-    
-    print(sum / test_count)
-    print(hp_count)
-
-    plt.figure(1)
-    plt.bar(x,hp_count,color='blue')
-
-    plt.show()
+    iz_test.start_test(jump_frame=1, speed_rate=5, print_interval=200)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
     fun(game.controller)
+
+plt.figure(1)
+plt.bar(list(range(full_hp)), [y/test_count/5 for y in hp_count])
+plt.title('yssss , zombie at col 6, N = ' + str(test_count*5) )
+plt.xlabel('hp (lost)')
+plt.ylabel('frequency')
+plt.show()

@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 # 410
 
 def fun(ctler: Controller):
-    n = 10000
+    n = 1000
     iz_test = IzTest(ctler).init_by_str(f'''
         {n} -1
         3-3 
@@ -26,6 +26,7 @@ def fun(ctler: Controller):
     
     y = [.0] * n
     x = list(range(n))
+    s = [.0] * n
     i = 0
 
     @iz_test.flow_factory.add_flow()
@@ -36,14 +37,17 @@ def fun(ctler: Controller):
 
         await until(lambda _:h.is_dead).after(4)
         speed = lz.dx
+        lzx = lz.x
         ti1 = fm.time
         await until(lambda _:lz.is_dead)
+        s[i] = lzx - lz.x
         ti = fm.time - ti1
         y[i] = speed * ti
         i += 1
 
     iz_test.start_test(jump_frame=1, speed_rate=3)
     plt.scatter(x,y)
+    plt.scatter(x,s,c='r')
     plt.show()
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:

@@ -6,13 +6,13 @@ from rpze.flow.flow import FlowManager
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
         1000 -1
-        3-0
+        3-3
         .....
         .....
-        1ssss
+        .tt..
         .....
         .....
-        lz 
+        cg 
         0  
         3-6 ''')
 
@@ -36,7 +36,7 @@ def fun(ctler: Controller):
         no_pause_time = 0
         print()
 
-    iz_test.start_test(jump_frame=0, speed_rate=5) 
+    iz_test.start_test(jump_frame=0, speed_rate=1) 
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
     fun(game.controller)

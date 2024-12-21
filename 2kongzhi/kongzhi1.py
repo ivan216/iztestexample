@@ -15,11 +15,14 @@ def fun(ctler: Controller):
         .....
         blpsh
         .._._
-        byy_l
+        yby_l
         .....
         mj
         0  
         3-6 ''')
+    
+    #byy_l 
+    #yby_l
     
     _50_count = _300_count = _225_count =  0
     tz_fail = tou_fail = nobu_fail = 0

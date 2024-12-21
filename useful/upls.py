@@ -63,13 +63,13 @@ def fun(ctler: Controller):
         nonlocal plant,shoot,adj
         shoot = 0
         print()
-        plant = randomize_generate_cd(iz_test.game_board.new_plant(2,2,PlantType.split_pea))
+        plant = randomize_generate_cd(iz_test.game_board.new_plant(2,2,PlantType.gloomshroom))
         adj = 1 if plant.type_ is not PlantType.split_pea else 26
 
         ti = await until_plant_last_shoot(plant,1)
         print("间隔 = ",ti)
         print("返回时间 ",fm.time)
-        place("xg 3-4")
+        await repeat("xg 3-4")
 
     @iz_test.flow_factory.add_tick_runner()
     def printfun(fm:FlowManager):
@@ -82,13 +82,13 @@ def fun(ctler: Controller):
         
     @iz_test.flow_factory.add_tick_runner()
     def check(fm:FlowManager):
-        if fm.time > 1200:
+        if fm.time > 1300:
             if plant.is_dead:
                 return iz_test.end(True)
             if iz_test.game_board.zombie_list.obj_num == 0:
                 return iz_test.end(False)
 
-    iz_test.start_test(jump_frame=0, speed_rate=0.2,print_interval=1e2)
+    iz_test.start_test(jump_frame=0, speed_rate=1,print_interval=1e2)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
     fun(game.controller)

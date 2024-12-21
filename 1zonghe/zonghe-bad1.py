@@ -9,8 +9,8 @@ def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
         1000 -1
         3-0 4-0 5-0
-        dyloz
-        p__pw
+        .....
+        .....
         p5ptz
         31sjh
         bpcph

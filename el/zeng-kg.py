@@ -10,6 +10,7 @@ from random import randint
 
 def fun(ctler:Controller):
     iz_test = IzTest(ctler)
+    iz_test.controller.write_bool(False, 0x6a66f4)
     
     hurt_count = 0
     kg = yy = None

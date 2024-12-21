@@ -9,7 +9,7 @@ from random import randint
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
-        1000 -1
+        500 -1
         3-0
         .....
         .....
@@ -38,7 +38,7 @@ def fun(ctler: Controller):
                 lz = place("lz 3-6")
                 _75_count += 1
 
-        await until(lambda _:lz.hp <= 110 or lz.int_x <= 310)  #320
+        await until(lambda _:lz.hp <= 110 or lz.int_x <= 320)  #320
         [cg1, cg2] = await repeat("cg 3-6")     #合适时机放双杆
         _75_count += 2
 
