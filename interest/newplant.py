@@ -19,15 +19,15 @@ def fun(ctler:Controller):
         1-6 ''')
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         iz_test.game_board.sun_num = 4321
 
-        jq = iz_test.game_board.new_plant(2,1,PlantType.gatling_pea)
+        jq = randomize_generate_cd(iz_test.game_board.new_plant(2,1,PlantType.gatling_pea))
         iz_test.game_board.iz_setup_plant(jq)
-        randomize_generate_cd(jq)
-        bg = iz_test.game_board.new_plant(2,1,PlantType.winter_melon)
+
+        bg = randomize_generate_cd(iz_test.game_board.new_plant(2,1,PlantType.winter_melon))
         iz_test.game_board.iz_setup_plant(bg)
-        randomize_generate_cd(bg)
+        
         fs = iz_test.game_board.new_plant(1,2,0x34)
         iz_test.game_board.iz_setup_plant(fs)
 

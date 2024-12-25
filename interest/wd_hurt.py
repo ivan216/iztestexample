@@ -22,22 +22,22 @@ def fun(ctler: Controller):
     zb = None
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal zb
         zb = iz_test.game_board.zombie_list[0]
         zb.accessories_hp_1 = full_hp * 20
 
     @iz_test.on_game_end()
-    def end_callback(result: bool):
+    def _(_):
         nonlocal sum
         i = (full_hp * 20 - zb.accessories_hp_1) // 20
         sum += i
         hp_record[i] += 1
 
     @iz_test.check_tests_end()
-    def end_test_callback(n, ns):
+    def _(n,_):
         if n%100 == 0:
-            print("每100次输出当前期望： ",sum / n)
+            print("每100次输出当前期望: ",sum / n)
         if n < test_count:
             return None
         return True

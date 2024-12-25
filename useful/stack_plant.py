@@ -18,7 +18,7 @@ def fun(ctler: Controller):
         1-6 2-6 3-6 5-6''')
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombies(_):
+    async def _(_):
         iz_test.game_board.plant_list.set_next_idx(5)   
         iz_test.game_board.iz_new_plant(1,3,PlantType.squash)
         iz_test.game_board.plant_list.set_next_idx(4)   # 0~3已经被占用

@@ -18,7 +18,7 @@ def fun(ctler: Controller):
         3-6''')
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         xp = iz_test.ground["3-1"]
         # set_puff_x_offset(xp,range(-5,-2))
         xp.x = randint(35,37)

@@ -22,17 +22,17 @@ def fun(ctler: Controller):
     _75_count = 0
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         magnet = iz_test.ground["3-1"]
         cg = iz_test.game_board.zombie_list[0]
         await until(lambda _:cg.int_x <=140) #140的话矿与杆基本不冲突
         place("kg 5-6")
         await until(lambda _:magnet.status_cd > 0)
         await until_precise_digger(magnet)
-        place("kg 4-8") #注意矿工和补杆有冲突，实战时建议使用非八列矿工法
+        place("kg 4-8")
         
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal _75_count
         star = iz_test.ground["3-2"]
         o = iz_test.ground["1-3"]

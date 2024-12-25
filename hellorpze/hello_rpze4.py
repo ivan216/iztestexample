@@ -16,11 +16,11 @@ def fun(ctler: Controller):
         ''')
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         place("lz 3-6")
 
     @iz_test.flow_factory.add_tick_runner()
-    def check_end(fm:FlowManager):
+    def _(fm:FlowManager):
         if iz_test.ground["3-0"] is None:
             return iz_test.end(True)
         if fm.time > 0:

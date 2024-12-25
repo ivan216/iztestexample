@@ -19,7 +19,7 @@ def fun(ctler: Controller):
     no_pause_time = record = 0
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         iz_test.game_board.sun_num = 9876
         nonlocal no_pause_time,record
 
@@ -31,13 +31,13 @@ def fun(ctler: Controller):
         print("interval: ", no_pause_time - record)
 
     @iz_test.flow_factory.add_tick_runner()
-    def print_no_pause_time(_):
+    def _(_):
         nonlocal no_pause_time
         if not ctler.read_bool(0x6a9ec0, 0x768, 0x164) :
             no_pause_time += 1
     
     @iz_test.on_game_end()
-    def clean(_):
+    def _(_):
         nonlocal no_pause_time,record
         no_pause_time = record = 0
         print()

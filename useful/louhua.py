@@ -20,7 +20,7 @@ def fun(ctler: Controller):
     h2_record = [0 for _ in range(9)]
 
     @iz_test.on_game_end()
-    def count_sun(_):
+    def _(_):
         i = get_sunflower_remaining_sun(iz_test.ground["1-4"]) // 25
         h1_record[i] += 1
         i = get_sunflower_remaining_sun(iz_test.ground["3-5"]) // 25

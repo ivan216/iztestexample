@@ -4,7 +4,6 @@ from rpze.iztest.operations import place
 from rpze.flow.utils import until
 from rpze.rp_extend import Controller
 from rpze.iztest.cond_funcs import until_n_butter
-from random import randint
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
@@ -22,7 +21,7 @@ def fun(ctler: Controller):
     _75_count = 0
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal _75_count
         lz = iz_test.game_board.zombie_list[0]
         tp = iz_test.ground["3-1"]

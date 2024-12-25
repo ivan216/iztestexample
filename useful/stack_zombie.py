@@ -19,7 +19,7 @@ def fun(ctler: Controller):
         5-9''') #2024图九；2021特殊一
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombies(_):
+    async def _(_):
         tp = iz_test.ground["1-4"]
         place("xg 2-6")
         await until_plant_n_shoot(tp).after(34) #豌豆生成

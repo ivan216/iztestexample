@@ -24,7 +24,7 @@ def fun(ctler: Controller):
     _125_count = 0
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal _125_count
         wb_num = 0
         mj = iz_test.game_board.zombie_list[0]
@@ -45,7 +45,7 @@ def fun(ctler: Controller):
                 _125_count += 1
     
     @iz_test.on_game_end()
-    def count(_):
+    def _(_):
         nonlocal _1_fail,_2_fail,_3_fail
         if iz_test.ground["1-0"] is not None:
             _1_fail += 1

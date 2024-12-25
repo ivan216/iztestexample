@@ -1,7 +1,7 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
-from rpze.flow.utils import until, delay
-from rpze.iztest.operations import place ,repeat
+from rpze.flow.utils import until
+from rpze.iztest.operations import place
 from rpze.rp_extend import Controller
 from random import randint
 
@@ -19,7 +19,7 @@ def fun(ctler: Controller):
         3-6''')
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         b = iz_test.ground["3-1"]
         await until(lambda _: b.hp <= 220).after(randint(0,10)) 
         place("cg 3-6")

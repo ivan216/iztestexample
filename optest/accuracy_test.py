@@ -22,7 +22,7 @@ def fun(ctler: Controller):
     # 外置节拍器，bpm 92，数14拍，非常准确
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal no_pause_time,record
         iz_test.game_board.sun_num = 9876
         c = iz_test.ground["3-4"]
@@ -36,13 +36,13 @@ def fun(ctler: Controller):
         print("magnet cd left(587-590 is good): ",c.status_cd)
 
     @iz_test.flow_factory.add_tick_runner()
-    def print_no_pause_time(_):
+    def _(_):
         nonlocal no_pause_time
         if not ctler.read_bool(0x6a9ec0, 0x768, 0x164) :
             no_pause_time += 1
     
     @iz_test.on_game_end()
-    def clean(_):
+    def _(_):
         nonlocal no_pause_time,record
         no_pause_time = record = 0
         print()

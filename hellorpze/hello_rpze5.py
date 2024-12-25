@@ -10,7 +10,7 @@ def fun(ctler: Controller):
     iz_test = IzTest(ctler)
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         iz_test.game_board.iz_place_zombie(2,5,ZombieType.conehead)
 
         iz_test.game_board.iz_new_plant(2,1,PlantType.umbrella_leaf)
@@ -20,7 +20,7 @@ def fun(ctler: Controller):
         randomize_generate_cd(iz_test.game_board.iz_new_plant(2,0,PlantType.pea_shooter))
     
     @iz_test.flow_factory.add_tick_runner()
-    def check_end(fm:FlowManager):
+    def _(fm:FlowManager):
         if fm.time > 0:
             if iz_test.ground["3-0"] is None:
                 return iz_test.end(True)
@@ -28,7 +28,7 @@ def fun(ctler: Controller):
                 return iz_test.end(False)
     
     @iz_test.check_tests_end()
-    def check_fin(n,_):
+    def _(n,_):
         if n < 1e3:
             return None
         return True

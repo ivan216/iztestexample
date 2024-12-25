@@ -22,7 +22,7 @@ def fun(ctler: Controller):
     spawned = 0
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(fm:FlowManager):
+    async def _(fm:FlowManager):
         iz_test.game_board.sun_num = 9876
         nonlocal spawned
         await delay(randint(200,700))
@@ -31,7 +31,7 @@ def fun(ctler: Controller):
         print("spawn: ",fm.time)
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(fm:FlowManager):
+    async def _(fm:FlowManager):
         await until(lambda _:iz_test.game_board.zombie_list.obj_num == 3)
         if fm.time - spawned - 1 >= 0:
             print("placed: ",fm.time)
@@ -40,7 +40,7 @@ def fun(ctler: Controller):
             print("fail")
             
     @iz_test.on_game_end()
-    def clean(_):
+    def _(_):
         nonlocal spawned
         spawned = 0
         print()

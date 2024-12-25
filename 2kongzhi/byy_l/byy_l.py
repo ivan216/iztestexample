@@ -1,11 +1,8 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.rp_extend import Controller
-from rpze.flow.utils import until, delay
+from rpze.flow.utils import until
 from rpze.iztest.operations import place ,repeat
-from rpze.iztest.cond_funcs import until_plant_die
-
-# 3.7倍75 = 277.5
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
@@ -23,7 +20,7 @@ def fun(ctler: Controller):
     _75_count = 0
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal _75_count
         bu = False      #补刀标志
         pan = False
@@ -38,7 +35,7 @@ def fun(ctler: Controller):
                 _75_count += 1
 
         await until(lambda _: lz.hp <= 110 or lz.int_x <= 320)
-        [cg1, cg2] = await repeat("cg 3-6")     #合适时机放双杆
+        cg1, cg2 = await repeat("cg 3-6")     #合适时机放双杆
         _75_count += 2
 
         await until(lambda _: cg1.butter_cd == 400 or cg2.butter_cd == 400 or cg1.hp < 170 or cg2.hp < 170)

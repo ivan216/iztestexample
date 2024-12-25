@@ -7,8 +7,6 @@ from rpze.structs.plant import PlantStatus
 from random import randint
 from rpze.iztest.cond_funcs import until_plant_n_shoot
 
-#36%成功率
-
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
         1000 -1
@@ -23,16 +21,16 @@ def fun(ctler: Controller):
         2-6''')
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         d = iz_test.ground["2-2"]
         lz = iz_test.game_board.zombie_list[0]
 
-        await until(lambda _:lz.x < 311)    #311
+        await until(lambda _:lz.x < 311)
         await until_plant_n_shoot(d).after(48 + randint(0,10))
         place("xg 2-6")
 
     @iz_test.flow_factory.add_tick_runner()
-    def check_end(_):
+    def _(_):
         if iz_test.game_board.zombie_list.obj_num == 0:
             w = iz_test.ground["2-1"]
             if w.status is PlantStatus.squash_jump_down:

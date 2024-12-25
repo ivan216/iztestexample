@@ -22,7 +22,7 @@ def fun(ctler: Controller):
     _75_count = 0 #补75的次数
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal _75_count,_125_count
         bu_gan = False  #补刀标记
         bu_zhang = False
@@ -72,7 +72,7 @@ def fun(ctler: Controller):
                     break
                     
     @iz_test.on_game_end()
-    def end_callback(result: bool):
+    def _(_):
         nonlocal tp_fail_count
         if iz_test.ground["3-1"] is not None :
             tp_fail_count += 1

@@ -19,7 +19,7 @@ def fun(ctler: Controller):
     no_pause_time = 0
     
     @iz_test.flow_factory.add_tick_runner()
-    def print_no_pause_time(fm:FlowManager):
+    def _(fm:FlowManager):
         nonlocal no_pause_time
         if no_pause_time == 0 :
             print("不含暂停时间：",no_pause_time)
@@ -31,7 +31,7 @@ def fun(ctler: Controller):
             no_pause_time += 1
 
     @iz_test.on_game_end()
-    def clear_fun(_):
+    def _(_):
         nonlocal no_pause_time
         no_pause_time = 0
         print()
