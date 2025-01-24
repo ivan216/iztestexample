@@ -22,7 +22,7 @@ def fun(ctler: Controller):
         nonlocal test_count
         if n < test_count:
             return None #注意是none，false是直接结束进程
-        return True
+        return ns/n
 
     iz_test.start_test(jump_frame=1, speed_rate=5)
 

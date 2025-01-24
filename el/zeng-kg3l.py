@@ -59,10 +59,10 @@ def fun(ctler:Controller):
     def _(n,_):
         if n % 1e4 == 0:
             hurt_count = sum(hp_r)
-            print("测试次数: ",3*n," 受伤次数: ",hurt_count," 受伤率: %.5f"%(hurt_count/n/3))
+            print(f"测试次数: {3*n}, 受伤次数: {hurt_count}, 受伤率: {hurt_count/n/3:.3%}")
         if n < test_count:
             return None
-        return True
+        return hurt_count/n/3
     
     iz_test.start_test(jump_frame=1, speed_rate=2, print_interval=1e3)
     print("受伤情况(从0开始, 间隔4): ",hp_r)

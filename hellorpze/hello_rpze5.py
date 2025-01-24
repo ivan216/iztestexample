@@ -28,12 +28,12 @@ def fun(ctler: Controller):
                 return iz_test.end(False)
     
     @iz_test.check_tests_end()
-    def _(n,_):
+    def _(n,ns):
         if n < 1e3:
             return None
-        return True
+        return ns/n
     
-    iz_test.start_test(jump_frame=False, speed_rate=5, print_interval=1e1)
+    iz_test.start_test(jump_frame=True, speed_rate=5, print_interval=1e1)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
     fun(game.controller)

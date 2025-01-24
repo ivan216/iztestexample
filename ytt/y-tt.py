@@ -5,12 +5,12 @@ from rpze.flow.utils import until
 import matplotlib.pyplot as plt
 
 full_hp = 70
-test_count = 20000
+test_count = 200
 hp_count = [0 for _ in range(full_hp)]
 
 def fun(ctler: Controller):
-    iz_test = IzTest(ctler).init_by_str('''
-        -1 -1
+    iz_test = IzTest(ctler).init_by_str(f'''
+        {test_count} -1
         1-0 2-0 3-0 4-0 5-0
         yssss
         yssss
@@ -80,13 +80,11 @@ def fun(ctler: Controller):
         sum += i
         hp_count[i] += 1
         
-    @iz_test.check_tests_end()
-    def end_test_callback(n, ns):
-        if n % 200 == 0:
+    @iz_test.on_game_end()
+    def _(_):
+        if iz_test._test_time % 200 == 199:
+            n = iz_test._test_time + 1
             print("当前次数: ", n*5, " 当前期望: ",sum/n/5)
-        if n < test_count:
-            return None
-        return True
 
     iz_test.start_test(jump_frame=1, speed_rate=5, print_interval=200)
 

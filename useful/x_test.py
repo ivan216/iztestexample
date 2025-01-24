@@ -12,12 +12,12 @@ def fun(ctler: Controller):
         3-0
         .....
         xxxxx
-        y....
+        ..._.
         xxxxx
         .....
         tt 
         0  
-        3-6''')
+        3-8''')
     
     zb = pl = None
     print()
@@ -26,10 +26,10 @@ def fun(ctler: Controller):
     async def place_zombie(_):
         nonlocal zb,pl
         zb = iz_test.game_board.zombie_list[0]
-        pl = iz_test.ground["3-1"]
+        # pl = iz_test.ground["3-1"]
 
-        zb.x = 765.0
-        pl.generate_cd = 2
+        # zb.x = 765.0
+        # pl.generate_cd = 2
 
     @iz_test.flow_factory.add_tick_runner()
     def output(fm:FlowManager):

@@ -14,4 +14,4 @@ def ci_fun(x_mean = 0.5,alpha = 0.05,n = 10000):
     print("(",format(p1,'e'),",",format(p2,'e'),")")
     return [p1,p2]
 
-ci_fun(0.00013,0.05,500000)
+ci_fun(0.00016,0.05,600000)

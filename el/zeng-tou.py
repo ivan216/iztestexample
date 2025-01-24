@@ -1,14 +1,10 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.rp_extend import Controller
-from rpze.flow.utils import until, delay
-from rpze.iztest.operations import place ,repeat
+from rpze.flow.utils import until
 from rpze.structs.zombie import ZombieStatus
 from rpze.structs.plant import PlantType
 from rpze.flow.flow import FlowManager
-from rpze.iztest.dancing import partner
-from rpze.iztest.plant_modifier import randomize_generate_cd
-from random import randint
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''

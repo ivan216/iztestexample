@@ -9,8 +9,11 @@ from rpze.flow.utils import delay
 from random import randint
 
 def fun(ctler:Controller):
-    iz_test = IzTest(ctler).init_by_str('''
-        -1 -1
+    test_count = int(1e4)
+    inter = int(1e3)
+
+    iz_test = IzTest(ctler).init_by_str(f'''
+        {test_count} -1
         
         .o...
         .....
@@ -54,16 +57,11 @@ def fun(ctler:Controller):
             hurt_count += 1
             i = (300 - yy.hp) // 4
             hp_r[i] += 1
+        if iz_test._test_time % inter == inter - 1 :
+            n = iz_test._test_time + 1
+            print(f"当前次数：{n}, 受伤次数: {hurt_count}, 受伤率: {hurt_count/n:.3%}")
     
-    @iz_test.check_tests_end()
-    def show(n,_):
-        if n % 1e3 == 0:
-            print("当前受伤次数: ",hurt_count," 受伤率: %.5f"%(hurt_count/n))
-        if n < 1e4:
-            return None
-        return True
-    
-    iz_test.start_test(jump_frame=1, speed_rate=2, print_interval=1e2)
+    iz_test.start_test(jump_frame=1, speed_rate=2, print_interval=0)
     print("受伤情况(从0开始, 间隔4): ",hp_r)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:

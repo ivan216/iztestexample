@@ -65,10 +65,11 @@ def fun(ctler:Controller):
     @iz_test.check_tests_end()
     def show(n,_):
         if n % 1e4 == 0:
-            print("测试次数: ",2*n," 受伤次数: ",hurt_count," 受伤率: %.5f"%(hurt_count/n/2))
+            rate = hurt_count/n/2
+            print(f"测试次数: {2*n}, 受伤次数: {hurt_count}, 受伤率: {rate}")
         if n < test_count:
             return None
-        return True
+        return hurt_count/n/2
     
     iz_test.start_test(jump_frame=0, speed_rate=2, print_interval=1e3)
     print("总测试次数: ", 2*test_count)

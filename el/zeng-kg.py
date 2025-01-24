@@ -45,10 +45,11 @@ def fun(ctler:Controller):
     @iz_test.check_tests_end()
     def show(n,_):
         if n % 1e4 == 0:
-            print("当前受伤次数: ",hurt_count," 受伤率: %.5f"%(hurt_count/n))
-        if n < 5e5:
+            rate = hurt_count/n
+            print(f"当前受伤次数: {hurt_count} ,受伤率{rate:.3%}")
+        if n < 2e4:
             return None
-        return True
+        return hurt_count/n
     
     iz_test.start_test(jump_frame=1, speed_rate=2, print_interval=1e3)
     print("受伤情况(从0开始, 间隔4): ",hp_r)
