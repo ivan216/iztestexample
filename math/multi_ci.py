@@ -29,6 +29,6 @@ width2 = np.sqrt( np.power(wi,2).dot(xi*(1-xi)) / n ) * quantile
 inf2 = xbar_sum - width2
 sup2 = xbar_sum + width2
 
-print("预设真实值 %.2f"%real)
-print("全图测试区间估计 ( %.4f"%inf,",%.4f"%sup,")")
-print("经验公式估计 ( %.4f"%inf2,",%.4f"%sup2,")")
+print(f"预设真实值 {real:.2f}")
+print(f"全图测试区间估计 ( {inf:.4f}, {sup:.4f} )")
+print(f"经验公式估计 ( {inf2:.4f}, {sup2:.4f} )")

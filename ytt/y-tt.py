@@ -84,7 +84,7 @@ def fun(ctler: Controller):
     def _(_):
         if iz_test._test_time % 200 == 199:
             n = iz_test._test_time + 1
-            print("当前次数: ", n*5, " 当前期望: ",sum/n/5)
+            print(f"当前次数: {n*5} ,当前期望: {sum/n/5}")
 
     iz_test.start_test(jump_frame=1, speed_rate=5, print_interval=200)
 

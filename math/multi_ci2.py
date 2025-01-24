@@ -14,4 +14,4 @@ width2 = np.sqrt( sum(wi**2 *xi*(1-xi))/(n) ) * quantile
 inf2 = sample_sum - width2
 sup2 = sample_sum + width2
 
-print("经验公式估计 ( %.4f"%inf2,",%.4f"%sup2,")")
+print(f"经验公式估计 ( {inf2:.4f}, {sup2:.4f} )")

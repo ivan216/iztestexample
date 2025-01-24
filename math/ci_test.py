@@ -10,8 +10,8 @@ def ci_fun(x_mean = 0.5,alpha = 0.05,n = 10000):
     p1 = (-b - (b**2 - 4*a*c)**(1/2) )/2/a
     p2 = (-b + (b**2 - 4*a*c)**(1/2) )/2/a
 
-    print("测试次数 ",n,",测得过率 ",x_mean,",置信水平为 ",1-alpha,"的置信区间为: ")
-    print("(",format(p1,'e'),",",format(p2,'e'),")")
+    print(f"测试次数 {n}, 测得过率 {x_mean}, 置信水平为 {1-alpha} 的置信区间为:")
+    print(f"({p1:e}, {p2:e})")
     return [p1,p2]
 
 ci_fun(0.00016,0.05,600000)
