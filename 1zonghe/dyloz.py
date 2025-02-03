@@ -3,7 +3,6 @@ from rpze.iztest.iztest import IzTest
 from rpze.flow.utils import until,delay
 from rpze.iztest.operations import place ,repeat
 from rpze.rp_extend import Controller
-from rpze.structs.zombie import ZombieStatus
 from random import randint
 
 # 300.5,万分之2补鬼障杆，千分之4补双杆

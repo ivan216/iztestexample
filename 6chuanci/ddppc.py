@@ -3,7 +3,7 @@ from rpze.iztest.iztest import IzTest
 from rpze.rp_extend import Controller
 from rpze.flow.utils import until, delay
 from rpze.iztest.operations import place ,repeat
-from rpze.iztest.cond_funcs import until_plant_die,until_plant_n_shoot
+from rpze.iztest.cond_funcs import until_plant_n_shoot
 from rpze.flow.flow import FlowManager
 from random import randint
 

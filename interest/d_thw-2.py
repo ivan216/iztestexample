@@ -1,10 +1,8 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.flow.utils import until
-from rpze.iztest.operations import place
 from rpze.rp_extend import Controller
 from rpze.flow.flow import FlowManager
-from rpze.structs.zombie import ZombieStatus
 import matplotlib.pyplot as plt
 
 # 171.5 >= dx*t >= 167.5
