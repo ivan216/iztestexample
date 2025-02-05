@@ -18,7 +18,6 @@ def fun(ctler: Controller):
         3-6''')
     
     succ_time = 0
-    fail_time = 0
     game_res = False
 
     @iz_test.on_game_end()
@@ -28,19 +27,14 @@ def fun(ctler: Controller):
 
     @iz_test.flow_factory.add_destructor()
     def _(fm:FlowManager):
-        nonlocal succ_time, fail_time, game_res
+        nonlocal succ_time, game_res
         if game_res:
             succ_time += fm.time - 1
-        else:
-            fail_time += fm.time - 1
 
-    iz_test.start_test(jump_frame=1,speed_rate=10, print_interval=100)
+    iz_test.start_test(jump_frame=1, print_interval=100)
 
-    aver_succ = succ_time / iz_test._success_count
-    aver_fail = fail_time / (n - iz_test._success_count)
-
-    print(f"成功{iz_test._success_count}次， 成功平均用时{aver_succ:.2f}cs")
-    print(f"失败{n-iz_test._success_count}次， 失败平均用时{aver_fail:.2f}cs")
+    aver_succ = succ_time / iz_test._success_count if iz_test._success_count != 0 else -1
+    print(f"测试{n}次, 成功{iz_test._success_count}次, 成功平均用时{aver_succ:.2f}cs")
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
     fun(game.controller)
