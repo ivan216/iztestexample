@@ -25,7 +25,7 @@ sup = X_bar + width
 
 #经验公式估计
 xbar_sum = xi.dot(wi)
-width2 = np.sqrt( np.power(wi,2).dot(xi*(1-xi)) / n ) * quantile
+width2 = np.sqrt( np.power(wi,2).dot(xi*(1-xi)) / (n) ) * quantile
 inf2 = xbar_sum - width2
 sup2 = xbar_sum + width2
 
