@@ -22,7 +22,7 @@ def fun(ctler: Controller):
     zb = None
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(fm:FlowManager):
+    async def _(_):
         nonlocal zb
         zb = iz_test.game_board.zombie_list[0]
         yy = iz_test.game_board.new_plant(1,0,PlantType.gloomshroom)

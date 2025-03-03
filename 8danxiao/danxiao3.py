@@ -22,14 +22,14 @@ def fun(ctler: Controller):
     _75 = 0
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         tt = iz_test.ground.zombie(0)
         await until(lambda _:tt.hp < 90)
         if iz_test.ground["2-0"] is not None:
             place("xg 2-6")
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal _50 ,_75
         xi = iz_test.ground["1-2"]
         p = iz_test.ground["1-3"]

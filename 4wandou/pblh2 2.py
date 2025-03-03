@@ -3,7 +3,6 @@ from rpze.iztest.iztest import IzTest
 from rpze.rp_extend import Controller
 from rpze.flow.utils import until, delay
 from rpze.iztest.operations import place ,repeat
-from rpze.flow.flow import FlowManager
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
@@ -28,7 +27,7 @@ def fun(ctler: Controller):
     p_hp = 0
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(fm: FlowManager):
+    async def _(_):
         nonlocal xg_count,zb_x,p_hp
         p = iz_test.ground["3-1"]
         tt = iz_test.ground.zombie(0)

@@ -17,9 +17,7 @@ def fun(ctler: Controller):
         3-6 ''')
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
-        # zlist = iz_test.game_board.zombie_list
-        # zb = zlist[0]
+    async def _(_):
         pl = iz_test.ground["2-1"]
         await delay(200)
         place("lz 3-6")

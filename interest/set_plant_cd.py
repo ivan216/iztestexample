@@ -27,7 +27,7 @@ def fun(ctler: Controller):
     pri = True
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(fm:FlowManager):
+    async def _(fm:FlowManager):
         nonlocal yy, shoot, pri
         shoot = 0
         pri = True
@@ -47,7 +47,7 @@ def fun(ctler: Controller):
         # yy.generate_cd = 200
     
     # @iz_test.flow_factory.add_tick_runner()
-    # def prfun(fm:FlowManager):
+    # def _(fm:FlowManager):
     #     nonlocal shoot, pri
     #     if fm.time > 0:
     #         if yy.generate_cd == 1:
@@ -58,7 +58,7 @@ def fun(ctler: Controller):
     #                 print("植物攻击 ",fm.time)
 
     # @iz_test.flow_factory.add_tick_runner()
-    # def print_no_pause_time(fm:FlowManager):
+    # def _(fm:FlowManager):
     #     if fm.time > 0:
     #         print("\033[2A\r\033[K"+"generate: ",yy.generate_cd)
     #         print("\033[K"+"launch: ",yy.launch_cd)

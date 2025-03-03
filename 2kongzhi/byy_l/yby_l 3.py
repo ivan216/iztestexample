@@ -26,7 +26,7 @@ def fun(ctler: Controller):
     y1 = y2 = b =None
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal _75_count,y1,y2,b
         tt = iz_test.game_board.zombie_list[0]
         l = iz_test.ground["3-5"]
@@ -40,14 +40,9 @@ def fun(ctler: Controller):
         if not l.is_dead:
             lz = place("lz 3-6")
             _75_count += 1
-    
-    # @iz_test.check_tests_end()
-    # def print_fun(n,ns):
-    #     if n%100 == 0:
-    #         print("当前补率：",_75_count / n)
         
     @iz_test.on_game_end()
-    def check(res:bool):
+    def _(res:bool):
         nonlocal y1_count,clear_count
         if not res:
             if not y1.is_dead:

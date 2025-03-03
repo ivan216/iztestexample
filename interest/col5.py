@@ -2,7 +2,6 @@ from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.rp_extend import Controller
 from rpze.flow.flow import FlowManager
-from rpze.structs.plant import PlantType
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''

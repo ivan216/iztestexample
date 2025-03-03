@@ -24,7 +24,7 @@ def fun(ctler: Controller):
     _125_count = 0
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(fm: FlowManager):
+    async def _(_):
         nonlocal _125_count
 
     iz_test.start_test(jump_frame=0, speed_rate=1)

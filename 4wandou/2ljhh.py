@@ -23,7 +23,7 @@ def fun(ctler: Controller):
     xg_count = 0
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(fm: FlowManager):
+    async def _(fm: FlowManager):
         nonlocal xg_count
         rp = iz_test.ground["3-1"]
         j = iz_test.ground["3-3"]

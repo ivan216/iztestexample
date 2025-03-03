@@ -18,7 +18,7 @@ def fun(ctler: Controller):
     test_count = 100
 
     @iz_test.check_tests_end()
-    def end_test_callback(n, ns):
+    def _(n, ns):
         nonlocal test_count
         if n < test_count:
             return None #注意是none，false是直接结束进程

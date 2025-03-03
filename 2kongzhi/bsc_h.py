@@ -20,7 +20,7 @@ def fun(ctler: Controller):
         2-6 ''')
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         zlist = iz_test.game_board.zombie_list
         lz = zlist[0]        
         plist = iz_test.ground

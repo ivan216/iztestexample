@@ -29,7 +29,7 @@ def fun(ctler: Controller):
     i = 0
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal clock_result,i
         plist = iz_test.ground
         ts = plist["4-1"]
@@ -44,7 +44,7 @@ def fun(ctler: Controller):
         i =int(clock_record / 10)
 
         @iz_test.on_game_end()
-        def end_callback(result: bool):
+        def _(result: bool):
             nonlocal clock_result,i
             if not result:
                 clock_result[i] += 1

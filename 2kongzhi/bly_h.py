@@ -47,7 +47,7 @@ def fun(ctler: Controller):
     _150_count = 0
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal _75_count,_150_count
         y = iz_test.ground["3-3"]
         l = iz_test.ground["3-2"]

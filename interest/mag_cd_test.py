@@ -19,7 +19,7 @@ def fun(ctler: Controller):
     
 
     @iz_test.flow_factory.add_tick_runner()
-    def print_no_pause_time(fm:FlowManager):
+    def _(fm:FlowManager):
         c = iz_test.ground["3-4"]
         if fm.time > 1401:
             kg = iz_test.game_board.zombie_list[1]

@@ -27,7 +27,7 @@ def fun(ctler: Controller):
     h_r = [0] * 9
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal _50_count
         iz_test.game_board.sun_num = 2000
         mj = iz_test.game_board.zombie_list[0]
@@ -52,7 +52,7 @@ def fun(ctler: Controller):
                 _50_count += 1
 
     @iz_test.on_game_end()
-    def count(_):
+    def _(_):
         i = get_sunflower_remaining_sun(iz_test.ground["4-5"]) // 25
         h_r[i] += 1
 

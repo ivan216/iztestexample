@@ -29,7 +29,7 @@ def fun(ctler:Controller):
     hp_r = [0] * 8
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal kg, yy
 
         kg = iz_test.game_board.iz_place_zombie(2,5,ZombieType.digger)
@@ -45,13 +45,13 @@ def fun(ctler:Controller):
         kg.x = 9.9
 
     @iz_test.flow_factory.add_tick_runner()
-    def check_end(fm:FlowManager):
+    def _(fm:FlowManager):
         if fm.time > 0:
             if kg.hp < 90:
                 return iz_test.end(False)
     
     @iz_test.on_game_end()
-    def count(_):
+    def _(_):
         nonlocal hurt_count
         if yy.hp < 300:
             hurt_count += 1

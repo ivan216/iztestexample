@@ -3,9 +3,7 @@ from rpze.iztest.iztest import IzTest
 from rpze.rp_extend import Controller
 from rpze.flow.flow import FlowManager
 from rpze.structs.plant import PlantType
-from rpze.iztest.operations import place ,repeat
-from rpze.flow.utils import until, delay
-from rpze.iztest.plant_modifier import randomize_generate_cd,set_puff_x_offset
+from rpze.iztest.plant_modifier import set_puff_x_offset
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
@@ -25,7 +23,7 @@ def fun(ctler: Controller):
     print("\n\n")
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(fm:FlowManager):
+    async def _(_):
         nonlocal pl,zb
         pl = iz_test.game_board.new_plant(2,4,PlantType.puffshroom)
         set_puff_x_offset(pl,3)
@@ -33,12 +31,12 @@ def fun(ctler: Controller):
         zb.hp = 300
 
     @iz_test.flow_factory.add_tick_runner()
-    def output(fm:FlowManager):
+    def _(fm:FlowManager):
         if fm.time > 410:
             return iz_test.end(True)
 
     @iz_test.flow_factory.add_tick_runner()
-    def output(fm:FlowManager):
+    def _(fm:FlowManager):
         if fm.time > 0:
             print("\033[4A\r\033[K"+"time: ",fm.time)
             print("\033[K"+"gcd: ",pl.generate_cd)

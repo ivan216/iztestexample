@@ -19,7 +19,7 @@ def fun(ctler: Controller):
         4-6 4-6 3-2''')
 
     # @iz_test.flow_factory.add_flow()
-    # async def place_zombie(_):
+    # async def _(_):
     #     plist = iz_test.game_board.plant_list
     #     h = plist["4-5"]
     #     await until(lambda _:h.hp <= 20)

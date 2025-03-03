@@ -25,7 +25,7 @@ def fun(ctler: Controller):
     cg2 = None
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal cg1,cg2
         zlist = iz_test.game_board.zombie_list
         cg1 = zlist[0]
@@ -33,7 +33,7 @@ def fun(ctler: Controller):
         cg2 = zlist[1]
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         plist = iz_test.ground
         y = plist["3-1"]
         await until_n_butter(y).after(142)

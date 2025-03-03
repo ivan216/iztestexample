@@ -4,7 +4,6 @@ from rpze.rp_extend import Controller
 from rpze.flow.utils import until, delay
 from rpze.iztest.operations import place ,repeat
 from rpze.iztest.cond_funcs import until_plant_die,until_plant_n_shoot
-from rpze.flow.flow import FlowManager
 from random import randint
 
 def fun(ctler: Controller):
@@ -23,7 +22,7 @@ def fun(ctler: Controller):
     _75_count = 0
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(fm: FlowManager):
+    async def _(_):
         nonlocal _75_count
         c = iz_test.ground["3-5"]
         d = iz_test.ground["3-1"]

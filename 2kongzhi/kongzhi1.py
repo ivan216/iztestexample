@@ -30,7 +30,7 @@ def fun(ctler: Controller):
     buti = butou = nobu = False
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal _50_count,_300_count,_225_count,buti,butou,nobu
         buti = butou = nobu = False
         mj = iz_test.game_board.zombie_list[0]
@@ -64,7 +64,7 @@ def fun(ctler: Controller):
             butou = True
 
     @iz_test.on_game_end()
-    def count_sun(res:bool):
+    def _(res:bool):
         nonlocal tz_fail,tou_fail,nobu_fail
         if iz_test.ground["2-5"] is None:
             i = 0

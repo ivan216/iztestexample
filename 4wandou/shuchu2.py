@@ -3,7 +3,6 @@ from rpze.iztest.iztest import IzTest
 from rpze.rp_extend import Controller
 from rpze.flow.utils import until, delay
 from rpze.iztest.operations import place ,repeat
-from rpze.flow.flow import FlowManager
 from rpze.structs.zombie import ZombieStatus
 from rpze.iztest.sun_num_utils import get_sunflower_remaining_sun
 
@@ -27,7 +26,7 @@ def fun(ctler: Controller):
     h2_l = [0 for _ in range(9)]
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(fm: FlowManager):
+    async def _(_):
         nonlocal h1,h2,l1,l2,mj2
         h1 = iz_test.ground["1-4"]
         h2 = iz_test.ground["5-4"]
@@ -43,7 +42,7 @@ def fun(ctler: Controller):
         mj2 = place("mj 4-6")
 
     @iz_test.on_game_end()
-    def end_callback(_):
+    def _(_):
         i = get_sunflower_remaining_sun(h1) // 25
         if l1.is_dead :
             h1_[i] += 1
@@ -57,7 +56,7 @@ def fun(ctler: Controller):
             h2_l[i] += 1
 
     @iz_test.flow_factory.add_tick_runner()
-    def check_end(_):
+    def _(_):
         nonlocal mj2
         if (mj2 is not None) and mj2.x < 200:
             mj2 = None

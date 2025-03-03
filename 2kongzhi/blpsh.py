@@ -1,7 +1,5 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
-from rpze.flow.utils import until, delay
-from rpze.iztest.operations import place ,repeat
 from rpze.rp_extend import Controller
 from random import randint
 
@@ -23,13 +21,13 @@ def fun(ctler: Controller):
     count = 0
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal mj,p
         mj = iz_test.game_board.zombie_list[0]
         p = iz_test.ground["2-3"]
 
     @iz_test.on_game_end()
-    def end_callback(result: bool):
+    def _(_):
         nonlocal mj,p,count
         if not mj.is_dead :
             if p.is_dead :

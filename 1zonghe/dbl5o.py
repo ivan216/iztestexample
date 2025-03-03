@@ -21,14 +21,14 @@ def fun(ctler: Controller):
         2-2''')
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         star = iz_test.ground["2-4"]
         await delay(400)
         await until_plant_last_shoot(star).after(50)
         await repeat("cg 2-6")
 
     @iz_test.flow_factory.add_tick_runner()
-    def check_end(fm:FlowManager):
+    def _(fm:FlowManager):
         if iz_test.ground["2-0"] is None:
             return iz_test.end(True)
         if fm.time > 1000:

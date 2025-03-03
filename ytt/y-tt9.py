@@ -23,7 +23,7 @@ def fun(ctler: Controller):
     y_fail_count = 0
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         i = 1
         nonlocal fail_count, y_fail_count
         zb = iz_test.ground.zombie(i-1)
@@ -35,7 +35,7 @@ def fun(ctler: Controller):
                 y_fail_count += 1
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         i = 2
         nonlocal fail_count, y_fail_count
         zb = iz_test.ground.zombie(i-1)
@@ -47,7 +47,7 @@ def fun(ctler: Controller):
                 y_fail_count += 1
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         i = 3
         nonlocal fail_count, y_fail_count
         zb = iz_test.ground.zombie(i-1)
@@ -59,7 +59,7 @@ def fun(ctler: Controller):
                 y_fail_count += 1
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         i = 4
         nonlocal fail_count, y_fail_count
         zb = iz_test.ground.zombie(i-1)
@@ -71,7 +71,7 @@ def fun(ctler: Controller):
                 y_fail_count += 1
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         i = 5
         nonlocal fail_count, y_fail_count
         zb = iz_test.ground.zombie(i-1)

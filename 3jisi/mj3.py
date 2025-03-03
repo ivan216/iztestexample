@@ -6,7 +6,6 @@ from rpze.iztest.operations import place
 from rpze.iztest.dancing import partner
 from rpze.structs.zombie import ZombieStatus
 from random import randint
-from rpze.iztest.sun_num_utils import get_sunflower_remaining_sun
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
@@ -25,7 +24,7 @@ def fun(ctler: Controller):
     can_bu = False
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal _75_count,can_bu
         can_bu = False
         mj = iz_test.game_board.zombie_list[0]
@@ -50,7 +49,7 @@ def fun(ctler: Controller):
             _75_count += 1
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal can_bu
         h = iz_test.ground["1-4"]
         h2 = iz_test.ground["5-4"]

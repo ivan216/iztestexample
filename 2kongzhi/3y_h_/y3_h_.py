@@ -34,7 +34,7 @@ def fun(ctler: Controller):
     #禁铁：双杆，三线都未啃完，双障；啃完三线，放小鬼，看情况补杆。205
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal _75_count , _125_count,tp_fail_2zb,tp_fail_tt
         tt = iz_test.game_board.zombie_list[0]
         tp = iz_test.ground["3-2"]
@@ -70,7 +70,7 @@ def fun(ctler: Controller):
                     _75_count += 1
 
     @iz_test.on_game_end()
-    def end_callback(result: bool):
+    def _(_):
         nonlocal ts_fail_count
         plant_list = iz_test.ground
         if plant_list["3-2"] is not None:

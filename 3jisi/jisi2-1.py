@@ -26,13 +26,13 @@ def fun(ctler: Controller):
     print()
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         mj = iz_test.game_board.zombie_list[0]
         mjc = 242   #2-9 242 84%  #2-6 
         iz_test.game_board.mj_clock = randint(mjc,mjc+10)
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal _50_count,both
         t_die = False
         p = iz_test.ground["2-2"]
@@ -68,7 +68,7 @@ def fun(ctler: Controller):
         _50_count += 1
 
     @iz_test.on_game_end()
-    def count(_):
+    def _(_):
         nonlocal _1_fail,_2_fail,_3_fail
         if iz_test.ground["1-0"] is not None:
             _1_fail += 1
@@ -78,7 +78,7 @@ def fun(ctler: Controller):
             _3_fail += 1
     
     # @iz_test.flow_factory.add_tick_runner()
-    # def show(_):
+    # def _(_):
     #     mj = iz_test.game_board.zombie_list[0]
     #     print("\033[A\033[K",hex(mj.status))
     

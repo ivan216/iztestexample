@@ -23,13 +23,13 @@ def fun(ctler: Controller):
     r4 = 0
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         mj = iz_test.game_board.zombie_list[0]
         await until(lambda _:mj.x < 380)
         lz = place("lz 3-6")
 
     @iz_test.on_game_end()
-    def count(_):
+    def _(_):
         nonlocal r2,r3,r4
         if iz_test.ground["2-0"] is not None:
             r2 += 1

@@ -28,7 +28,7 @@ def fun(ctler: Controller):
     i = 0
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(fm:FlowManager):
+    async def _(fm:FlowManager):
         nonlocal i
         lz = iz_test.game_board.zombie_list[0]
         h = iz_test.ground["3-4"]

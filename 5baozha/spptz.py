@@ -21,7 +21,7 @@ def fun(ctler: Controller):
         2-6''')
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         p = iz_test.ground["2-3"]
         z = iz_test.ground["2-5"]
 
@@ -32,7 +32,7 @@ def fun(ctler: Controller):
         place("xg 2-6")
     
     @iz_test.flow_factory.add_tick_runner()
-    def check(fm:FlowManager):
+    def _(fm:FlowManager):
         if fm.time > 300:
             if iz_test.ground["2-1"] is None:
                 return iz_test.end(True)

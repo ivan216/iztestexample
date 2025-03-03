@@ -1,12 +1,8 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.rp_extend import Controller
-from rpze.flow.utils import until
-from rpze.iztest.operations import place
-from rpze.iztest.dancing import partner
 from rpze.structs.zombie import ZombieStatus
 from rpze.flow.flow import FlowManager
-from random import randint
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
@@ -27,12 +23,12 @@ def fun(ctler: Controller):
     stuck = False
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal mj
         mj = iz_test.ground.zombie(0)
     
     @iz_test.flow_factory.add_tick_runner()
-    def count(fm:FlowManager):
+    def _(fm:FlowManager):
         nonlocal mjx,stuck
         if fm.time >0:
             if mj.status is ZombieStatus.dancing_walking:

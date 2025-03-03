@@ -29,7 +29,7 @@ def fun(ctler: Controller):
     _1fail = _2fail = _3fail = 0
     
     @iz_test.on_game_end()
-    def count(res:bool):
+    def _(res:bool):
         nonlocal _1fail,_2fail,_3fail
         if not res:
             if iz_test.ground["1-0"] is not None:

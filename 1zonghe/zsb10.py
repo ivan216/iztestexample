@@ -1,7 +1,7 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.flow.utils import until, delay
-from rpze.iztest.operations import place ,repeat
+from rpze.iztest.operations import place
 from rpze.rp_extend import Controller
 from rpze.iztest.cond_funcs import until_plant_n_shoot
 
@@ -19,7 +19,7 @@ def fun(ctler: Controller):
         1-6 ''')
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         plist = iz_test.ground
         c = plist["2-3"]
         star = plist["3-3"]

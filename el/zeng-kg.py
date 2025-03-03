@@ -17,7 +17,7 @@ def fun(ctler:Controller):
     hp_r = [0] * 4
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal kg, yy
         kg = iz_test.game_board.iz_place_zombie(2,5,ZombieType.digger)
         yy = randomize_generate_cd(iz_test.game_board.new_plant(2,0,PlantType.gloomshroom))
@@ -29,13 +29,13 @@ def fun(ctler:Controller):
         kg.x = 9.9
 
     @iz_test.flow_factory.add_tick_runner()
-    def check_end(fm:FlowManager):
+    def _(fm:FlowManager):
         if fm.time > 0:
             if kg.hp < 90:
                 return iz_test.end(False)
 
     @iz_test.on_game_end()
-    def count(_):
+    def _(_):
         nonlocal hurt_count
         if yy.hp < 300:
             hurt_count += 1
@@ -43,7 +43,7 @@ def fun(ctler:Controller):
             hp_r[i] += 1
 
     @iz_test.check_tests_end()
-    def show(n,_):
+    def _(n,_):
         if n % 1e4 == 0:
             rate = hurt_count/n
             print(f"当前受伤次数: {hurt_count} ,受伤率{rate:.3%}")

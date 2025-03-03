@@ -19,7 +19,7 @@ def fun(ctler: Controller):
         4-6  ''')
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         lz = iz_test.game_board.zombie_list[0]
         xi = iz_test.ground["4-2"]
         await until(lambda _:lz.x < 151).after(randint(0,10))    #151 93% 5k 93%

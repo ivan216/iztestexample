@@ -23,7 +23,7 @@ def fun(ctler: Controller):
     _75_count =0
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal _75_count
         bu = False
         fu = False  #zb2赋值标志

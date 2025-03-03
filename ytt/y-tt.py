@@ -26,7 +26,7 @@ def fun(ctler: Controller):
     sum = 0
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal sum
         tt = iz_test.ground.zombie(0)
         tt.accessories_hp_1 = full_hp * 20
@@ -37,7 +37,7 @@ def fun(ctler: Controller):
         hp_count[i] += 1
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal sum
         tt = iz_test.ground.zombie(1)
         tt.accessories_hp_1 = full_hp * 20
@@ -48,7 +48,7 @@ def fun(ctler: Controller):
         hp_count[i] += 1
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal sum
         tt = iz_test.ground.zombie(2)
         tt.accessories_hp_1 = full_hp * 20
@@ -59,7 +59,7 @@ def fun(ctler: Controller):
         hp_count[i] += 1
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal sum
         tt = iz_test.ground.zombie(3)
         tt.accessories_hp_1 = full_hp * 20
@@ -70,7 +70,7 @@ def fun(ctler: Controller):
         hp_count[i] += 1
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal sum
         tt = iz_test.ground.zombie(4)
         tt.accessories_hp_1 = full_hp * 20

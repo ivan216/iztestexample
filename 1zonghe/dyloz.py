@@ -23,7 +23,7 @@ def fun(ctler: Controller):
     l_fail = y_fail = yl_fail = 0
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         kg = iz_test.game_board.zombie_list[0]
         o = iz_test.ground["3-4"]
         l = iz_test.ground["3-3"]
@@ -38,7 +38,7 @@ def fun(ctler: Controller):
         place("xt 3-3")
 
         @iz_test.on_game_end()
-        def check(_):
+        def _(_):
             nonlocal l_fail,y_fail,yl_fail
             if (not l.is_dead) and (not y.is_dead):
                 yl_fail += 1

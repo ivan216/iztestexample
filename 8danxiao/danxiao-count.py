@@ -23,7 +23,7 @@ def fun(ctler: Controller):
     full = 0
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal lz,full
         lz0 = iz_test.game_board.zombie_list[0]
         await until(lambda _:lz0.x < 152).after(randint(0,10))
@@ -31,7 +31,7 @@ def fun(ctler: Controller):
         full = lz.accessories_hp_1
     
     @iz_test.on_game_end()
-    def count(_):
+    def _(_):
         i = (full - lz.accessories_hp_1) // 20
         hp[i] += 1
 

@@ -24,7 +24,7 @@ def fun(ctler: Controller):
     xg_count = 0
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(fm: FlowManager):
+    async def _(_):
         nonlocal xg_count
         tz = iz_test.game_board.zombie_list[0]
         p = iz_test.ground["3-1"]
@@ -36,7 +36,7 @@ def fun(ctler: Controller):
             xg_count += 1
 
     # @iz_test.flow_factory.add_tick_runner()
-    # def check(fm:FlowManager):
+    # def _(fm:FlowManager):
     #     if iz_test.ground["3-0"] is None:
     #         return iz_test.end(True)
     #     if fm.time >0:
@@ -44,7 +44,7 @@ def fun(ctler: Controller):
     #             return iz_test.end(False)
 
     # @iz_test.on_game_end()
-    # def result(res):
+    # def _(res):
     #     if not res:
     #         print("fail:",tz_x)
     #     else:

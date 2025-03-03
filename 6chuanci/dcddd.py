@@ -2,7 +2,7 @@ from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.flow.utils import until, delay
 from rpze.iztest.operations import place ,repeat
-from rpze.iztest.cond_funcs import until_plant_last_shoot,until_plant_die
+from rpze.iztest.cond_funcs import until_plant_last_shoot
 from rpze.rp_extend import Controller
 from rpze.flow.flow import FlowFactory
 from rpze.structs.zombie import ZombieStatus
@@ -24,7 +24,7 @@ def fun(ctler: Controller):
     _75_count = 0
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal _75_count
         d1 = iz_test.ground["3-1"]
         d3 = iz_test.ground["3-3"]
@@ -40,7 +40,7 @@ def fun(ctler: Controller):
             _75_count += 1
 
     @iz_test.flow_factory.add_tick_runner()
-    def check(fm:FlowFactory):
+    def _(fm:FlowFactory):
         if iz_test.ground["3-0"] is None:
             return iz_test.end(True)
         if fm.time > 10000: #防止死循环

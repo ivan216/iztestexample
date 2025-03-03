@@ -19,11 +19,9 @@ def fun(ctler: Controller):
         4-6''')
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
-        zlist = iz_test.game_board.zombie_list
-        cg = zlist[0]
-        plist = iz_test.ground
-        h = plist["4-5"]
+    async def _(_):
+        cg = iz_test.game_board.zombie_list[0]
+        h = iz_test.ground["4-5"]
 
         await until(lambda _:cg.hp <= 460)
         place("xg 4-6")

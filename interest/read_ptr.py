@@ -23,7 +23,7 @@ def fun(ctler: Controller):
     i = 0   # 没有  <0x14c=332
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal i
         plant = randomize_generate_cd(iz_test.game_board.new_plant(2,2,PlantType.pea_shooter))
 
@@ -37,7 +37,7 @@ def fun(ctler: Controller):
         i += 1
 
     @iz_test.flow_factory.add_tick_runner()
-    def check(fm:FlowManager):
+    def _(fm:FlowManager):
         if fm.time > 1100:
             if iz_test.ground["3-0"] is None:
                 return iz_test.end(True)

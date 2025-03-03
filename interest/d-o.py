@@ -1,6 +1,5 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
-from rpze.flow.utils import until, delay
 from rpze.iztest.operations import place ,repeat
 from rpze.iztest.cond_funcs import until_plant_last_shoot
 from rpze.rp_extend import Controller
@@ -21,14 +20,14 @@ def fun(ctler: Controller):
         3-6''')
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         d = iz_test.ground["3-1"]
 
         await until_plant_last_shoot(d).after(115 + randint(0,10))  #120
         place("cg 3-6")
 
     @iz_test.flow_factory.add_tick_runner()
-    def check(fm:FlowFactory):
+    def _(fm:FlowFactory):
         if iz_test.ground["3-0"] is None:
             return iz_test.end(True)
         if fm.time > 2000:

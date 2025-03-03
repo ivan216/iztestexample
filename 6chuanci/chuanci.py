@@ -3,7 +3,6 @@ from rpze.iztest.iztest import IzTest
 from rpze.rp_extend import Controller
 from rpze.flow.utils import until, delay
 from rpze.iztest.operations import place ,repeat
-from rpze.flow.flow import FlowManager
 from rpze.structs.zombie import ZombieStatus
 from rpze.iztest.dancing import partner
 
@@ -28,7 +27,7 @@ def fun(ctler: Controller):
     _50_count = 0
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(fm: FlowManager):
+    async def _(_):
         nonlocal _125_count
         h = iz_test.ground["3-5"]
         p = iz_test.ground["3-4"]
@@ -44,7 +43,7 @@ def fun(ctler: Controller):
         _125_count += 1
     
     @iz_test.on_game_end()
-    def count(_):
+    def _(_):
         nonlocal three_count,_50_count,_75_count,_150_count,_205_count
         if iz_test.ground["3-0"] is not None:
             three_count += 1

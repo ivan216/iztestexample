@@ -20,13 +20,13 @@ def fun(ctler: Controller):
         3-7 ''')
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         y = iz_test.ground["3-2"]
         await (until_plant_last_shoot(y) | delay(600))
         place("tz 3-6")
 
     @iz_test.flow_factory.add_tick_runner()
-    def check_end(fm : FlowManager):
+    def _(fm : FlowManager):
         if fm.time > 1000:
             if iz_test.game_board.zombie_list.obj_num == 0:
                 item = iz_test.game_board.get_griditem_at(2,3,GriditemType.ladder)

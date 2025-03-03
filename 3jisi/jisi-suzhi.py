@@ -19,14 +19,14 @@ def fun(ctler: Controller):
         1-6 1-6''')
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         mjc = 63 
         iz_test.game_board.mj_clock = randint(mjc,mjc+10)
         await delay(300)
         mj = iz_test.game_board.zombie_list[0]
         
     @iz_test.flow_factory.add_tick_runner()
-    def check(fm:FlowManager):
+    def _(fm:FlowManager):
         if fm.time > 300:
             if iz_test.ground["1-0"] is None \
                 and iz_test.ground["2-0"] is None :

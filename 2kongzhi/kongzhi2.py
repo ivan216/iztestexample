@@ -1,7 +1,7 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.flow.utils import until, delay
-from rpze.iztest.operations import place ,repeat
+from rpze.iztest.operations import place
 from rpze.rp_extend import Controller
 from rpze.structs.zombie import ZombieStatus,Zombie
 from rpze.iztest.sun_num_utils import get_sunflower_remaining_sun
@@ -34,7 +34,7 @@ def fun(ctler: Controller):
     # h3_record = [0 for _ in range(9)]
 
     @iz_test.flow_factory.add_flow()    #专门开一个add_flow 存植物与僵尸，方便其他add_flow调用
-    async def place_zombie(_):
+    async def _(_):
         nonlocal lz1,lz2,mj
         nonlocal b,tp,p2,p3,c,y,h1,h3
         nonlocal nao1,nao2,nao3
@@ -60,7 +60,7 @@ def fun(ctler: Controller):
 
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal xt_count,bu_tou
         await delay(220)
         await until(lambda _:lz1.hp<90 and lz2.hp<90 or nao2.is_dead)
@@ -75,7 +75,7 @@ def fun(ctler: Controller):
 
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal xt_count,bu_tou
         await delay(220)
         
@@ -96,7 +96,7 @@ def fun(ctler: Controller):
 
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal xg_count
         await delay(220)
         await until(lambda _:mj.int_x<240) 
@@ -110,7 +110,7 @@ def fun(ctler: Controller):
             h3.die()    #当作全部成功补
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal can_end,bu1,bu3,bu_tou
         nonlocal wbs,wbw
 
@@ -128,7 +128,7 @@ def fun(ctler: Controller):
         bu3 = True
         
     @iz_test.flow_factory.add_flow()
-    async def budao1(_):
+    async def _(_):
         nonlocal bu1,can_end,wbw
         nonlocal cg_count,tt_count,ft_count,xt1_count
 
@@ -161,7 +161,7 @@ def fun(ctler: Controller):
         can_end = True      #补刀也全部写好了，可以启用结束检查
     
     @iz_test.flow_factory.add_flow()
-    async def budao3(_):
+    async def _(_):
         nonlocal bu3,can_end,wbs,cg2_count,tt2_count,lz2_count,_25_count
 
         await until(lambda _:bu3 is True)
@@ -184,7 +184,7 @@ def fun(ctler: Controller):
         can_end = True      #补刀也全部写好了，可以启用结束检查
 
     @iz_test.flow_factory.add_tick_runner()
-    def check_end(_):
+    def _(_):
         if can_end:     #检查被启用后
             if iz_test.ground["3-0"] is None and iz_test.ground["1-0"] is None:
                 return iz_test.end(True)
@@ -192,7 +192,7 @@ def fun(ctler: Controller):
                 return iz_test.end(False)
     
     @iz_test.on_game_end()
-    def count_sun(_):
+    def _(_):
         nonlocal _1_fail,_2_fail,_3_fail,tp_fail
 
         # if h1 is None:

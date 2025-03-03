@@ -32,7 +32,7 @@ def fun(ctler: Controller):
     five_fail = 0
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         pl = iz_test.ground["4-5"]
 
         await until(lambda _:pl.hp <= 140)
@@ -43,7 +43,7 @@ def fun(ctler: Controller):
         await walk_until_int_x(mj,0)    #mj已经死亡，不过仍能让舞伴继续前进
 
     @iz_test.on_game_end()
-    def end_callback(result: bool):
+    def _(result: bool):
         nonlocal three_fail,four_fail,five_fail
         if not result: 
             if iz_test.ground["3-0"] is not None:

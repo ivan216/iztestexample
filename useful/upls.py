@@ -1,8 +1,7 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.rp_extend import Controller
-from rpze.iztest.operations import place, repeat
-from rpze.flow.utils import until, delay
+from rpze.iztest.operations import repeat
 from rpze.flow.utils import AwaitableCondFunc, VariablePool
 from rpze.flow.flow import FlowManager
 from rpze.structs.plant import Plant, PlantType
@@ -59,7 +58,7 @@ def fun(ctler: Controller):
     shoot = adj = 0
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(fm:FlowManager):
+    async def _(fm:FlowManager):
         nonlocal plant,shoot,adj
         shoot = 0
         print()
@@ -72,7 +71,7 @@ def fun(ctler: Controller):
         await repeat("xg 3-4")
 
     @iz_test.flow_factory.add_tick_runner()
-    def printfun(fm:FlowManager):
+    def _(fm:FlowManager):
         nonlocal shoot
         if fm.time >0:
             if plant.generate_cd == adj:
@@ -81,7 +80,7 @@ def fun(ctler: Controller):
                 print("植物攻击 ",fm.time)
         
     @iz_test.flow_factory.add_tick_runner()
-    def check(fm:FlowManager):
+    def _(fm:FlowManager):
         if fm.time > 1300:
             if plant.is_dead:
                 return iz_test.end(True)

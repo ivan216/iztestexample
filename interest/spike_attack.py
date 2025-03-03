@@ -2,9 +2,7 @@ from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.rp_extend import Controller
 from rpze.iztest.operations import place, repeat
-from rpze.flow.utils import until, delay
 from rpze.flow.utils import AwaitableCondFunc, VariablePool
-from rpze.flow.flow import FlowManager
 from rpze.structs.plant import Plant, PlantType
 
 def until_spike_n_attack(spike: Plant, n: int = 1) -> AwaitableCondFunc[None]:
@@ -33,7 +31,7 @@ def fun(ctler: Controller):
     print("\n")
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(fm:FlowManager):
+    async def _(_):
         nonlocal pl,zb
         # pl = iz_test.game_board.new_plant(2,4,PlantType.spikerock)
         pl = iz_test.game_board.new_plant(2,4,PlantType.spikeweed)
@@ -45,7 +43,7 @@ def fun(ctler: Controller):
         # zb.die_no_loot()
 
     @iz_test.flow_factory.add_tick_runner() #钢70-32 刺75
-    def output(fm:FlowManager):
+    def _(_):
         if pl is not None:
             print("\033[2A\033[K",pl.status_cd)
             print("\033[K",zb.accessories_hp_1)

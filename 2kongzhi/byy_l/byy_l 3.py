@@ -3,7 +3,7 @@ from rpze.iztest.iztest import IzTest
 from rpze.iztest.operations import place ,repeat
 from rpze.flow.utils import until, delay
 from rpze.rp_extend import Controller
-# from random import randint
+from random import randint
 
 #算作270，不优
 
@@ -23,7 +23,7 @@ def fun(ctler: Controller):
     _75_count = 0
 
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal _75_count
         y = iz_test.ground["3-3"]
         b = iz_test.ground["3-1"]

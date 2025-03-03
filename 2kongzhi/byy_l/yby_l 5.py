@@ -25,7 +25,7 @@ def fun(ctler: Controller):
     _125_count = 0
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
+    async def _(_):
         nonlocal _75_count,_50_count,_125_count
         bu = fu = False
         lz = iz_test.game_board.zombie_list[0]

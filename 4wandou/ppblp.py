@@ -19,11 +19,9 @@ def fun(ctler: Controller):
         3-6''')
     
     @iz_test.flow_factory.add_flow()
-    async def place_zombie(_):
-        # zlist = iz_test.game_board.zombie_list
-        plist = iz_test.ground
-        # zb = zlist[0]
-        pl = plist["3-4"]
+    async def _(_):
+        # zb = iz_test.game_board.zombie_list[0]
+        pl = iz_test.ground["3-4"]
         await until(lambda _:pl.is_dead).after(130+ randint(0,10))
         place("cg 3-6")
     
