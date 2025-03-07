@@ -30,7 +30,7 @@ def fun(ctler: Controller):
     def _(fm:FlowManager):
         nonlocal succ_time, game_res
         if game_res:
-            succ_time += fm.time - 1
+            succ_time += fm.time - 2  # 减去2cs才是真正用时
 
     @iz_test.check_tests_end()
     def _(n,ns):
