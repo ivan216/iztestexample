@@ -21,10 +21,8 @@ def fun(ctler: Controller):
     
     @iz_test.flow_factory.add_flow()
     async def _(_):
-        zlist = iz_test.game_board.zombie_list
-        kg = zlist[0]
-        plist = iz_test.ground
-        star = plist["3-2"]
+        kg = iz_test.game_board.zombie_list[0]
+        star = iz_test.ground["3-2"]
         await until(lambda _:kg.int_x < 40)
         await until(lambda _:kg.int_x >= 80)
         await until_plant_last_shoot(star).after(58 + randint(0,10))

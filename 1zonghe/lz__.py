@@ -1,32 +1,35 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
-from rpze.iztest.operations import place ,repeat
-from rpze.iztest.cond_funcs import until_plant_last_shoot
 from rpze.rp_extend import Controller
-from random import randint
+from rpze.iztest.operations import place ,repeat
+from rpze.flow.utils import until, delay
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
-        10000 -1
-        2-0
+        1000 -1
+        3-0
         .....
-        ..._.
-        ...5.
+        .....
+        .t__.
         .....
         .....
         lz 
         0  
-        4-5''')
+        3-6''')
     
     @iz_test.flow_factory.add_flow()
     async def _(_):
-        star = iz_test.ground["3-4"]
+        dc = iz_test.ground["3-4"]
         lz = iz_test.game_board.zombie_list[0]
 
-        await until_plant_last_shoot(star).after(100 + randint(0,10))   #100-110
-        xg = place("xg 2-6")
+        print(lz.accessories_hp_1)
+        await until(lambda _:lz.accessories_hp_1 < 370)
+        lzdx = lz.dx
+        
 
-    iz_test.start_test(jump_frame=0, speed_rate=1)
+        place("xg 3-6")
+    
+    iz_test.start_test(jump_frame=0, speed_rate=2)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
     fun(game.controller)
