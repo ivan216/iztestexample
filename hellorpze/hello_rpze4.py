@@ -1,12 +1,11 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
-from rpze.rp_extend import Controller
-from rpze.flow.flow import FlowManager
 from rpze.structs.plant import PlantType
 from rpze.structs.zombie import ZombieType
 from rpze.iztest.plant_modifier import randomize_generate_cd
+game_path = r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe"
 
-def fun(ctler: Controller):
+def fun(ctler):
     iz_test = IzTest(ctler)
 
     @iz_test.flow_factory.add_flow()
@@ -20,7 +19,7 @@ def fun(ctler: Controller):
         randomize_generate_cd(iz_test.game_board.iz_new_plant(2,0,PlantType.pea_shooter))
     
     @iz_test.flow_factory.add_tick_runner()
-    def _(fm:FlowManager):
+    def _(fm):
         if fm.time > 0:
             if iz_test.ground["3-0"] is None:
                 return iz_test.end(True)
@@ -35,6 +34,6 @@ def fun(ctler: Controller):
     
     iz_test.start_test(jump_frame=True, speed_rate=5, print_interval=1e1)
 
-with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
+with InjectedGame(game_path) as game:
     fun(game.controller)
     

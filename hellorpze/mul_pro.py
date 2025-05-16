@@ -1,12 +1,11 @@
 import multiprocessing
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
-from rpze.rp_extend import Controller
+game_path = r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe"
 
-
-def fun(ctler: Controller, n):
+def fun(ctler, n):
     simu = 0  # 记录同归于尽次数
-    print_interval = 100  # 屏幕输出间隔
+    prt_intvl = 100  # 屏幕输出间隔
 
     iz_test = IzTest(ctler).init_by_str(f'''
         {n} -1
@@ -26,15 +25,15 @@ def fun(ctler: Controller, n):
         if not res:
             if iz_test.ground['3-1'] is None:
                 simu += 1
-        if iz_test._test_time % print_interval == print_interval - 1 :
+        if iz_test._test_time % prt_intvl == prt_intvl - 1 :
             print(f"pid {ctler.pid} :")  # 输出pid
 
-    p, _ = iz_test.start_test(jump_frame=True, print_interval=print_interval)
+    p, _ = iz_test.start_test(jump_frame=True, print_interval=prt_intvl)
     return p, simu  # 返回: 过率, 同归于尽次数
 
 
 def testing(n):
-    with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
+    with InjectedGame(game_path) as game:
         return fun(game.controller, n)
 
 
