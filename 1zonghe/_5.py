@@ -2,11 +2,10 @@ from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.iztest.operations import place ,repeat
 from rpze.iztest.cond_funcs import until_plant_last_shoot
-from rpze.rp_extend import Controller
 from random import randint
-from rpze.flow.flow import FlowManager
+game_path = r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe"
 
-def fun(ctler: Controller):
+def fun(ctler):
     iz_test = IzTest(ctler).init_by_str('''
         10000 -1
         
@@ -30,7 +29,7 @@ def fun(ctler: Controller):
         xg = place("xg 1-6")
 
     @iz_test.flow_factory.add_tick_runner()
-    def _(fm:FlowManager):
+    def _(fm):
         if fm.time > 800:
             if iz_test.ground["1-0"] is None:
                 return iz_test.end(True)
@@ -39,5 +38,5 @@ def fun(ctler: Controller):
 
     iz_test.start_test(jump_frame=1, speed_rate=2)
 
-with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
+with InjectedGame(game_path) as game:
     fun(game.controller)

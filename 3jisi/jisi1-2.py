@@ -1,13 +1,13 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
-from rpze.rp_extend import Controller
+from rpze.structs.zombie import ZombieStatus
 from rpze.flow.utils import until
 from rpze.iztest.operations import place
 from rpze.iztest.dancing import partner
-from rpze.structs.zombie import ZombieStatus
 from random import randint
+game_path = r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe"
 
-def fun(ctler: Controller):
+def fun(ctler):
     iz_test = IzTest(ctler).init_by_str('''
         1000 -1
         1-0 2-0
@@ -38,7 +38,7 @@ def fun(ctler: Controller):
                 if wb_num < 3:
                     await until(lambda _:wb.is_dead)
         
-        await until(lambda _:wb.status is not ZombieStatus.backup_spawning).after(4)
+        await until(lambda _:wb.status is not ZombieStatus.backup_spawning).after(4) #可以取2
         if wb.x < 86:
             if not wb.is_eating :
                 place("xt 2-2")
@@ -60,5 +60,5 @@ def fun(ctler: Controller):
     print("2失败 ",_2_fail)
     print("3失败 ",_3_fail)
 
-with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
+with InjectedGame(game_path) as game:
     fun(game.controller)

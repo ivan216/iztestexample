@@ -1,10 +1,10 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.structs.plant import PlantType
-from rpze.rp_extend import Controller
 from rpze.iztest.plant_modifier import randomize_generate_cd
+game_path = r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe"
 
-def fun(ctler: Controller):
+def fun(ctler):
     iz_test = IzTest(ctler).init_by_str('''
         1000 -1
         3-0
@@ -38,6 +38,6 @@ def fun(ctler: Controller):
 
     iz_test.start_test(jump_frame=0, speed_rate=1)
     
-with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
+with InjectedGame(game_path) as game:
     fun(game.controller)
     

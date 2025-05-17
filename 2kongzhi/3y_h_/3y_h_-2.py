@@ -2,10 +2,10 @@ from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.iztest.operations import place
 from rpze.flow.utils import until
-from rpze.rp_extend import Controller
 from rpze.iztest.cond_funcs import until_n_butter
+game_path = r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe"
 
-def fun(ctler: Controller):
+def fun(ctler):
     iz_test = IzTest(ctler).init_by_str('''
         1000 -1
         3-0
@@ -44,5 +44,5 @@ def fun(ctler: Controller):
     iz_test.start_test(jump_frame=1, speed_rate=3)
     print("补75:",_75_count)
 
-with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
+with InjectedGame(game_path) as game:
     fun(game.controller)

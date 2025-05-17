@@ -1,16 +1,15 @@
 from rpze.basic.inject import InjectedGame
-from rpze.rp_extend import Controller
 from rpze.iztest.iztest import IzTest
-from rpze.flow.flow import FlowManager
 from rpze.structs.plant import PlantType,Plant
 from rpze.structs.zombie import ZombieType,Zombie
 from rpze.iztest.plant_modifier import randomize_generate_cd
 from rpze.flow.utils import delay
 from random import randint
+game_path = r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe"
 
-def fun(ctler:Controller):
+def fun(ctler):
     iz_test = IzTest(ctler)
-    iz_test.controller.write_bool(False, 0x6a66f4)
+    iz_test.controller.write_bool(False, 0x6a66f4) # 提升跳帧效率
 
     kg_l :list[Zombie]= []
     pl_l :list[Plant]= []
@@ -41,7 +40,7 @@ def fun(ctler:Controller):
         kg_l[2].x = 9.9
 
     @iz_test.flow_factory.add_tick_runner()
-    def _(fm:FlowManager):
+    def _(fm):
         if fm.time > 0:
             if kg_l[0].hp < 90 and kg_l[1].hp < 90 and kg_l[2].hp < 90:
                 return iz_test.end(False)
@@ -67,5 +66,5 @@ def fun(ctler:Controller):
     iz_test.start_test(jump_frame=1, speed_rate=2, print_interval=1e3)
     print("受伤情况(从0开始, 间隔4): ",hp_r)
 
-with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
+with InjectedGame(game_path) as game:
     fun(game.controller)
