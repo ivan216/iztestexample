@@ -2,9 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
-a = 1
-n = 6
-test_n = a * 10**n  # 测试次数
+test_n = 1e6  # 测试次数
 num_work = 0  # 动曾
 num_idle = 4  # 静曾
 
