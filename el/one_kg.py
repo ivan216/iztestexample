@@ -1,100 +1,83 @@
-# 单矿工伤害测试程序
-from random import randint
 import numpy as np
 import matplotlib.pyplot as plt
+import time
 
 a = 1
 n = 6
-test_N = a * 10**n  # 测试次数
+test_n = a * 10**n  # 测试次数
+num_work = 1  # 动曾
+num_idle = 2  # 静曾
 
-num_act = 0
-num_not_act = 4  # 静曾
+def fun(n_work:int, n_idle:int, test_n:int):
+    pl_n = n_work + n_idle
+    gen_time = max(5-pl_n,1) if pl_n > 2 else 4 - pl_n # 决定产生多少次随机数，减少运算量
+    time_scale = 200*(gen_time+2)+1
+    atk_list = np.array([74,102,130,158])
+    t_list = np.array([15*i for i in range(1,187)]+[2790+15*i-(i+1)*i//2 for i in range(1,15)])
+    num = 150  # 记录损失血量的向量长度，植物受伤不会超过600hp
+    res = np.zeros(num)
+    tmp = 1  # 用于输出进度
 
-plant_list = [True]*num_act+[False]*num_not_act
+    for i in range(test_n):
+        eat = np.random.randint(350,354)  #[350,354)
+        dmg_mat = np.zeros((pl_n,time_scale))  # 行代表植物，列代表命中时间点
+        t_rand = np.random.randint(1,2896,(pl_n,1))
+        t = np.searchsorted(t_list, t_rand) + 1  # pl_n*1 矩阵，每行代表该植物的第一个t, 1~200
+        
+        if n_work > 0:  # 动曾处理
+            low_bound = np.maximum(186-t[:n_work],0)
+            up_bound = 200-t[:n_work] +1
+            last_atk = np.random.randint(low_bound,up_bound,(n_work,1)) # n_work*1 矩阵
+            pre_hurt = 4 - np.searchsorted(atk_list,last_atk,side='right')
+            dmg_mat[:n_work,0] = pre_hurt # 动曾不关心受伤时机，直接将值存到第一列
+        
+        itvl_mat = np.random.randint(186,201,(pl_n,gen_time))
+        t_mat = np.concatenate([t,itvl_mat],axis=1)
+        t = np.cumsum(t_mat,axis=1)  # t 现在是 pl_n*(1+gen_time) 矩阵
+        t_reshape = t[:,:,np.newaxis]
+        atk_list_reshape = atk_list[np.newaxis,np.newaxis,:]
+        t_res = t_reshape + atk_list_reshape
+        t_res = t_res.reshape(pl_n,-1)  # pl_n*(4*gen_time) 矩阵，每行代表一个植物，每列代表一个命中时机
 
-M_sup = 1001  #时间长度,不会超过1001cs
-max_hp = 600  #不会超过600hp
+        rows = np.arange(pl_n)[:,np.newaxis]
+        rows = np.tile(rows,(1,t_res.shape[1]))
+        dmg_mat[rows,t_res] += 1  # 形成最终记录伤害的矩阵，注:若行有重复元素，使用np.add.at()
 
-class IO:
-    def __init__(self,act):
-        self.list = self.hit_list(act,[158,130,102,74],200,20)  # 74是第一次命中
-    @staticmethod
-    def hit_list(act, hits, max_cd, dmg):
-        tmp = np.zeros(M_sup)  # 存储具体时间点的伤害
-
-        # last_att 上一次判定到当前时刻过了多久
-        # t 当前时间距离下一次判定的时长
-        prob = randint(0,(max_cd-7)*15-1)    # 0-2894
-        if prob < 15*(max_cd-14):
-            t = 1 + prob//15  # 1-186
-            last_att = randint(max_cd-14,max_cd) - t  
+        col_sum = np.sum(dmg_mat, axis=0)
+        prefix_sum = np.cumsum(col_sum)
+        kg_die = np.searchsorted(prefix_sum,15)  # 死亡时间点
+        if kg_die <= eat:
+            res[0] += 1
         else:
-            t_list = [14,27,39,50,60,69,77,84,90,95,99,102,104,105]
-            prob -= 15*(max_cd-14)    #[0,105)
-            for i in range(14):
-                if prob < t_list[i]:
-                    t = max_cd -14 +i+1  # 187-200
-                    last_att = randint(t, max_cd) - t
-                    break
-
-        if act:  # 动曾
-            for hit in hits:
-                if last_att < hit:    # -att__0__-att+74__...__-att+158，需要严格小于
-                    tmp[hit-last_att] = dmg
-        while True:
-            intvl = randint(max_cd-14,max_cd)
-            if t+intvl >= M_sup:  
-                break
-            for hit in hits:
-                tmp[t+hit] = dmg  # 相应命中时间赋值
-            t += intvl  # 更新下一个t
-            
-        return tmp
-
-def test_dmg():
-    plt :list[IO] = []
-    for p in plant_list:  # 生成植物
-        plt.append(IO(p))  # 每个植物都有对应时间点伤害
-
-    hp = 300  # 15豌豆
-    t_eat = randint(350,353)
-    ans = 0
-
-    for i in range(M_sup):
-        for p in plt:
-            if p.list[i] != 0:
-                hp -= p.list[i]
-        if hp <= 0:
-            return ans
-        if i >= t_eat and (i-t_eat) % 4 == 0: #啃食最后结算
-            ans += 4
-    print('excel')
-
-def my_tst(N):
-    num = max_hp//4
-    ans = np.zeros(num)
-    tmp = 1
-    for i in range(N):
-        res = test_dmg()
-        ans[res//4] += 1
-        if i+1 == round(N*(tmp/100)) :
-            ht_count = np.dot(ans[1:], np.ones(num-1))
-            ht_hp = np.dot(ans, np.array(range(num))*4)
-            print(f"process:{100*(i+1)/N:.0f}%  hp:{ht_hp/(i+1):.5f}  count:{100*ht_count/(i+1):.3f}%")
+            idx = (kg_die-eat-1)//4 + 1  # 受伤值对应res的下标
+            res[idx] += 1
+        
+        ##输出进度
+        if i+1 == round(test_n*(tmp/100)):
+            ht_count_aver = np.dot(res[1:], np.ones(num-1)) / (i+1)
+            ht_hp_aver = np.dot(res, np.arange(num)*4) / (i+1)
+            print(f"process:{100*(i+1)/test_n:.0f}% aver_count:{100*ht_count_aver:.3f}% aver_hp:{ht_hp_aver:.5f}")
             tmp += 1
+        
+    max_idx = np.nonzero(res)[0][-1]
+    return res[:max_idx+1]
 
-    ht_count = np.dot(ans[1:], np.ones(num-1))
-    ht_hp = np.dot(ans, np.array(range(num))*4)
-    print(f"mean dmg:{ht_hp/N:.5f}  mean count:{100*ht_count/N:.3f}%")
-    
-    # 作图
-    max_idx = np.nonzero(ans)[0][-1]
-    x = np.array(range(max_idx+1)) * 4
-    plt.bar(x,ans[0:max_idx+1])
-    plt.yscale('log')
-    plt.title(f"mean dmg:{ht_hp/N:.5f} dmg prob:{100*ht_count/N:.3f}%")
-    plt.xlabel('dmg')
-    plt.ylabel('frequency')
-    plt.show()
+start_time = time.time()
+res = fun(num_work,num_idle,test_n)
+end_time = time.time()
+elapsed_time = end_time - start_time
+print(f"程序运行时间: {elapsed_time} 秒")
 
-my_tst(test_N)
+## 画图
+s = res.size
+x = np.arange(s)
+ht_count_aver = np.dot(res[1:], np.ones(s-1)) / test_n
+ht_hp_aver = np.dot(res, np.arange(s)*4) / test_n
+plt.bar(x,res)
+plt.yscale('log')
+plt.title(f"mean dmg:{ht_hp_aver:.5f} dmg prob:{100*ht_count_aver:.3f}%")
+plt.xlabel('dmg')
+plt.ylabel('frequency')
+plt.show()
+
+# print(res)
