@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
-test_n = 1e6  # 测试次数
+test_n = int(1e6)  # 测试次数
 num_work = 0  # 动曾
 num_idle = 4  # 静曾
 
