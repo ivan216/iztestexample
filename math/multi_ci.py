@@ -9,7 +9,7 @@ x_real = 1 - np.array([0.9,0.84,0.96,0.57,0.39])
 real = x_real.dot(wi)   #预设的补刀期望真实值
 
 # 模拟进行测试
-randmat = np.random.random([n,x_real.size])
+randmat = np.random.rand(n,x_real.size)
 resmat = (randmat < x_real).astype(int)
 xi :np.ndarray = np.mean(resmat, axis=0) #每行失败率测得值，用于经验公式
 Xj :np.ndarray = resmat.dot(wi) #每次测试总补刀花费，用于全图估计

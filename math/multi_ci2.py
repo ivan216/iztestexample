@@ -9,8 +9,8 @@ xi = 1 - np.array([0.9,0.84,0.96,0.57,0.39])
 
 quantile = stats.norm.ppf(1-alpha/2,loc=0,scale=1)
 
-sample_sum = sum(xi*wi)
-width2 = np.sqrt( sum(wi**2 *xi*(1-xi))/(n) ) * quantile
+sample_sum = np.dot(xi, wi)
+width2 = np.sqrt( np.dot(wi**2,xi*(1-xi))/(n) ) * quantile
 inf2 = sample_sum - width2
 sup2 = sample_sum + width2
 
