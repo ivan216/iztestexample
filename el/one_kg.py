@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 import time
 
 n_test = int(1e6)  # 测试次数
-num_work = 2  # 动曾
-num_idle = 0  # 静曾
+num_work = 0  # 动曾
+num_idle = 4  # 静曾
 
 def fun(n_work:int, n_idle:int, n_test:int):
     n_pl = n_work + n_idle

@@ -9,7 +9,7 @@ num_idle = 2  # 静曾
 def fun(n_work:int, n_idle:int, n_test:int):
     n_pl = n_work + n_idle
     gen_time = max(5-n_pl,1) if n_pl > 2 else 4 - n_pl  # 决定产生多少次随机数，减少运算量
-    time_scale = 200*(gen_time+1) + 159  # 对应时间长度
+    time_scale = 200*(gen_time+2) + 159  # 对应时间长度
     atk_list = np.array([74,102,130,158])  # 曾的4次相对命中时机
     t_list = np.array([15*i for i in range(1,187)]+[2790+15*i-(i+1)*i//2 for i in range(1,15)])  # t的分布律
     num = 152  # 记录损失血量的向量长度，植物受伤不会超过604hp
@@ -29,7 +29,7 @@ def fun(n_work:int, n_idle:int, n_test:int):
         t_rand = np.random.randint(1,2896,(n_pl,1))
         t = np.searchsorted(t_list, t_rand) + 1  # (n_pl*1)矩阵，每行代表对应植物的第一个倒计时1~200
 
-        dmg_mat = np.zeros((n_pl,time_scale+200))
+        dmg_mat = np.zeros((n_pl,time_scale))
         itvl_mat = np.random.randint(186,201,(n_pl,gen_time+1))
 
         if n_work > 0:
@@ -45,11 +45,11 @@ def fun(n_work:int, n_idle:int, n_test:int):
         t_res = t_res.reshape(n_pl,-1)
 
         dmg_mat[rows,t_res] += 1
-        dmg_mat[:,:201] = 0 # 假定0对应-200cs
+        dmg_mat = dmg_mat[:,201:] # 假定0对应-200cs
 
         col_sum = np.sum(dmg_mat, axis=0)
-        prefix_sum = np.cumsum(col_sum)  # 累加后找第一个 >=15的值在第几列，-200为矿工死亡时刻
-        kg_die = np.searchsorted(prefix_sum,15) - 200  # 时间点从-200开始
+        prefix_sum = np.cumsum(col_sum)  # 累加后找第一个 >=15的值在第几列
+        kg_die = np.searchsorted(prefix_sum,15) + 1  # 原本的0cs被删去，因此要+1
         if kg_die <= eat:   # 矿工死亡时刻反推出植物受到伤害
             res[0] += 1
         else:
