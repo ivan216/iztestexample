@@ -13,7 +13,7 @@ def fun(n_work:int, n_idle:int, n_test:int):
     atk_list = np.array([74,102,130,158])  # 曾的4次相对命中时机
     t_list = np.array([15*i for i in range(1,187)]+[2790+15*i-(i+1)*i//2 for i in range(1,15)])  # t的分布律
     num = 152  # 记录损失血量的向量长度，植物受伤不会超过604hp
-    res = np.zeros(num)  # 记录结果
+    res = np.zeros(num).astype(int)  # 记录结果
     tmp = 1  # 用于屏幕输出进度
     rows = np.arange(n_pl)[:,np.newaxis]
     rows = np.tile(rows, (1,4*(gen_time+1)))  # 下标值，用于 dmg_mat 的赋值
@@ -42,7 +42,7 @@ def fun(n_work:int, n_idle:int, n_test:int):
 
         col_sum = np.sum(dmg_mat, axis=0)
         prefix_sum = np.cumsum(col_sum)  # 累加后找第一个 >=15的值在第几列，为矿工死亡时刻
-        kg_die = np.searchsorted(prefix_sum,15)  # 时间也从0开始，因此下标就是对应时间点
+        kg_die = np.searchsorted(prefix_sum,15)  # 时间点也从0开始，因此下标就是对应时间点
         if kg_die <= eat:   # 矿工死亡时刻反推出植物受到伤害
             res[0] += 1
         else:
@@ -62,18 +62,18 @@ def fun(n_work:int, n_idle:int, n_test:int):
 start_time = time.time()
 res = fun(num_work,num_idle,n_test)
 end_time = time.time()
-print(f"程序运行时间: {end_time - start_time:.2f} 秒")
-# print(res)
+print(f"测试次数: {n_test}, 运行时间: {end_time - start_time:.2f} 秒")
+print("受伤情况(从0开始, 间隔4): ",res)
 
 ## 画图
 s = res.size
-x = np.arange(s)
+x = np.arange(s) * 4
 ht_count_aver = np.dot(res[1:], np.ones(s-1)) / n_test
-ht_hp_aver = np.dot(res[1:], np.arange(1,s)*4) / n_test
+ht_hp_aver = np.dot(res[1:], x[1:]) / n_test
 
 plt.bar(x,res)
 plt.yscale('log')
-plt.title(f"mean dmg:{ht_hp_aver:.5f} dmg prob:{100*ht_count_aver:.3f}%")
+plt.title(f"test count:{n_test} mean dmg:{ht_hp_aver:.5f} dmg prob:{100*ht_count_aver:.3f}%")
 plt.xlabel('dmg')
 plt.ylabel('frequency')
 plt.show()
