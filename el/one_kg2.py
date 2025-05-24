@@ -4,7 +4,7 @@ import time
 
 n_test = int(1e6)  # 测试次数
 num_work = 2  # 动曾
-num_idle = 0  # 静曾
+num_idle = 2  # 静曾
 
 def fun(n_work:int, n_idle:int, n_test:int):
     n_pl = n_work + n_idle
@@ -15,35 +15,41 @@ def fun(n_work:int, n_idle:int, n_test:int):
     num = 152  # 记录损失血量的向量长度，植物受伤不会超过604hp
     res = np.zeros(num).astype(int)  # 记录结果
     tmp = 1  # 用于屏幕输出进度
+
     rows = np.arange(n_pl)[:,np.newaxis]
-    rows = np.tile(rows, (1,4*(gen_time+1)))  # 下标值，用于 dmg_mat 的赋值
+    rows = np.tile(rows, (1,4*(gen_time+2)))
+
+    if n_work== 0:
+        t_work = np.zeros((0,gen_time+2)).astype(int)
+    if n_idle == 0:
+        t_idle = np.zeros((0,gen_time+2)).astype(int)
 
     for i in range(n_test):
         eat = np.random.randint(350,354)  # [350,354) 开始啃食时刻
-        dmg_mat = np.zeros((n_pl,time_scale))  # 命中时间矩阵，行代表植物，列代表时刻，元素值(基本上)只有0和1
         t_rand = np.random.randint(1,2896,(n_pl,1))
         t = np.searchsorted(t_list, t_rand) + 1  # (n_pl*1)矩阵，每行代表对应植物的第一个倒计时1~200
-        
-        if n_work > 0:  # 动曾处理
-            low_bound = np.maximum(186-t[:n_work],0)
-            up_bound = 200-t[:n_work] +1
-            last_atk = np.random.randint(low_bound,up_bound,(n_work,1))  # (n_work*1)矩阵，每行代表上一次攻击触发到当前的时长
-            pre_hurt = 4 - np.searchsorted(atk_list,last_atk,side='right')  # last_atk 值小于 atk_list 值的个数代表受伤几次
-            pre_hurt = pre_hurt.reshape(-1)
-            dmg_mat[:n_work,0] = pre_hurt  # 不关心动曾命中时机，直接将动曾每行总受伤值存到 dmg_mat 首列
-        
-        itvl_mat = np.random.randint(186,201,(n_pl,gen_time))  # 代表每个植物每次随机到的倒计时
-        t_res = np.concatenate([t,itvl_mat],axis=1)
-        t_res = np.cumsum(t_res, axis=1)  # t_res 现在是 n_pl*(1+gen_time) 矩阵，每列元素值代表攻击触发时间点
-        t_res = t_res[:,:,np.newaxis]  # 升维以便和 atk_list 广播加和
-        t_res = t_res + atk_list  # 攻击触发时间点 + 相对命中时机 = 真正的命中时机
-        t_res = t_res.reshape(n_pl,-1)  # t_res 现在是 n_pl*(4+4*gen_time) 矩阵，每行代表一个植物，每列的值代表一个命中时机
 
-        dmg_mat[rows,t_res] += 1  # 形成最终的命中时间矩阵
+        dmg_mat = np.zeros((n_pl,time_scale+200))
+        itvl_mat = np.random.randint(186,201,(n_pl,gen_time+1))
+
+        if n_work > 0:
+            t_work = np.concatenate([t[:n_work],itvl_mat[:n_work]], axis=1)
+        if n_idle > 0:
+            t[n_work:] += 200
+            t_idle = np.concatenate([np.zeros((n_idle,1)).astype(int),t[n_work:],itvl_mat[n_work:,:gen_time]], axis=1)
+        
+        t_res = np.concatenate([t_work,t_idle], axis=0)
+        t_res = np.cumsum(t_res, axis=1)
+        t_res = t_res[:,:,np.newaxis]
+        t_res = t_res + atk_list
+        t_res = t_res.reshape(n_pl,-1)
+
+        dmg_mat[rows,t_res] += 1
+        dmg_mat[:,:201] = 0 # 假定0对应-200cs
 
         col_sum = np.sum(dmg_mat, axis=0)
-        prefix_sum = np.cumsum(col_sum)  # 累加后找第一个 >=15的值在第几列，为矿工死亡时刻
-        kg_die = np.searchsorted(prefix_sum,15)  # 时间点也从0开始，因此下标就是对应时间点
+        prefix_sum = np.cumsum(col_sum)  # 累加后找第一个 >=15的值在第几列，-200为矿工死亡时刻
+        kg_die = np.searchsorted(prefix_sum,15) - 200  # 时间点从-200开始
         if kg_die <= eat:   # 矿工死亡时刻反推出植物受到伤害
             res[0] += 1
         else:
