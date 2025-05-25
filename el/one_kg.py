@@ -8,39 +8,39 @@ num_idle = 4  # 静曾 0 2 4
 
 def fun(n_work:int, n_idle:int, n_test:int):
     n_pl = n_work + n_idle
-    atk_list = np.array([74,102,130,158])  # 曾的4次相对命中时机
+    atk_list = np.array([74,102,130,158])  # 曾的4次相对命中时刻
     t_list = np.array([15*i for i in range(1,187)]+[2790+15*i-(i+1)*i//2 for i in range(1,15)])  # t的分布律
     num = 152  # 记录损失血量的向量长度, 植物受伤不会超过604hp
-    res = np.zeros(num).astype(int)  # 记录结果
+    res = np.zeros(num).astype(int)
     tmp = 1  # 用于屏幕输出进度
 
     gen_time = max(5-n_pl,1) if n_pl > 2 else 4 - n_pl  # 决定产生多少次随机数
     if n_work > 0 :
         gen_time += 1  # 动曾 gen_time 多1次
     
-    time_scale = 200*(gen_time+1) + 159  # 对应时间段 -200cs ~ 200*(gen_time+1)+158cs 的总长度(包括端点)
+    time_scale = 200*(gen_time+1) + 159  # 对应时间段的总长度(包括端点)
     rows = np.arange(n_pl)[:,np.newaxis]
     rows = np.tile(rows, (1,4*(gen_time+1)))  # 下标值, 用于 dmg_mat 的赋值
-  
+
     for i in range(n_test):
         eat = np.random.randint(350,354)  # [350,354) 开始啃食时刻
         t_rand = np.random.randint(1,2896,(n_pl,1))
         t = np.searchsorted(t_list, t_rand) + 1  # (n_pl*1)矩阵, 每行代表对应植物的第一个倒计时1~200
-        dmg_mat = np.zeros((n_pl,time_scale))   # 命中时机矩阵, 行代表植物, 列代表时机(从-200/0cs开始)
-        itvl_mat = np.random.randint(186,201,(n_pl,gen_time))  # 代表每个植物重置到的随机数矩阵
+        dmg_mat = np.zeros((n_pl,time_scale))   # 命中时机矩阵, 行代表植物, 列代表时机(从-200cs/0cs开始)
+        itvl_mat = np.random.randint(186,201,(n_pl,gen_time))  # 每个植物每次重置的随机数形成的矩阵
 
-        if n_work == 0 or n_idle == 0:   
-            t_res = np.concatenate([t,itvl_mat], axis=1) # 仅动或仅静曾对应的随机数矩阵
+        if n_work == 0 or n_idle == 0:   # 只有动曾或只有静曾
+            t_res = np.concatenate([t,itvl_mat], axis=1)  # 将t与随机数矩阵合并
         else:
-            t_work = np.concatenate([t[:n_work],itvl_mat[:n_work]], axis=1)
+            t_work = np.concatenate([t[:n_work],itvl_mat[:n_work]], axis=1)  # 动曾对应矩阵
             t_idle = np.concatenate([np.zeros((n_idle,1)).astype(int),t[n_work:]+200,itvl_mat[n_work:,:gen_time-1]], axis=1)
-            # 静曾真正开始时间是0cs, 要将t[n_work:]旧值增加200, 根据初次攻击分布, 这种处理是合理的
             # 静曾对应矩阵, 用0向量填充使得与动曾维度一致, 0向量的影响可以在后面消去
+            # 静曾真正开始时间是0cs, 要将t[n_work:]值增加200, 根据初次攻击分布, 这种处理是合理的
             t_res = np.concatenate([t_work,t_idle], axis=0)  # 动静曾合并为大矩阵一起处理
         
         t_res = np.cumsum(t_res, axis=1)    # 累加得到每个攻击触发时间点
         t_res = t_res[:,:,np.newaxis] + atk_list   # 增加维度来与 atk_list 广播加和, 攻击触发时刻 + 相对命中时刻 = 真正的命中时刻
-        t_res = t_res.reshape(n_pl,-1)  # n_pl*(8+4*gen_time) 矩阵, 行代表植物, 列代表命中时机(还可能有一些由0向量带来的假值)
+        t_res = t_res.reshape(n_pl,-1)  # n_pl*(4+4*gen_time) 矩阵, 行代表植物, 列代表命中时刻(还可能有一些由0向量带来的假值)
 
         dmg_mat[rows,t_res] += 1    # 对 dmg_mat 相应元素赋值
         if n_work > 0:  # 含动曾要特殊处理, -200~0cs全部删去, 0向量带来影响也同时被删去
@@ -83,7 +83,7 @@ ht_hp_aver = np.dot(res[1:], x[1:]) / n_test
 
 plt.bar(x,res)
 plt.yscale('log')
-plt.title(f"test count:{n_test} mean dmg:{ht_hp_aver:.5f} dmg prob:{100*ht_count_aver:.3f}%")
+plt.title(f"test_count:{n_test} dmg_prob:{100*ht_count_aver:.3f}% mean_dmg:{ht_hp_aver:.5f}")
 plt.xlabel('dmg')
 plt.ylabel('frequency')
 plt.show()
