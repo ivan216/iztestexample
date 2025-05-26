@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import time
 
-n_test = int(1e6)  # 测试次数
+n_test = int(1e7)  # 测试次数
 num_work = 0  # 动曾 2 1 0
 num_idle = 4  # 静曾 0 2 4
 
@@ -12,7 +12,7 @@ def fun(n_work:int, n_idle:int, n_test:int):
     t_list = np.array([15*i for i in range(1,187)]+[2790+15*i-(i+1)*i//2 for i in range(1,15)])  # t的分布律
     num = 152  # 记录损失血量的向量长度, 植物受伤不会超过604hp
     res = np.zeros(num).astype(int)
-    step = n_test/10  # 用于屏幕输出进度
+    step = n_test/100  # 用于屏幕输出进度
 
     gen_time = max(5-n_pl,1) if n_pl > 2 else 4 - n_pl  # 决定产生多少次随机数
     if n_work > 0 :
@@ -27,7 +27,7 @@ def fun(n_work:int, n_idle:int, n_test:int):
         eat = np.random.randint(350,354)  # [350,354) 开始啃食时刻
         t_rand = np.random.randint(1,2896,(n_pl,1))
         t = np.searchsorted(t_list, t_rand) + 1  # (n_pl*1)矩阵, 每行代表对应植物的第一个倒计时1~200
-        dmg_mat = np.zeros((n_pl,time_scale))   # 命中时机矩阵, 行代表植物, 列代表时机(从-200cs/0cs开始)
+        dmg_mat = np.zeros((n_pl,time_scale))  # 命中时机矩阵, 行代表植物, 列代表时机(从-200cs/0cs开始)
         itvl_mat = np.random.randint(186,201,(n_pl,gen_time))  # 每个植物每次重置的随机数形成的矩阵
 
         if n_work == 0 or n_idle == 0:   # 只有动曾或只有静曾
@@ -62,9 +62,9 @@ def fun(n_work:int, n_idle:int, n_test:int):
         ##屏幕输出
         if i+1 >= step :
             ht_count_aver = res[1:].sum() / (i+1)  # 平均受伤次数
-            ht_hp_aver = np.dot(res[1:], np.arange(1,num)*4) / (i+1)  # 平均受伤值
-            print(f"process:{i+1}/{n_test} aver_count:{100*ht_count_aver:.3f}% aver_hp:{ht_hp_aver:.5f}")
-            step += n_test/10
+            ht_hp_aver = np.dot(res[1:], np.arange(1,num).astype(float)*4) / (i+1)  # 平均受伤值
+            print(f"process:{i+1}/{n_test} aver_count:{100*ht_count_aver:.4f}% aver_hp:{ht_hp_aver:.6f}")
+            step += n_test/100
         
     max_idx = np.nonzero(res)[0][-1]
     return res[:max_idx+1]  # 去掉无用的0值
@@ -80,11 +80,11 @@ print("受伤情况(从0开始, 间隔4): ",res)
 s = res.size
 x = np.arange(s) * 4
 ht_count_aver = res[1:].sum() / n_test
-ht_hp_aver = np.dot(res[1:], x[1:]) / n_test
+ht_hp_aver = np.dot(res[1:], x[1:].astype(float)) / n_test
 
 plt.bar(x,res)
 plt.yscale('log')
-plt.title(f"test_count:{n_test} dmg_prob:{100*ht_count_aver:.3f}% mean_dmg:{ht_hp_aver:.5f}")
+plt.title(f"test_count:{n_test} dmg_prob:{100*ht_count_aver:.4f}% mean_dmg:{ht_hp_aver:.6f}")
 plt.xlabel('dmg')
 plt.ylabel('frequency')
 plt.show()
