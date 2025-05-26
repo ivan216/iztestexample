@@ -12,7 +12,7 @@ def fun(n_work:int, n_idle:int, n_test:int):
     t_list = np.array([15*i for i in range(1,187)]+[2790+15*i-(i+1)*i//2 for i in range(1,15)])  # t的分布律
     num = 152  # 记录损失血量的向量长度, 植物受伤不会超过604hp
     res = np.zeros(num).astype(int)
-    tmp = 1  # 用于屏幕输出进度
+    step = n_test/10  # 用于屏幕输出进度
 
     gen_time = max(5-n_pl,1) if n_pl > 2 else 4 - n_pl  # 决定产生多少次随机数
     if n_work > 0 :
@@ -21,6 +21,7 @@ def fun(n_work:int, n_idle:int, n_test:int):
     time_scale = 200*(gen_time+1) + 159  # 对应时间段的总长度(包括端点)
     rows = np.arange(n_pl)[:,np.newaxis]
     rows = np.tile(rows, (1,4*(gen_time+1)))  # 下标值, 用于 dmg_mat 的赋值
+    zero_arr = np.zeros((n_idle,1)).astype(int)  # 避免在循环体中重复生成0向量
 
     for i in range(n_test):
         eat = np.random.randint(350,354)  # [350,354) 开始啃食时刻
@@ -33,7 +34,7 @@ def fun(n_work:int, n_idle:int, n_test:int):
             t_res = np.concatenate([t,itvl_mat], axis=1)  # 将t与随机数矩阵合并
         else:
             t_work = np.concatenate([t[:n_work],itvl_mat[:n_work]], axis=1)  # 动曾对应矩阵
-            t_idle = np.concatenate([np.zeros((n_idle,1)).astype(int),t[n_work:]+200,itvl_mat[n_work:,:gen_time-1]], axis=1)
+            t_idle = np.concatenate([zero_arr,t[n_work:]+200,itvl_mat[n_work:,:gen_time-1]], axis=1)
             # 静曾对应矩阵, 用0向量填充使得与动曾维度一致, 0向量的影响可以在后面消去
             # 静曾真正开始时间是0cs, 要将t[n_work:]值增加200, 根据初次攻击分布, 这种处理是合理的
             t_res = np.concatenate([t_work,t_idle], axis=0)  # 动静曾合并为大矩阵一起处理
@@ -42,7 +43,7 @@ def fun(n_work:int, n_idle:int, n_test:int):
         t_res = t_res[:,:,np.newaxis] + atk_list   # 增加维度来与 atk_list 广播加和, 攻击触发时刻 + 相对命中时刻 = 真正的命中时刻
         t_res = t_res.reshape(n_pl,-1)  # n_pl*(4+4*gen_time) 矩阵, 行代表植物, 列代表命中时刻(还可能有一些由0向量带来的假值)
 
-        dmg_mat[rows,t_res] += 1    # 对 dmg_mat 相应元素赋值
+        dmg_mat[rows,t_res] = 1    # 对 dmg_mat 相应元素赋值
         if n_work > 0:  # 含动曾要特殊处理, -200~0cs全部删去, 0向量带来影响也同时被删去
             dmg_mat = dmg_mat[:,201:]
 
@@ -59,11 +60,11 @@ def fun(n_work:int, n_idle:int, n_test:int):
             res[idx] += 1
         
         ##屏幕输出
-        if i+1 >= n_test/10*tmp :
+        if i+1 >= step :
             ht_count_aver = res[1:].sum() / (i+1)  # 平均受伤次数
             ht_hp_aver = np.dot(res[1:], np.arange(1,num)*4) / (i+1)  # 平均受伤值
             print(f"process:{i+1}/{n_test} aver_count:{100*ht_count_aver:.3f}% aver_hp:{ht_hp_aver:.5f}")
-            tmp += 1
+            step += n_test/10
         
     max_idx = np.nonzero(res)[0][-1]
     return res[:max_idx+1]  # 去掉无用的0值
