@@ -30,8 +30,8 @@ def fun(ctler:Controller):
     async def _(_):
         nonlocal kg,pl
         kg = iz_test.game_board.iz_place_zombie(2,5,ZombieType.digger)
-        kg.accessories_hp_1 = 60
-        kg.hp = 90
+        # kg.accessories_hp_1 = 60
+        # kg.hp = 90
 
         pl = iz_test.game_board.new_plant(2,0,PlantType.gloomshroom)
         pl.hp = 1000

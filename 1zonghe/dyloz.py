@@ -21,9 +21,11 @@ def fun(ctler: Controller):
         3-6''')
     
     l_fail = y_fail = yl_fail = 0
+    l = y = None
 
     @iz_test.flow_factory.add_flow()
     async def _(_):
+        nonlocal l, y
         kg = iz_test.game_board.zombie_list[0]
         o = iz_test.ground["3-4"]
         l = iz_test.ground["3-3"]
@@ -37,15 +39,15 @@ def fun(ctler: Controller):
             await until(lambda _:kg.hp == 250).after(0) #10
         place("xt 3-3")
 
-        @iz_test.on_game_end()
-        def _(_):
-            nonlocal l_fail,y_fail,yl_fail
-            if (not l.is_dead) and (not y.is_dead):
-                yl_fail += 1
-            elif not l.is_dead :
-                l_fail += 1
-            elif not y.is_dead:
-                y_fail += 1
+    @iz_test.on_game_end()
+    def _(_):
+        nonlocal l_fail,y_fail,yl_fail
+        if (not l.is_dead) and (not y.is_dead):
+            yl_fail += 1
+        elif not l.is_dead :
+            l_fail += 1
+        elif not y.is_dead:
+            y_fail += 1
             
     iz_test.start_test(jump_frame=1, speed_rate=1)
     print(yl_fail)
