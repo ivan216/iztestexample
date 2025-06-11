@@ -1,8 +1,7 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
-from rpze.structs.plant import PlantType
-from rpze.structs.zombie import ZombieType
 from rpze.iztest.plant_modifier import randomize_generate_cd
+from rpze.iztest.operations import place
 game_path = r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe"
 
 def fun(ctler):
@@ -10,14 +9,14 @@ def fun(ctler):
 
     @iz_test.flow_factory.add_flow()
     async def _(_):
-        iz_test.game_board.iz_place_zombie(2,5,ZombieType.conehead)
-
-        iz_test.game_board.iz_new_plant(2,1,PlantType.umbrella_leaf)
-        iz_test.game_board.iz_new_plant(2,2,PlantType.umbrella_leaf)
-        iz_test.game_board.iz_new_plant(2,3,PlantType.umbrella_leaf)
-        iz_test.game_board.iz_new_plant(2,4,PlantType.umbrella_leaf)
-        randomize_generate_cd(iz_test.game_board.iz_new_plant(2,0,PlantType.pea_shooter))
-    
+        place("lz 3-6")
+        df = place("1 3-1")
+        randomize_generate_cd(df)
+        place("s 3-2")
+        place("s 3-3")
+        place("s 3-4")
+        place("s 3-5")
+        
     @iz_test.flow_factory.add_tick_runner()
     def _(fm):
         if fm.time > 0:

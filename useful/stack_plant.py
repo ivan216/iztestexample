@@ -1,7 +1,7 @@
 from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
-from rpze.structs.plant import PlantType
 from rpze.iztest.plant_modifier import randomize_generate_cd
+from rpze.iztest.operations import place
 game_path = r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe"
 
 def fun(ctler):
@@ -19,22 +19,22 @@ def fun(ctler):
     
     @iz_test.flow_factory.add_flow()
     async def _(_):
-        iz_test.game_board.plant_list.set_next_idx(5)   
-        iz_test.game_board.iz_new_plant(1,3,PlantType.squash)
+        iz_test.game_board.plant_list.set_next_idx(5)
+        place("w 2-4")
         iz_test.game_board.plant_list.set_next_idx(4)   # 0~3已经被占用
-        iz_test.game_board.iz_new_plant(1,4,PlantType.potato_mine)
+        place("t 2-5")
 
         iz_test.game_board.plant_list.set_next_idx(8)
-        hs1 = iz_test.game_board.iz_new_plant(2,2,PlantType.torchwood)
-        hs1.hp = 6000
+        j1 = place("j 3-3")
+        j1.hp = 1200
         
         iz_test.game_board.plant_list.set_next_idx(7)
-        tp = iz_test.game_board.iz_new_plant(3,2,PlantType.threepeater)
+        tp = place("3 4-3")
         randomize_generate_cd(tp)
 
         iz_test.game_board.plant_list.set_next_idx(6)
-        hs2 = iz_test.game_board.iz_new_plant(4,2,PlantType.torchwood)
-        hs2.hp = 6000
+        j2 = place("j 5-3")
+        j2.hp = 1200
 
     iz_test.start_test(jump_frame=0, speed_rate=1)
     

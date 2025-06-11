@@ -22,14 +22,14 @@ def fun(ctler):
     async def _(_):
         iz_test.game_board.sun_num = 4321
 
-        jq = randomize_generate_cd(iz_test.game_board.new_plant(2,1,PlantType.gatling_pea))
-        iz_test.game_board.iz_setup_plant(jq)
-
-        bg = randomize_generate_cd(iz_test.game_board.new_plant(2,1,PlantType.winter_melon))
-        iz_test.game_board.iz_setup_plant(bg)
-        
-        fs = iz_test.game_board.new_plant(1,2,0x34)
-        iz_test.game_board.iz_setup_plant(fs)
+        plist = []
+        plist.append(iz_test.game_board.new_plant(2,1,PlantType.gatling_pea))
+        plist.append(iz_test.game_board.new_plant(2,1,PlantType.winter_melon))
+        for pl in plist:
+            randomize_generate_cd(pl)
+        plist.append(iz_test.game_board.new_plant(1,2,0x34)) # 反向双发
+        for pl in plist:
+            iz_test.game_board.iz_setup_plant(pl)
 
         xg = iz_test.game_board.zombie_list[0]
         xg.die_no_loot()

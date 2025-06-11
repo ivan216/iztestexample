@@ -18,24 +18,18 @@ def fun(ctler):
     
     @iz_test.flow_factory.add_flow()
     async def _(_):
-        ng = iz_test.game_board.new_plant(2,2,PlantType.pumpkin)
-        iz_test.game_board.iz_setup_plant(ng)
+        plist = []
+        plist.append(iz_test.game_board.new_plant(2,2,PlantType.pumpkin))
+        plist.append(iz_test.game_board.new_plant(2,2,PlantType.gloomshroom))
+        plist.append(iz_test.game_board.new_plant(2,6,PlantType.spikerock))
+        plist.append(iz_test.game_board.new_plant(3,6,PlantType.cob_cannon))
 
-        yy = iz_test.game_board.new_plant(2,2,PlantType.gloomshroom)
-        iz_test.game_board.iz_setup_plant(yy)
-
-        dc = iz_test.game_board.new_plant(2,6,PlantType.spikerock)
-        iz_test.game_board.iz_setup_plant(dc)
+        for pl in plist:
+            iz_test.game_board.iz_setup_plant(pl)
         
-        pao = iz_test.game_board.new_plant(3,6,PlantType.cob_cannon)
-        iz_test.game_board.iz_setup_plant(pao)
-        
-        iz_test.game_board.add_ladder(2,2)
-        iz_test.game_board.add_ladder(2,6)
-        iz_test.game_board.add_ladder(3,1)
-        iz_test.game_board.add_ladder(3,2)
-        iz_test.game_board.add_ladder(3,3)
-        iz_test.game_board.add_ladder(3,6)
+        coord = [[2,2,3,3,3,3],[2,6,1,2,3,6]] # 代表梯子坐标
+        for row,col in zip(*coord):
+            iz_test.game_board.add_ladder(row,col)
     
     iz_test.start_test(jump_frame=0, speed_rate=1)
 
