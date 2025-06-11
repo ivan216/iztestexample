@@ -10,7 +10,7 @@ from random import randint
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
         10000 -1
-        3-3 3-4
+        3-3 3-2
         .....
         .....
         dyloz
@@ -49,7 +49,7 @@ def fun(ctler: Controller):
         elif not y.is_dead:
             y_fail += 1
             
-    iz_test.start_test(jump_frame=1, speed_rate=1)
+    iz_test.start_test(jump_frame=0, speed_rate=2)
     print(yl_fail)
     print(l_fail)
     print(y_fail)
