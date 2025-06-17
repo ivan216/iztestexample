@@ -34,7 +34,7 @@ def fun(ctler):
     async def _(_):
         nonlocal zb
         zb = iz_test.ground.zombie(0)
-        pl = iz_test.game_board.iz_new_plant(2,4,PlantType.chomper)
+        pl = place("z 3-4")
         await until_zombie_dying(zb)
         place("lz 4-6")
     
