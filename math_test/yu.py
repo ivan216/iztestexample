@@ -26,10 +26,9 @@ def corns(n,cnt):
     c1 = np.concatenate((c1,fix_mat), axis=1)
     c2 = np.random.rand(*np.shape(c1)) > 0.75
 
-    y = c1[c2]
+    y = c1[c2]  # 黄油对应时机
+    y = y[y<t_length]  # 舍弃超过设定时间的部分
     y = np.sort(y)  # 排序好的黄油命中时机
-    idx = np.searchsorted(y,t_length)
-    y = y[:idx]  # 舍弃超过设定时间的部分
 
     stag = 0.0  # 计算停滞时间
     diff = y[1:] - y[:-1]
