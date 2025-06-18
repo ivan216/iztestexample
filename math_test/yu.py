@@ -1,5 +1,6 @@
 import numpy as np
 
+n = 5  # 玉米数量
 cnt = 10**7  # 大概投掷次数
 t_list = np.array([15*i for i in range(1,287)]+[4290+15*i-(i+1)*i//2 for i in range(1,15)])
 t_length = 293.0*cnt  # 截取时间长度
@@ -39,5 +40,5 @@ def corns(n,cnt):
     return t_length / (t_length - stag)
 
 print("running...")
-res = corns(1,cnt)
+res = corns(n,cnt)
 print(res)
