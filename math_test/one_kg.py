@@ -9,7 +9,7 @@ num_idle = 4  # 静曾 0 2 4
 def fun(n_work:int, n_idle:int, n_test:int):
     n_pl = n_work + n_idle
     atk_list = np.array([74,102,130,158])  # 曾的4次相对命中时刻
-    t_list = np.array([15*i for i in range(1,187)]+[2790+15*i-(i+1)*i//2 for i in range(1,15)])  # t的分布律
+    t_list = np.array([15*i for i in range(187)]+[2790+15*i-(i+1)*i//2 for i in range(1,15)])  # t的分布律
     num = 152  # 记录损失血量的向量长度, 植物受伤不会超过604hp
     res = np.zeros(num).astype(int)
     step = n_test/100  # 用于屏幕输出进度
@@ -25,8 +25,8 @@ def fun(n_work:int, n_idle:int, n_test:int):
 
     for i in range(n_test):
         eat = np.random.randint(350,354)  # [350,354) 开始啃食时刻
-        t_rand = np.random.randint(1,2896,(n_pl,1))
-        t = np.searchsorted(t_list, t_rand) + 1  # (n_pl*1)矩阵, 每行代表对应植物的第一个倒计时1~200
+        t_rand = np.random.randint(2895,size=(n_pl,1))
+        t = np.searchsorted(t_list, t_rand, side='right')  # (n_pl*1)矩阵, 每行代表对应植物的第一个倒计时1~200
         dmg_mat = np.zeros((n_pl,time_scale))  # 命中时机矩阵, 行代表植物, 列代表时机(从-200cs/0cs开始)
         itvl_mat = np.random.randint(186,201,(n_pl,gen_time))  # 每个植物每次重置的随机数形成的矩阵
 
