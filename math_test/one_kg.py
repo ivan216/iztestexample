@@ -23,7 +23,7 @@ def fun(n_work:int, n_idle:int, n_test:int):
     rows = np.tile(rows, (1,4*(gen_time+1)))  # 下标值, 用于 dmg_mat 的赋值
     zero_arr = np.zeros((n_idle,1)).astype(int)  # 避免在循环体中重复生成0向量
 
-    for i in range(n_test):
+    for i in range(1, n_test+1):
         eat = np.random.randint(350,354)  # [350,354) 开始啃食时刻
         t_rand = np.random.randint(2895,size=(n_pl,1))
         t = np.searchsorted(t_list, t_rand, side='right')  # (n_pl*1)矩阵, 每行代表对应植物的第一个倒计时1~200
@@ -34,7 +34,7 @@ def fun(n_work:int, n_idle:int, n_test:int):
             t_res = np.concatenate([t,itvl_mat], axis=1)  # 将t与随机数矩阵合并
         else:
             t_work = np.concatenate([t[:n_work],itvl_mat[:n_work]], axis=1)  # 动曾对应矩阵
-            t_idle = np.concatenate([zero_arr,t[n_work:]+200,itvl_mat[n_work:,:gen_time-1]], axis=1)
+            t_idle = np.concatenate([zero_arr,t[n_work:]+200,itvl_mat[n_work:,:-1]], axis=1)
             # 静曾对应矩阵, 用0向量填充使得与动曾维度一致, 0向量的影响可以在后面消去
             # 静曾真正开始时间是0cs, 要将t[n_work:]值增加200, 根据初次攻击分布, 这种处理是合理的
             t_res = np.concatenate([t_work,t_idle], axis=0)  # 动静曾合并为大矩阵一起处理
@@ -60,10 +60,10 @@ def fun(n_work:int, n_idle:int, n_test:int):
             res[idx] += 1
         
         ##屏幕输出
-        if i+1 >= step :
-            ht_count_aver = res[1:].sum() / (i+1)  # 平均受伤次数
-            ht_hp_aver = np.dot(res[1:], np.arange(1,num).astype(float)*4) / (i+1)  # 平均受伤值
-            print(f"process:{i+1}/{n_test} aver_count:{100*ht_count_aver:.4f}% aver_hp:{ht_hp_aver:.6f}")
+        if i >= step :
+            ht_count_aver = res[1:].sum() / i  # 平均受伤次数
+            ht_hp_aver = np.dot(res[1:], np.arange(1,num).astype(float)*4) / i  # 平均受伤值
+            print(f"process:{i}/{n_test} aver_count:{100*ht_count_aver:.4f}% aver_hp:{ht_hp_aver:.6f}")
             step += n_test/100
         
     max_idx = np.nonzero(res)[0][-1]
