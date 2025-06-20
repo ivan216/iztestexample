@@ -40,7 +40,7 @@ def simulate(num, basic_time):
 if __name__ == "__main__":
     outer_repeat = 10  # 外层循环次数(防假死)
     repeat = 100000  # 内层循环次数
-    num = 1  # 玉米个数
+    num = 5  # 玉米个数
     basic_time = 3900  # 基准时间 cs
     sum_time = 0.0
     sum_basic = 0.0
@@ -48,22 +48,16 @@ if __name__ == "__main__":
     print("Sim Start")
     st = time.time()
 
-    pool = multiprocessing.Pool()  # 创建进程池
-
-    for k in range(outer_repeat):
-        args = [(num, basic_time) for _ in range(repeat)]
-        # 并行执行模拟函数
-        batch_results = pool.starmap(simulate, args)
-
-        for total_time, pertube_time in batch_results:
-            sum_time += total_time
-            sum_basic += pertube_time
-
-        result = sum_time / sum_basic
-        print(f"{(k + 1) / outer_repeat:.0%}  {result:.6f}")
-
-    pool.close()  # 关闭进程池
-    pool.join()  # 等待所有进程完成
+    with multiprocessing.Pool() as pool:
+        for k in range(outer_repeat):
+            args = [(num, basic_time) for _ in range(repeat)]
+            # 并行执行模拟函数
+            batch_results = pool.starmap(simulate, args)
+            for total_time, pertube_time in batch_results:
+                sum_time += total_time
+                sum_basic += pertube_time
+            result = sum_time / sum_basic
+            print(f"{(k + 1) / outer_repeat:.0%}  {result:.6f}")
 
     print(f"time cost: {time.time() - st:.2f} s")
     print(f"Repeat = {outer_repeat * repeat} times")
