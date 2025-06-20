@@ -32,7 +32,7 @@ for k in range(outer_repeat):
         butter_until = -1  # 黄油结束时机
         butter_curr = heapq.heappop(itv)  # 当前命中黄油时机
         
-        while butter_curr <= total_time:
+        while butter_curr < total_time:
             if butter_curr >= butter_until:
                 total_time += 400
             else:
