@@ -42,11 +42,15 @@ for k in range(outer_repeat):
                 ht += 1
             curr = heapq.heappushpop(itv, curr + random.randint(286,300))
 
-        if curr == total_time:  # 死亡同时出手
+        while curr == total_time:  # 找到所有死亡同时出手
             if random.random() < 0.25:
                 ht += 2
             else:
                 ht += 1
+            if itv:
+                curr = heapq.heappop(itv)
+            else:
+                break
 
         while ht >= len(hurts):
             hurts.extend([0 for _ in range(60)])
