@@ -8,7 +8,7 @@ repeat = 100000  # 内层循环次数
 num = 1  # 玉米个数
 basic_time = 3950  # 基准时间 cs
 hurts = [0 for _ in range(num*60)]
-pertube = basic_time // 15  # 扰动范围, 经验值
+pertube = basic_time // 17  # 扰动范围, 经验值
 
 print("Sim Start")
 st = time.time()
@@ -16,14 +16,14 @@ st = time.time()
 for k in range(outer_repeat):
     for _ in range(repeat):
         ht = 0
-        itv = []  # 存储攻击出手时机的最小堆
+        itv = []  # 存储命中时机的最小堆
         for _ in range(num):
             # 初次攻击分布
             rand_result = random.randint(0,299) - random.randint(0,14)
             while rand_result < 0:
                 rand_result = random.randint(0,299) - random.randint(0,14)
-            # 一次出手对应一次伤害, 最早出手为 2+28=30
-            heapq.heappush(itv, rand_result + 30)
+            # 最早黄油命中为 2+141=143
+            heapq.heappush(itv, rand_result + 143)
         
         pertube_time = basic_time + random.randint(-pertube,pertube)  # 用均匀扰动近似正态扰动
         total_time = pertube_time
@@ -41,8 +41,9 @@ for k in range(outer_repeat):
             else:
                 ht += 1
             curr = heapq.heappushpop(itv, curr + random.randint(286,300))
-
-        while curr == total_time:  # 找到所有死亡同时出手
+        
+        # 剩余被投出的投掷物伤害
+        while curr - 113 <= total_time:
             if random.random() < 0.25:
                 ht += 2
             else:

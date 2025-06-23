@@ -3,12 +3,12 @@ import heapq
 import time
 import multiprocessing
 
-# 定义模拟函数，用于并行计算
+# 模拟长时间行为, 实际的短时间行为相似但难以量化, 本程序不予考虑
 def simulate(num, basic_time):
-    pertube = basic_time // 15  # 扰动范围, 经验值
-    itv = []  # 存储黄油出手时机的最小堆
+    pertube = basic_time // 10  # 扰动范围
+    itv = []  # 存储黄油命中时机的最小堆
     for _ in range(num):
-        # 初次攻击分布
+        # 初次攻击分布, 认为首次命中时机即为 0-299cs
         rand_result = random.randint(0, 299) - random.randint(0, 14)
         while rand_result < 0:
             rand_result = random.randint(0, 299) - random.randint(0, 14)
@@ -16,8 +16,7 @@ def simulate(num, basic_time):
         # 迭代直到黄油时机
         while random.random() > 0.25:
             rand_result += random.randint(286, 300)
-        # 一次出手对应一次伤害, 最早出手为 2+28=30
-        heapq.heappush(itv, rand_result + 30)
+        heapq.heappush(itv, rand_result)
 
     pertube_time = basic_time + random.randint(-pertube, pertube)  # 模拟相对于基准时间的浮动
     total_time = pertube_time
@@ -36,17 +35,14 @@ def simulate(num, basic_time):
         while random.random() > 0.25:
             rand_result += random.randint(286, 300)
         butter_curr = heapq.heappushpop(itv, rand_result)
-    
-    if butter_curr == total_time:  # 出手同时死亡
-        total_time += 400  # 视作再停滞400, 并结束
-
+    # 由于剩余投掷物影响难以量化, 本程序不予考虑
     return total_time, pertube_time
 
 if __name__ == "__main__":
     outer_repeat = 10  # 外层循环次数(防假死)
     repeat = 100000  # 内层循环次数
     num = 1  # 玉米个数
-    basic_time = 3950  # 基准时间 cs
+    basic_time = 100000  # 基准时间 cs
     sum_time = 0.0
     sum_basic = 0.0
 
