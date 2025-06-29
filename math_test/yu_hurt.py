@@ -2,13 +2,23 @@ import random
 import heapq
 import time
 import matplotlib.pyplot as plt
+import numpy as np
+from scipy.stats import nbinom, gamma
 
 outer_repeat = 10  # 外层循环次数(防假死)
 repeat = 100000  # 内层循环次数
 num = 1  # 玉米个数
-basic_time = 3950  # 基准时间 cs
-hurts = [0 for _ in range(num*60)]
-pertube = basic_time // 17  # 扰动范围, 经验值
+hurts = np.zeros(num*60,dtype=int)
+basic_time = 3900  # 基准时间 cs
+plant_full = True
+
+# basic_time = 5000
+# plant_full = False
+
+if plant_full:
+    pertube = basic_time // 14  # 小扰动
+else:
+    pertube = basic_time // 5  # 大扰动
 
 print("Sim Start")
 st = time.time()
@@ -52,19 +62,57 @@ for k in range(outer_repeat):
                 curr = heapq.heappop(itv)
             else:
                 break
-
+        
         while ht >= len(hurts):
-            hurts.extend([0 for _ in range(60)])
+            hurts = np.append(hurts,np.zeros(60,dtype=int))
         hurts[ht] += 1
 
     print(f"{(k+1) / outer_repeat:.0%}")
 
-fin_hurts = hurts[:next( (i+1 for i in range(len(hurts)-1,-1,-1) if hurts[i]!=0 ) )]
-x = list(range(len(fin_hurts)))
+test_count = outer_repeat * repeat
+hurts = hurts[:next( (i+1 for i in range(len(hurts)-1,-1,-1) if hurts[i]!=0 ) )]
+hurts_prob = hurts / test_count
+x = np.arange(len(hurts))
 
 print(f"time cost: {time.time() - st:.2f} s")
-print(f"Repeat = {outer_repeat * repeat} times")
-print(f"result = {fin_hurts}")
+print('basic time:',basic_time)
+print(f"Repeat = {test_count} times")
+# print(f"result = {fin_hurts}")
 
-plt.bar(x,fin_hurts)
+values = x[hurts>0]
+counts = hurts[hurts>0]
+total = 1.0 * test_count
+mean = np.sum(values*counts) / total
+vari = np.sum((values-mean)**2 * counts) / (total -1)
+std = np.sqrt(vari)
+thrid_moment = np.sum((values - mean)**3 * counts)
+skewness = (thrid_moment / std**3) * (total / ((total-1)*(total-2)) )
+r = mean**2/(mean+vari)
+p = mean/(mean+vari)
+print("mean:",mean," vari:",vari," skew:",skewness)
+print("r:",r," p:",p)
+
+wd_count = (basic_time - 71) / 143
+r_approx: int = np.around(wd_count / 2.93).astype(int)
+mean_approx = wd_count * 4688/3195 *1.25 *143/293
+p_approx = r_approx / mean_approx
+# var_approx = r_approx*(1-p_approx) / p_approx**2  # 化简后得下式
+var_approx = mean_approx * (4688/3195 *1.25 *1.43 - 1)  # 当大于200s时越来越不准确
+nb_pmf = nbinom.pmf(x,r_approx,p_approx,loc=round(r_approx))
+
+alpha = r_approx*(1-p_approx)
+beta = p_approx
+g_pdf = gamma.pdf(x,alpha,scale=1/beta,loc=round(r_approx))
+
+print('mean_approx:',mean_approx,' var_approx:',var_approx)
+print('r_approx:',r_approx, ' p_approx:',p_approx)
+
+plt.figure(figsize=(8,6),dpi=150)
+plt.plot(x,g_pdf,color='g',label='gamma approx',linewidth=1)
+plt.plot(x,nb_pmf,color='r',label='nbin approx',linewidth=1)
+plt.bar(x,hurts_prob,label='simulate')
+plt.title(f'simulate test count = {test_count}, time={basic_time}cs')
+plt.legend()
+plt.xlabel('dmg')
+plt.ylabel('frequency')
 plt.show()
