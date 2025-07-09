@@ -3,22 +3,30 @@ import heapq
 import time
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.stats import nbinom, gamma
+from scipy.stats import nbinom
+from scipy.special import gamma
+
+# def nbin_real(x,r,p):
+#     x = 1.0*x
+#     return np.piecewise(x,[x<r],[0,lambda x: gamma(x)*(1-p)**(x-r)/gamma(x-r+1)*p**r/gamma(r)])
+
 
 outer_repeat = 10  # 外层循环次数(防假死)
 repeat = 100000  # 内层循环次数
 num = 1  # 玉米个数
 hurts = np.zeros(num*60,dtype=int)
-basic_time = 5000  # 基准时间 cs
-plant_full = False
+# basic_time = 30000  # 基准时间 cs
+# plant_full = True
 
-# basic_time = 5000
-# plant_full = False
+basic_time = 5000
+plant_full = False
 
 if plant_full:
     pertube = basic_time // 14  # 小扰动
+    # pertube = basic_time // 20
 else:
     pertube = basic_time // 5  # 大扰动
+    # pertube = basic_time // 4
 
 print("Sim Start")
 st = time.time()
@@ -92,27 +100,18 @@ p = mean/(mean+vari)
 print("mean:",mean," vari:",vari," skew:",skewness)
 print("r:",r," p:",p)
 
-wd_count = (basic_time - 71) / 143
-r_approx: int = np.around(wd_count / 2.93).astype(int)
-mean_approx = wd_count * 4688/3195 *1.25 *143/293
-p_approx = r_approx / mean_approx
-# var_approx = r_approx*(1-p_approx) / p_approx**2  # 化简后得下式
-var_approx = mean_approx * (4688/3195 *1.25 *1.43 - 1)  # 当大于200s时越来越不准确
-nb_pmf = nbinom.pmf(x,r_approx,p_approx,loc=round(r_approx))
+nb_pmf = nbinom.pmf(x,r,p,loc=round(r))
 
-alpha = r_approx*(1-p_approx)
-beta = p_approx
-g_pdf = gamma.pdf(x,alpha,scale=1/beta,loc=round(r_approx))
+# alpha = r * (1-p)
+# beta = p
+# g_pdf = gamma.pdf(x,alpha,scale=1/beta,loc=round(r))
 
-print('mean_approx:',mean_approx,' var_approx:',var_approx)
-print('r_approx:',r_approx, ' p_approx:',p_approx)
+# nr_pmf = nbin_real(x,r,p)
 
-plt.figure(figsize=(8,6),dpi=150)
-plt.plot(x,g_pdf,color='g',label='gamma approx',linewidth=1)
-plt.plot(x,nb_pmf,color='r',label='nbin approx',linewidth=1)
 plt.bar(x,hurts_prob,label='simulate')
-plt.title(f'simulate test count = {test_count}, time={basic_time}cs')
+plt.plot(x,nb_pmf,label='nbinom',linewidth=1,color='r')
+# plt.plot(x,g_pdf,label='gamma',linewidth=1,color='g')
+# plt.plot(x,nr_pmf,label='nbin_real',linewidth=1,color='g')
+plt.title(f"basic_time={basic_time}")
 plt.legend()
-plt.xlabel('dmg')
-plt.ylabel('frequency')
 plt.show()

@@ -8,6 +8,7 @@ from scipy.stats import nbinom
 
 full_hp_count = 150
 full_hp = 20*full_hp_count
+# test_count = 100000
 test_count = 100000
 hurts = np.zeros(full_hp_count,dtype=int)
 # basic_time = 3900  # 测试结果
@@ -89,7 +90,16 @@ values = x[hurts>0]
 counts = hurts[hurts>0]
 total = 1.0 * test_count
 mean = np.sum(values*counts) / total
-print('mean:',mean)
+vari = np.sum((values-mean)**2 * counts) / (total -1)
+r = mean**2/(mean+vari)
+p = mean/(mean+vari)
+std = np.sqrt(vari)
+thrid_moment = np.sum((values - mean)**3 * counts)
+skewness = (thrid_moment / std**3) * (total / ((total-1)*(total-2)) )
+print("mean:",mean," vari:",vari," skew:",skewness)
+print("r:",r," p:",p)
+
+nb_pmf = nbinom.pmf(x,r,p,loc=round(r))
 
 
 wd_count = (basic_time - 71) / 143
@@ -98,13 +108,14 @@ mean_approx = wd_count * 4688/3195 *1.25 *143/293
 p_approx = r_approx / mean_approx
 # var_approx = r_approx*(1-p_approx) / p_approx**2  # 化简后得下式
 var_approx = mean_approx * (4688/3195 *1.25 *1.43 - 1)  # 当大于200s时越来越不准确
-nb_pmf = nbinom.pmf(x,r_approx,p_approx,loc=round(r_approx))
+nb_pmf_app = nbinom.pmf(x,r_approx,p_approx,loc=round(r_approx))
 
 print('mean_approx:',mean_approx,' var_approx:',var_approx)
 print('r_approx:',r_approx, ' p_approx:',p_approx)
 
 plt.figure(figsize=(8,6),dpi=150)
-plt.plot(x,nb_pmf,color='r',label='approx')
+# plt.plot(x,nb_pmf_app,color='r',label='approx')
+plt.plot(x,nb_pmf,color='g',label='real_app')
 plt.bar(x,hurts_prob,label='real')
 plt.title(f'real test count = {test_count}')
 plt.legend()

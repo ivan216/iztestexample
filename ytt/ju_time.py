@@ -24,7 +24,7 @@ def fun(ctler: Controller):
         1-6''')
     
     #  起始 x = 818.0, x < 121 举锤, +134 cs 砸扁
-    #  5000cs
+    #  测得结果: 5000cs
     zbx = 818.0
     end1 = end2 = end3 = end4 = end5 = False
     
@@ -101,7 +101,7 @@ def fun(ctler: Controller):
             end1 = end2 = end3 = end4 = end5 = False
             return iz_test.end(True)
     
-    iz_test.start_test(jump_frame=1, speed_rate=2, print_interval=100)
+    iz_test.start_test(jump_frame=1, speed_rate=1, print_interval=100)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
     fun(game.controller)
