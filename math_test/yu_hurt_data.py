@@ -3,21 +3,17 @@ import heapq
 import time
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.stats import nbinom
-from scipy.special import gamma
+from scipy.stats import nbinom,skewnorm
+# from scipy.special import gamma
+from skewnorm import fit_skewnormal
 
-# def nbin_real(x,r,p):
-#     x = 1.0*x
-#     return np.piecewise(x,[x<r],[0,lambda x: gamma(x)*(1-p)**(x-r)/gamma(x-r+1)*p**r/gamma(r)])
-
-
-outer_repeat = 10  # 外层循环次数(防假死)
+outer_repeat = 100  # 外层循环次数(防假死)
 repeat = 100000  # 内层循环次数
 num = 1  # 玉米个数
 hurts = np.zeros(num*60,dtype=int)
+
 # basic_time = 30000  # 基准时间 cs
 # plant_full = True
-
 basic_time = 5000
 plant_full = False
 
@@ -25,8 +21,8 @@ if plant_full:
     pertube = basic_time // 14  # 小扰动
     # pertube = basic_time // 20
 else:
-    pertube = basic_time // 5  # 大扰动
-    # pertube = basic_time // 4
+    # pertube = basic_time // 5  # 大扰动
+    pertube = basic_time // 4
 
 print("Sim Start")
 st = time.time()
@@ -95,23 +91,26 @@ vari = np.sum((values-mean)**2 * counts) / (total -1)
 std = np.sqrt(vari)
 thrid_moment = np.sum((values - mean)**3 * counts)
 skewness = (thrid_moment / std**3) * (total / ((total-1)*(total-2)) )
+
 r = mean**2/(mean+vari)
 p = mean/(mean+vari)
 print("mean:",mean," vari:",vari," skew:",skewness)
 print("r:",r," p:",p)
-
 nb_pmf = nbinom.pmf(x,r,p,loc=round(r))
 
 # alpha = r * (1-p)
 # beta = p
 # g_pdf = gamma.pdf(x,alpha,scale=1/beta,loc=round(r))
 
-# nr_pmf = nbin_real(x,r,p)
+xi, omega, alpha = fit_skewnormal(mean, vari, skewness)
+print("xi:",xi," omega:",omega," alpha:",alpha)
+n_pmf = skewnorm.pdf(x, alpha, loc = xi, scale = omega)
 
 plt.bar(x,hurts_prob,label='simulate')
 plt.plot(x,nb_pmf,label='nbinom',linewidth=1,color='r')
 # plt.plot(x,g_pdf,label='gamma',linewidth=1,color='g')
-# plt.plot(x,nr_pmf,label='nbin_real',linewidth=1,color='g')
+plt.plot(x,n_pmf,label='skewnormal',linewidth=1,color='g')
+
 plt.title(f"basic_time={basic_time}")
 plt.legend()
 plt.show()

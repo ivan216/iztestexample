@@ -99,16 +99,15 @@ p_approx = r_approx / mean_approx
 # var_approx = r_approx*(1-p_approx) / p_approx**2  # 化简后得下式
 var_approx = mean_approx * (4688/3195 *1.25 *1.43 - 1)  # 当大于200s时越来越不准确
 nb_pmf = nbinom.pmf(x,r_approx,p_approx,loc=round(r_approx))
-
-alpha = r_approx*(1-p_approx)
-beta = p_approx
-g_pdf = gamma.pdf(x,alpha,scale=1/beta,loc=round(r_approx))
-
 print('mean_approx:',mean_approx,' var_approx:',var_approx)
 print('r_approx:',r_approx, ' p_approx:',p_approx)
 
+# alpha = r_approx*(1-p_approx)
+# beta = p_approx
+# g_pdf = gamma.pdf(x,alpha,scale=1/beta,loc=round(r_approx))
+
 plt.figure(figsize=(8,6),dpi=150)
-plt.plot(x,g_pdf,color='g',label='gamma approx',linewidth=1)
+# plt.plot(x,g_pdf,color='g',label='gamma approx',linewidth=1)
 plt.plot(x,nb_pmf,color='r',label='nbin approx',linewidth=1)
 plt.bar(x,hurts_prob,label='simulate')
 plt.title(f'simulate test count = {test_count}, time={basic_time}cs')

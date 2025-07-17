@@ -2,7 +2,6 @@ from scipy.optimize import fsolve
 import numpy as np
 from scipy.stats import skewnorm
 
-
 def fit_skewnormal(mean, variance, skewness):
     """根据均值、方差和偏度拟合偏正态分布参数"""
     # 1. 从偏度求解δ
@@ -27,24 +26,25 @@ def fit_skewnormal(mean, variance, skewness):
     
     return xi, omega, alpha
 
+if __name__ == '__main__':
 # 示例验证 =====================================
 # 设定目标参数
-target_mean = 5.0
-target_variance = 4.0
-target_skewness = 0.7
+    target_mean = 5.0
+    target_variance = 4.0
+    target_skewness = 0.7
 
-# 拟合参数
-xi, omega, alpha = fit_skewnormal(target_mean, target_variance, target_skewness)
+    # 拟合参数
+    xi, omega, alpha = fit_skewnormal(target_mean, target_variance, target_skewness)
 
-# 生成分布验证
-dist = skewnorm(alpha, loc=xi, scale=omega)
-samples = dist.rvs(size=100000)
+    # 生成分布验证
+    dist = skewnorm(alpha, loc=xi, scale=omega)
+    samples = dist.rvs(size=100000)
 
-# 计算样本统计量
-calc_mean = np.mean(samples)
-calc_var = np.var(samples)
-calc_skew = np.mean((samples - calc_mean)**3) / calc_var**1.5
+    # 计算样本统计量
+    calc_mean = np.mean(samples)
+    calc_var = np.var(samples)
+    calc_skew = np.mean((samples - calc_mean)**3) / calc_var**1.5
 
-print(f"目标统计量: 均值={target_mean:.2f}, 方差={target_variance:.2f}, 偏度={target_skewness:.2f}")
-print(f"拟合参数: ξ={xi:.3f}, ω={omega:.3f}, α={alpha:.3f}")
-print(f"样本统计量: 均值={calc_mean:.3f}, 方差={calc_var:.3f}, 偏度={calc_skew:.3f}")
+    print(f"目标统计量: 均值={target_mean:.2f}, 方差={target_variance:.2f}, 偏度={target_skewness:.2f}")
+    print(f"拟合参数: ξ={xi:.3f}, ω={omega:.3f}, α={alpha:.3f}")
+    print(f"样本统计量: 均值={calc_mean:.3f}, 方差={calc_var:.3f}, 偏度={calc_skew:.3f}")
