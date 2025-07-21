@@ -1,4 +1,3 @@
-from scipy.optimize import fsolve
 import numpy as np
 from scipy.stats import skewnorm
 
@@ -17,23 +16,16 @@ def fit_skewnormal(mean, variance, skewness)->tuple[float, float, float]:
     偏度 γ = (4-π)/2 * (δ*√(2/π))³ / (1-2*δ²/π)^1.5
 
     """
-    # 1. 从偏度 γ 求解 δ
+    
     c = 2/np.pi
+    # 1. 从偏度 γ 求解 δ
     k = (4 - np.pi)/2 * np.power(c,3/2)
-    
-    def eq_delta(delta):
-        return k * delta**3 / (1 - c*delta**2)**1.5 - skewness
-    
-    delta0 = 0.8 if skewness > 0 else -0.8
-    delta = fsolve(eq_delta, delta0)[0]
-    delta = np.clip(delta, -0.999, 0.999)
-    
+    skew_div_k = np.power(np.abs(skewness)/k,2/3)
+    delta = np.sign(skewness) * np.sqrt(skew_div_k / (1+c*skew_div_k))
     # 2. 计算 α
     alpha = delta / np.sqrt(1 - delta**2)
-    
     # 3. 计算 ω
     omega = np.sqrt(variance / (1 - c*delta**2))
-    
     # 4. 计算 ξ
     ksi = mean - omega * delta * np.sqrt(c)
     
