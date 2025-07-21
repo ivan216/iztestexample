@@ -4,18 +4,10 @@ from scipy.stats import nbinom, skewnorm, skew
 from skewnorm import fit_skewnormal
 
 def plot_qq_nbinom(counts_array, ifplot = True):
-    """
-    绘制实际数据与负二项分布的QQ图
-    
-    参数:
-    counts_array: numpy数组，下标代表数值，元素值代表出现次数
-    ax: matplotlib轴对象，可选
-    title: 图表标题，可选
-    """
-    # 步骤1: 将counts_array转换为原始数据数组
+    # 将counts_array转换为原始数据数组
     data = []
     for value, count in enumerate(counts_array):
-        data.extend([value] * int(count))  # 注意转换为整数
+        data.extend([value] * int(count))
     data = np.array(data)
     
     mean = np.mean(data)
@@ -24,8 +16,7 @@ def plot_qq_nbinom(counts_array, ifplot = True):
     p = mean/(mean+vari)
     
     if ifplot:
-    # 步骤3: 计算分位数
-    # 实际数据的分位数
+        # 实际数据的分位数
         sorted_data = np.sort(data)
         n_obs = len(sorted_data)
         empirical_quantiles = np.arange(1, n_obs + 1) / (n_obs + 1)  # 概率点
@@ -35,7 +26,7 @@ def plot_qq_nbinom(counts_array, ifplot = True):
         min_val = min(sorted_data.min(), theoretical_quantiles.min())
         max_val = max(sorted_data.max(), theoretical_quantiles.max())
 
-        # 步骤4: 绘制QQ图
+        # 绘制QQ图
         plt.figure()
         plt.scatter(theoretical_quantiles, sorted_data)
         plt.plot([min_val, max_val], [min_val, max_val], 'r--')
@@ -49,20 +40,20 @@ def plot_qq_nbinom(counts_array, ifplot = True):
 def plot_qq_skewnorm(counts_array, ifplot = True):
     data = []
     for value, count in enumerate(counts_array):
-        data.extend([value] * int(count))  # 注意转换为整数
+        data.extend([value] * int(count))
     data = np.array(data)
     
     mean = np.mean(data)
     vari = np.var(data,ddof=1)
     skewness = skew(data)
-    xi, omega, alpha = fit_skewnormal(mean, vari, skewness)
+    ksi, omega, alpha = fit_skewnormal(mean, vari, skewness)
 
     if ifplot:
         sorted_data = np.sort(data)
         n_obs = len(sorted_data)
         empirical_quantiles = np.arange(1, n_obs + 1) / (n_obs + 1)  # 概率点
 
-        theoretical_quantiles = skewnorm.ppf(empirical_quantiles, alpha, loc=xi, scale=omega)
+        theoretical_quantiles = skewnorm.ppf(empirical_quantiles, alpha, loc=ksi, scale=omega)
         min_val = min(sorted_data.min(), theoretical_quantiles.min())
         max_val = max(sorted_data.max(), theoretical_quantiles.max())
 
@@ -74,7 +65,7 @@ def plot_qq_skewnorm(counts_array, ifplot = True):
         plt.ylabel("simulate")
         plt.grid(True, linestyle='--')
     
-    return xi, omega, alpha
+    return ksi, omega, alpha
 
 
 # 示例用法
