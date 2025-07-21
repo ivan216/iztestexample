@@ -3,7 +3,8 @@ import heapq
 import time
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.stats import nbinom, gamma
+from scipy.stats import nbinom
+from plot_qq import plot_qq_nbinom,plot_qq_skewnorm
 
 outer_repeat = 10  # 外层循环次数(防假死)
 repeat = 100000  # 内层循环次数
@@ -79,17 +80,7 @@ print('basic time:',basic_time)
 print(f"Repeat = {test_count} times")
 # print(f"result = {fin_hurts}")
 
-values = x[hurts>0]
-counts = hurts[hurts>0]
-total = 1.0 * test_count
-mean = np.sum(values*counts) / total
-vari = np.sum((values-mean)**2 * counts) / (total -1)
-std = np.sqrt(vari)
-thrid_moment = np.sum((values - mean)**3 * counts)
-skewness = (thrid_moment / std**3) * (total / ((total-1)*(total-2)) )
-r = mean**2/(mean+vari)
-p = mean/(mean+vari)
-print("mean:",mean," vari:",vari," skew:",skewness)
+r,p = plot_qq_nbinom(hurts,ifplot=False)
 print("r:",r," p:",p)
 
 wd_count = (basic_time - 71) / 143
@@ -102,12 +93,8 @@ nb_pmf = nbinom.pmf(x,r_approx,p_approx,loc=round(r_approx))
 print('mean_approx:',mean_approx,' var_approx:',var_approx)
 print('r_approx:',r_approx, ' p_approx:',p_approx)
 
-# alpha = r_approx*(1-p_approx)
-# beta = p_approx
-# g_pdf = gamma.pdf(x,alpha,scale=1/beta,loc=round(r_approx))
 
 plt.figure(figsize=(8,6),dpi=150)
-# plt.plot(x,g_pdf,color='g',label='gamma approx',linewidth=1)
 plt.plot(x,nb_pmf,color='r',label='nbin approx',linewidth=1)
 plt.bar(x,hurts_prob,label='simulate')
 plt.title(f'simulate test count = {test_count}, time={basic_time}cs')

@@ -4,7 +4,7 @@ from rpze.rp_extend import Controller
 from rpze.flow.utils import until
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.stats import nbinom
+from scipy.stats import nbinom,skew
 
 full_hp_count = 150
 full_hp = 20*full_hp_count
@@ -86,17 +86,17 @@ hurts = hurts[:next( (i+1 for i in range(len(hurts)-1,-1,-1) if hurts[i]!=0 ) )]
 hurts_prob = hurts / test_count
 x = np.arange(len(hurts))
 
-values = x[hurts>0]
-counts = hurts[hurts>0]
-total = 1.0 * test_count
-mean = np.sum(values*counts) / total
-vari = np.sum((values-mean)**2 * counts) / (total -1)
+
+data = []
+for i in len(x):
+    data.extend([i] * int(x[i]))  # 注意转换为整数
+data = np.array(data)
+mean = np.mean(data)
+vari = np.var(data,ddof=1)
+skewness = skew(data)
+print("mean:",mean," vari:",vari," skew:",skewness)
 r = mean**2/(mean+vari)
 p = mean/(mean+vari)
-std = np.sqrt(vari)
-thrid_moment = np.sum((values - mean)**3 * counts)
-skewness = (thrid_moment / std**3) * (total / ((total-1)*(total-2)) )
-print("mean:",mean," vari:",vari," skew:",skewness)
 print("r:",r," p:",p)
 
 nb_pmf = nbinom.pmf(x,r,p,loc=round(r))

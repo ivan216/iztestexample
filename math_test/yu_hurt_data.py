@@ -4,10 +4,9 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.stats import nbinom,skewnorm
-# from scipy.special import gamma
-from skewnorm import fit_skewnormal
+from plot_qq import plot_qq_nbinom,plot_qq_skewnorm
 
-outer_repeat = 100  # 外层循环次数(防假死)
+outer_repeat = 10  # 外层循环次数(防假死)
 repeat = 100000  # 内层循环次数
 num = 1  # 玉米个数
 hurts = np.zeros(num*60,dtype=int)
@@ -83,32 +82,17 @@ print('basic time:',basic_time)
 print(f"Repeat = {test_count} times")
 # print(f"result = {fin_hurts}")
 
-values = x[hurts>0]
-counts = hurts[hurts>0]
-total = 1.0 * test_count
-mean = np.sum(values*counts) / total
-vari = np.sum((values-mean)**2 * counts) / (total -1)
-std = np.sqrt(vari)
-thrid_moment = np.sum((values - mean)**3 * counts)
-skewness = (thrid_moment / std**3) * (total / ((total-1)*(total-2)) )
+# r,p = plot_qq_nbinom(hurts)
+# print("r:",r," p:",p)
+# nb_pmf = nbinom.pmf(x,r,p,loc=round(r))
 
-r = mean**2/(mean+vari)
-p = mean/(mean+vari)
-print("mean:",mean," vari:",vari," skew:",skewness)
-print("r:",r," p:",p)
-nb_pmf = nbinom.pmf(x,r,p,loc=round(r))
-
-# alpha = r * (1-p)
-# beta = p
-# g_pdf = gamma.pdf(x,alpha,scale=1/beta,loc=round(r))
-
-xi, omega, alpha = fit_skewnormal(mean, vari, skewness)
+xi, omega, alpha = plot_qq_skewnorm(hurts)
 print("xi:",xi," omega:",omega," alpha:",alpha)
 n_pmf = skewnorm.pdf(x, alpha, loc = xi, scale = omega)
 
+plt.figure()
 plt.bar(x,hurts_prob,label='simulate')
-plt.plot(x,nb_pmf,label='nbinom',linewidth=1,color='r')
-# plt.plot(x,g_pdf,label='gamma',linewidth=1,color='g')
+# plt.plot(x,nb_pmf,label='nbinom',linewidth=1,color='r')
 plt.plot(x,n_pmf,label='skewnormal',linewidth=1,color='g')
 
 plt.title(f"basic_time={basic_time}")
