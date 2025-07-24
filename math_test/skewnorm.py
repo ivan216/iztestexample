@@ -1,5 +1,4 @@
 import numpy as np
-from scipy.stats import skewnorm
 
 def fit_skewnormal(mean, variance, skewness)->tuple[float, float, float]:
     """
@@ -16,7 +15,6 @@ def fit_skewnormal(mean, variance, skewness)->tuple[float, float, float]:
     偏度 γ = k * δ³ / √(1-c*δ²)³
 
     容易解出 δ² = ∛(γ/k)² / (1 + c * ∛(γ/k)²) , 代入并依次计算可得 α, ω, ξ
-
     """
     
     c = 2/np.pi
@@ -34,8 +32,9 @@ def fit_skewnormal(mean, variance, skewness)->tuple[float, float, float]:
     return ksi, omega, alpha
 
 if __name__ == '__main__':
-# 示例验证 =====================================
-# 设定目标参数
+    from scipy.stats import skewnorm
+    # 示例验证 =====================================
+    # 设定目标参数
     target_mean = 5.0
     target_variance = 4.0
     target_skewness = 0.7

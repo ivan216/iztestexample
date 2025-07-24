@@ -3,7 +3,6 @@ import matplotlib.pyplot as plt
 from scipy.stats import nbinom,skewnorm
 from scipy.special import gamma,gammaln
 from scipy import integrate
-from skewnorm import fit_skewnormal
 
 ## 用连续的函数进行拟合
 def nbin_entend_to_real(x,r,p):
@@ -55,22 +54,22 @@ if __name__ == '__main__':
 
 
     # ## 偏正态分布的尾巴结果
-    # ## basic = 5000, purtube 5
+    # ## basic 5000cs, purtube 5
     # # ksi = 22.5977
     # # omega = 11.3279
     # # alpha = 2.3049
-    # ## time 5000, pertube 4
+    # ## basic 5000cs, pertube 4
     # ksi = 22.2323
     # omega = 11.9018
     # alpha = 2.1966
     # # x = 150
     # x = 300
 
-    # ## basic = 5200, pertube 5
+    # ## basic 5200cs, pertube 5
     # # ksi = 23.6677
     # # omega = 11.6034
     # # alpha = 2.2767
-    # ## basic = 5200, pertube 4
+    # ## basic 5200cs, pertube 4
     # # ksi = 23.2905
     # # omega = 12.2137
     # # alpha = 2.1733
