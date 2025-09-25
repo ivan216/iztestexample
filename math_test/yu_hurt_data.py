@@ -3,17 +3,18 @@ import heapq
 import time
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.stats import nbinom,skewnorm
-from plot_qq import plot_qq_nbinom,plot_qq_skewnorm
+from scipy.stats import nbinom,skewnorm,gamma
+from plot_qq import plot_qq_nbinom,plot_qq_skewnorm, plot_qq_gamma
 
-outer_repeat = 10  # 外层循环次数(防假死)
+
+outer_repeat = 100  # 外层循环次数(防假死)
 repeat = 100000  # 内层循环次数
 num = 1  # 玉米个数
 hurts = np.zeros(num*60,dtype=int)
 
 # basic_time = 30000  # 基准时间 cs
 # plant_full = True
-basic_time = 5000
+basic_time = 10000
 plant_full = False
 
 if plant_full:
@@ -82,18 +83,23 @@ print('basic time:',basic_time)
 print(f"Repeat = {test_count} times")
 # print(f"result = {fin_hurts}")
 
-r,p = plot_qq_nbinom(hurts)
-print("r:",r," p:",p)
-nb_pmf = nbinom.pmf(x,r,p,loc=round(r))
+# r,p = plot_qq_nbinom(hurts)
+# print("r:",r," p:",p)
+# nb_pmf = nbinom.pmf(x,r,p,loc=round(r))
 
 # ksi, omega, alpha = plot_qq_skewnorm(hurts)
 # print("ksi:",ksi," omega:",omega," alpha:",alpha)
 # n_pmf = skewnorm.pdf(x, alpha, loc = ksi, scale = omega)
 
+alpha, beta, c = plot_qq_gamma(hurts)
+print("alpha:",alpha," beta:",beta," c:",c)
+g_pdf = gamma.pdf(x,alpha,scale=1/beta,loc=c)
+
 plt.figure()
 plt.bar(x,hurts_prob,label='simulate')
-plt.plot(x,nb_pmf,label='nbinom',linewidth=1,color='r')
+# plt.plot(x,nb_pmf,label='nbinom',linewidth=1,color='r')
 # plt.plot(x,n_pmf,label='skewnormal',linewidth=1,color='g')
+plt.plot(x,g_pdf,label='gamma',linewidth=1,color='g')
 
 plt.title(f"basic_time={basic_time}")
 plt.legend()

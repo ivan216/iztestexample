@@ -8,12 +8,12 @@ def fun(ctler):
         3-0
         .....
         .....
-        ssl_s
+        s....
         .....
         .....
-        tz
+        tt
         0
-        3-6''')
+        3-2''')
 
     zb = pl = None
     print()
@@ -22,6 +22,8 @@ def fun(ctler):
     async def _(_):
         nonlocal zb,pl
         zb = iz_test.game_board.zombie_list[0]
+        print(zb.x)
+        print()
         # pl = iz_test.ground["3-3"]
 
     @iz_test.flow_factory.add_tick_runner()

@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.stats import nbinom, skewnorm, skew
+from scipy.stats import nbinom, skewnorm, gamma, skew
 from skewnorm import fit_skewnormal
+from fit_gamma import fit_gamma
 
 def plot_qq_nbinom(counts_array, ifplot = True):
     # 将counts_array转换为原始数据数组
@@ -66,6 +67,38 @@ def plot_qq_skewnorm(counts_array, ifplot = True):
         plt.grid(True, linestyle='--')
     
     return ksi, omega, alpha
+
+
+def plot_qq_gamma(counts_array, ifplot=True):
+    data = []
+    for value, count in enumerate(counts_array):
+        data.extend([value] * int(count))
+    data = np.array(data)
+
+    mean = np.mean(data)
+    vari = np.var(data,ddof=1)
+    skewness = skew(data)
+
+    alpha, beta, c = fit_gamma(mean, vari, skewness)
+
+    if ifplot:
+        sorted_data = np.sort(data)
+        n_obs = len(sorted_data)
+        empirical_quantiles = np.arange(1, n_obs + 1) / (n_obs + 1)  # 概率点
+
+        theoretical_quantiles = gamma.ppf(empirical_quantiles, alpha, loc=c, scale=1/beta)
+        min_val = min(sorted_data.min(), theoretical_quantiles.min())
+        max_val = max(sorted_data.max(), theoretical_quantiles.max())     
+
+        plt.figure()
+        plt.scatter(theoretical_quantiles, sorted_data)
+        plt.plot([min_val, max_val], [min_val, max_val], 'r--')
+        plt.title("Q-Q: simulate vs gamma")
+        plt.xlabel("gamma")
+        plt.ylabel("simulate")
+        plt.grid(True, linestyle='--')
+    
+    return alpha, beta, c
 
 
 # 示例用法

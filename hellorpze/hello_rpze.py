@@ -15,4 +15,4 @@ with InjectedGame(game_path) as game:
         0  
         3-6 ''')
     
-    iz_test.start_test(jump_frame=True, speed_rate=5)
+    iz_test.start_test(jump_frame=False, speed_rate=5)

@@ -24,7 +24,7 @@ def fun(ctler):
 
         plist = []
         plist.append(iz_test.game_board.new_plant(2,1,PlantType.gatling_pea))
-        plist.append(iz_test.game_board.new_plant(2,1,PlantType.winter_melon))
+        # plist.append(iz_test.game_board.new_plant(2,1,PlantType.winter_melon))
         for pl in plist:
             randomize_generate_cd(pl)
         plist.append(iz_test.game_board.new_plant(1,2,0x34)) # 反向双发
@@ -34,8 +34,11 @@ def fun(ctler):
         xg = iz_test.game_board.zombie_list[0]
         xg.die_no_loot()
 
-        jr = iz_test.game_board.iz_place_zombie(2,5,ZombieType.giga_gargantuar)
-        jr.x = 800.0
+        for i in range(5):
+            jr = iz_test.game_board.iz_place_zombie(i,5,ZombieType.giga_gargantuar)
+            tt = iz_test.game_board.iz_place_zombie(i,5,ZombieType.buckethead)
+            tt.x = 800.0
+            jr.x = 800.0
 
     iz_test.start_test(jump_frame=0, speed_rate=2)
 

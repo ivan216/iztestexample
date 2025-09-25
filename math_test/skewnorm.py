@@ -48,9 +48,10 @@ if __name__ == '__main__':
 
     # 计算样本统计量
     calc_mean = np.mean(samples)
-    calc_var = np.var(samples)
-    calc_skew = np.mean((samples - calc_mean)**3) / calc_var**1.5
+    calc_var = np.var(samples,ddof=1)
+    from scipy.stats import skew
+    calc_skew = skew(samples)
 
-    print(f"目标统计量: 均值={target_mean:.2f}, 方差={target_variance:.2f}, 偏度={target_skewness:.2f}")
+    print(f"目标统计量: 均值={target_mean:.3f}, 方差={target_variance:.3f}, 偏度={target_skewness:.3f}")
     print(f"拟合参数: ξ={ksi:.3f}, ω={omega:.3f}, α={alpha:.3f}")
     print(f"样本统计量: 均值={calc_mean:.3f}, 方差={calc_var:.3f}, 偏度={calc_skew:.3f}")

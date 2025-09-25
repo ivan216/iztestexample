@@ -8,7 +8,7 @@ from rpze.flow.flow import FlowManager
 from random import randint
 
 def fun(ctler:Controller):
-    n = 2000
+    n = 20000
     iz_test = IzTest(ctler).init_by_str(f'''
         {n} -1
         1-0 2-0 3-0 4-0 5-0
@@ -32,27 +32,27 @@ def fun(ctler:Controller):
     @iz_test.flow_factory.add_flow()
     async def _(fm:FlowManager):
         zb = iz_test.game_board.iz_place_zombie(0,8,ZombieType.gargantuar)
-        zb.x = zbx
+        # zb.x = zbx
     
     @iz_test.flow_factory.add_flow()
     async def _(fm:FlowManager):
         zb = iz_test.game_board.iz_place_zombie(1,8,ZombieType.gargantuar)
-        zb.x = zbx
+        # zb.x = zbx
 
     @iz_test.flow_factory.add_flow()
     async def _(fm:FlowManager):
         zb = iz_test.game_board.iz_place_zombie(2,8,ZombieType.gargantuar)
-        zb.x = zbx
+        # zb.x = zbx
 
     @iz_test.flow_factory.add_flow()
     async def _(fm:FlowManager):
         zb = iz_test.game_board.iz_place_zombie(3,8,ZombieType.gargantuar)
-        zb.x = zbx
+        # zb.x = zbx
 
     @iz_test.flow_factory.add_flow()
     async def _(fm:FlowManager):
         zb = iz_test.game_board.iz_place_zombie(4,8,ZombieType.gargantuar)
-        zb.x = zbx
+        # zb.x = zbx
     
     @iz_test.on_game_end()
     def _(_):
@@ -68,7 +68,7 @@ def fun(ctler:Controller):
         if iz_test.ground['5-0'] is not None:
             succ_cnt += 1
     
-    iz_test.start_test(jump_frame=1, speed_rate=1, print_interval=100)
+    iz_test.start_test(jump_frame=1, speed_rate=2, print_interval=100)
     print(n * 5)
     print(succ_cnt)
 
