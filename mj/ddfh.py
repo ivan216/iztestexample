@@ -3,8 +3,7 @@ from rpze.iztest.iztest import IzTest
 from rpze.flow.utils import until, delay
 from rpze.iztest.operations import place
 from rpze.rp_extend import Controller
-from rpze.structs.zombie import Zombie
-from rpze.flow.utils import AwaitableCondFunc
+from rpze.iztest.dancing import get_dancing_manipulator
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str('''
@@ -12,35 +11,38 @@ def fun(ctler: Controller):
         4-0 3-0 5-0
         .s...
         .....
-        bz.3w
+        bzp3w
         d__ts
-        p...z
+        ppppz
         lz 
         0  
         4-6''')
-    
-    def walk_until_int_x(mj :Zombie,intx :int = 40) -> AwaitableCondFunc:
-        def _cond_func(_):
-            if mj.int_x > intx:
-                iz_test.game_board.mj_clock = 230
-                return False
-            return True
-        return AwaitableCondFunc(_cond_func)
     
     three_fail = 0
     four_fail = 0
     five_fail = 0
 
+    dm = get_dancing_manipulator(iz_test)
+
     @iz_test.flow_factory.add_flow()
     async def _(_):
         pl = iz_test.ground["4-5"]
-
         await until(lambda _:pl.hp <= 140)
         mj = place("mj 4-8")
-        await walk_until_int_x(mj,78)
-        iz_test.game_board.mj_clock = 240
-        await delay(191)   # 不发愣
-        await walk_until_int_x(mj,0)    #mj已经死亡，不过仍能让舞伴继续前进
+        
+        dm.start("move")
+
+        # while True:
+        #     await delay(27)
+        #     if mj.x < 76:
+        #         break
+        #     dm.next_phase("d")
+        #     await delay(1)
+        #     dm.next_phase("m")
+            
+        await dm.until_next_phase("summon",lambda _:mj.x < 76)
+        await delay(192) # 不发愣
+        dm.next_phase("move")
 
     @iz_test.on_game_end()
     def _(result: bool):
@@ -53,7 +55,7 @@ def fun(ctler: Controller):
             if iz_test.ground["5-0"] is not None:
                 five_fail += 1
 
-    iz_test.start_test(jump_frame=1, speed_rate=3)
+    iz_test.start_test(jump_frame=0, speed_rate=2)
     print("三路失败：",three_fail)
     print("四路失败：",four_fail)
     print("五路失败：",five_fail)
