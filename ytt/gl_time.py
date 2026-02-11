@@ -2,16 +2,14 @@ from rpze.basic.inject import InjectedGame
 from rpze.iztest.iztest import IzTest
 from rpze.rp_extend import Controller
 from rpze.flow.utils import until,FlowManager
-from rpze.iztest.operations import place
+
 import matplotlib.pyplot as plt
 import numpy as np
 
-full_hp = 2000
 test_count = 2000
-times = np.zeros(10000,dtype=int)
+times = np.zeros(3000,dtype=int)
 
-# 6列 平均 3900 cs
-# 出生 平均 5200 cs
+# 2480 cs
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str(f'''
@@ -22,26 +20,16 @@ def fun(ctler: Controller):
         1....
         1....
         1....
-        tt tt tt tt tt
+        gl gl gl gl gl
         0 0 0 0 0
         1-6 2-6 3-6 4-6 5-6''')
     
-    zbx = 765.1  # 765
-    # zbcol = 6
-    # zbx = (zbcol-1)*80 + 10.0
-    
-    # @iz_test.flow_factory.add_flow()
-    # async def _(_):
-    #     for i in range(1,6):
-    #         for j in range(2,zbcol):
-    #             place(f's {i}-{j}')
-    
+    zbx = 751.7 # 751.7
     @iz_test.flow_factory.add_flow()
     async def _(fm:FlowManager):
         pl = iz_test.ground['1-1']
-        tt = iz_test.ground.zombie(0)
-        tt.accessories_hp_1 = full_hp
-        tt.x = zbx
+        zb = iz_test.ground.zombie(0)
+        zb.x = zbx
         await until(lambda _:pl.is_dead)
         end_time = fm.time
         while end_time>=len(times):
@@ -51,9 +39,8 @@ def fun(ctler: Controller):
     @iz_test.flow_factory.add_flow()
     async def _(fm:FlowManager):
         pl = iz_test.ground['2-1']
-        tt = iz_test.ground.zombie(1)
-        tt.accessories_hp_1 = full_hp
-        tt.x = zbx
+        zb = iz_test.ground.zombie(1)
+        zb.x = zbx
         await until(lambda _:pl.is_dead)
         end_time = fm.time
         while end_time>=len(times):
@@ -63,9 +50,8 @@ def fun(ctler: Controller):
     @iz_test.flow_factory.add_flow()
     async def _(fm:FlowManager):
         pl = iz_test.ground['3-1']
-        tt = iz_test.ground.zombie(2)
-        tt.accessories_hp_1 = full_hp
-        tt.x = zbx
+        zb = iz_test.ground.zombie(2)
+        zb.x = zbx
         await until(lambda _:pl.is_dead)
         end_time = fm.time
         while end_time>=len(times):
@@ -75,9 +61,8 @@ def fun(ctler: Controller):
     @iz_test.flow_factory.add_flow()
     async def _(fm:FlowManager):
         pl = iz_test.ground['4-1']
-        tt = iz_test.ground.zombie(3)
-        tt.accessories_hp_1 = full_hp
-        tt.x = zbx
+        zb = iz_test.ground.zombie(3)
+        zb.x = zbx
         await until(lambda _:pl.is_dead)
         end_time = fm.time
         while end_time>=len(times):
@@ -87,15 +72,14 @@ def fun(ctler: Controller):
     @iz_test.flow_factory.add_flow()
     async def _(fm:FlowManager):
         pl = iz_test.ground['5-1']
-        tt = iz_test.ground.zombie(4)
-        tt.accessories_hp_1 = full_hp
-        tt.x = zbx
+        zb = iz_test.ground.zombie(4)
+        zb.x = zbx
         await until(lambda _:pl.is_dead)
         end_time = fm.time
         while end_time>=len(times):
             np.append(times,np.zeros(1000,dtype=int))
         times[end_time] += 1
-    
+
     iz_test.start_test(jump_frame=1, speed_rate=1, print_interval=100)
 
 with InjectedGame(r"D:\pvz\Plants vs. Zombies 1.0.0.1051 EN\PlantsVsZombies.exe") as game:
@@ -110,15 +94,8 @@ values = x[fin_time>0]
 counts = fin_time[fin_time>0]
 total = 5.0 * test_count
 mean = np.sum(values*counts) / total
-vari = np.sum((values-mean)**2 * counts) / (total -1)
-std = np.sqrt(vari)
+
 print("mean: ",mean)
-print("std: ",std)
-
-coef = mean / np.sqrt(3*vari)
-print('coef:',coef)
-
-fin_time = fin_time/total
 
 plt.bar(x,fin_time)
 plt.show()
