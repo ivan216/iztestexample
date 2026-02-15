@@ -8,7 +8,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 test_count = 10000
-times = np.zeros(10000,dtype=int)
+times = np.zeros(7000,dtype=int)
+throw_times = np.zeros(7000,dtype=int)
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str(f'''
@@ -23,9 +24,10 @@ def fun(ctler: Controller):
         0
         1-6''')
     
-    #  起始 x = 818.0, x < 121 举锤, +134 cs 砸扁
-    #  测得结果: 5000cs
-    zbx = 818.0
+    #  起始 x = 818.3, x < 121 举锤, +134 cs 砸扁
+    #  测得结果: 5000cs, 4022-5043-6425
+    #  x <= 400 不投掷, 2288cs - 3689cs, (t-134)*0.4125 < t_left
+    zbx = 818.3
     end1 = end2 = end3 = end4 = end5 = False
     
     @iz_test.flow_factory.add_flow()
@@ -38,11 +40,13 @@ def fun(ctler: Controller):
         nonlocal end1
         zb = iz_test.game_board.iz_place_zombie(0,8,ZombieType.gargantuar)
         zb.x = zbx
+        await until(lambda _:zb.x <= 400)
+        throw_time = fm.time
+        throw_times[throw_time] += 1
+
         await until(lambda _:zb.x < 121).after(134)
         end_time = fm.time
         end1 = True
-        while end_time>=len(times):
-            np.append(times,np.zeros(1000,dtype=int))
         times[end_time] += 1
     
     @iz_test.flow_factory.add_flow()
@@ -50,11 +54,13 @@ def fun(ctler: Controller):
         nonlocal end2
         zb = iz_test.game_board.iz_place_zombie(1,8,ZombieType.gargantuar)
         zb.x = zbx
+        await until(lambda _:zb.x <= 400)
+        throw_time = fm.time
+        throw_times[throw_time] += 1
+
         await until(lambda _:zb.x < 121).after(134)
         end_time = fm.time
         end2 = True
-        while end_time>=len(times):
-            np.append(times,np.zeros(1000,dtype=int))
         times[end_time] += 1
 
     @iz_test.flow_factory.add_flow()
@@ -62,11 +68,13 @@ def fun(ctler: Controller):
         nonlocal end3
         zb = iz_test.game_board.iz_place_zombie(2,8,ZombieType.gargantuar)
         zb.x = zbx
+        await until(lambda _:zb.x <= 400)
+        throw_time = fm.time
+        throw_times[throw_time] += 1
+
         await until(lambda _:zb.x < 121).after(134)
         end_time = fm.time
         end3 = True
-        while end_time>=len(times):
-            np.append(times,np.zeros(1000,dtype=int))
         times[end_time] += 1
 
     @iz_test.flow_factory.add_flow()
@@ -74,11 +82,13 @@ def fun(ctler: Controller):
         nonlocal end4
         zb = iz_test.game_board.iz_place_zombie(3,8,ZombieType.gargantuar)
         zb.x = zbx
+        await until(lambda _:zb.x <= 400)
+        throw_time = fm.time
+        throw_times[throw_time] += 1
+
         await until(lambda _:zb.x < 121).after(134)
         end_time = fm.time
         end4 = True
-        while end_time>=len(times):
-            np.append(times,np.zeros(1000,dtype=int))
         times[end_time] += 1
 
     @iz_test.flow_factory.add_flow()
@@ -86,11 +96,13 @@ def fun(ctler: Controller):
         nonlocal end5
         zb = iz_test.game_board.iz_place_zombie(4,8,ZombieType.gargantuar)
         zb.x = zbx
+        await until(lambda _:zb.x <= 400)
+        throw_time = fm.time
+        throw_times[throw_time] += 1
+
         await until(lambda _:zb.x < 121).after(134)
         end_time = fm.time
         end5 = True
-        while end_time>=len(times):
-            np.append(times,np.zeros(1000,dtype=int))
         times[end_time] += 1
     
     @iz_test.flow_factory.add_tick_runner()
@@ -111,20 +123,31 @@ x = np.arange(len(fin_time))
 fin_time = fin_time[next((i for i in range(len(fin_time)) if fin_time[i]!=0)):]
 x = x[-len(fin_time):]
 
+th_times = throw_times[:next( (i+1 for i in range(len(throw_times)-1,-1,-1) if throw_times[i]!=0 ) )]
+x2 = np.arange(len(th_times))
+th_times = th_times[next((i for i in range(len(th_times)) if th_times[i]!=0)):]
+x2 = x2[-len(th_times):]
+
 values = x[fin_time>0]
 counts = fin_time[fin_time>0]
 total = 1.0 * test_count
 mean = np.sum(values*counts) / total
 print("mean: ",mean)
 
-# vari = np.sum((values-mean)**2 * counts) / (total -1)
-# std = np.sqrt(vari)
-# print("std: ",std)
+vari = np.sum((values-mean)**2 * counts) / (total -1)
+std = np.sqrt(vari)
+print("std: ",std)
 
 # coef = mean / np.sqrt(3*vari)
 # print('coef:',coef)
 
 fin_time = fin_time/total
+th_times = th_times/total
 
+plt.figure()
 plt.bar(x,fin_time)
+plt.title('fin_time')
+
+plt.figure()
+plt.bar(x2,th_times)
 plt.show()

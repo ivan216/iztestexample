@@ -9,7 +9,7 @@ import numpy as np
 test_count = 2000
 times = np.zeros(3000,dtype=int)
 
-# 2480 cs
+# 2480 cs 三个波峰 2412-2456-2480-2504-2516
 
 def fun(ctler: Controller):
     iz_test = IzTest(ctler).init_by_str(f'''
@@ -94,8 +94,12 @@ values = x[fin_time>0]
 counts = fin_time[fin_time>0]
 total = 5.0 * test_count
 mean = np.sum(values*counts) / total
-
 print("mean: ",mean)
 
+vari = np.sum((values-mean)**2 * counts) / (total -1)
+std = np.sqrt(vari)
+print("std: ",std)
+
+fin_time = fin_time/total
 plt.bar(x,fin_time)
 plt.show()

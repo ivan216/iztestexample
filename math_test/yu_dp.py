@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-def corn_thrower_win_prob_bfs(m, t, prob_threshold=1e-70):
+def corn_thrower_win_prob_bfs(m, t, prob_threshold=1e-70, throw = False):
     """
     使用 BFS + 概率传播计算玉米投手获胜概率。
     
@@ -8,7 +8,7 @@ def corn_thrower_win_prob_bfs(m, t, prob_threshold=1e-70):
         m (int): 僵尸初始血量
         t (int): 僵尸无停滞下吃完所需时间（厘秒）
         prob_threshold (float): 概率低于此值的状态将被忽略（剪枝）
-
+        throw (bool): 是否投掷小鬼
     """
 
     # 投掷延迟（厘秒）
@@ -18,14 +18,18 @@ def corn_thrower_win_prob_bfs(m, t, prob_threshold=1e-70):
     LEN_FIRST_DELAYS = len(FIRST_DELAYS)
     LEN_LATER_DELAYS = len(LATER_DELAYS)
 
+    t_real = t - 141 # 减去投掷物飞行时间
+
     # 初始状态: (hp, free_time, stun) -> probability
-    # 第一轮：从初始状态出发，使用 FIRST_DELAYS
-    current_states = {(m, t, 0): 1.0}
+    current_states = {(m, t_real, 0): 1.0}
     total_win = 0.0
     total_lose = 0.0
     total_pruned = 0.0
+    total_throw = 0.0
     is_first_round = True
     round_count = 0
+    min_throw_time = (t-134)*0.4125  # 近似巨人最晚投掷对应剩余时间
+    hp_half = m//2
 
     while current_states:
         round_count += 1
@@ -36,23 +40,21 @@ def corn_thrower_win_prob_bfs(m, t, prob_threshold=1e-70):
         delay_count = LEN_FIRST_DELAYS if is_first_round else LEN_LATER_DELAYS
 
         for (hp, free_time, stun), prob in current_states.items():
-            # 边界检查（理论上不会发生，但安全起见）
-            if hp <= 0:
-                total_win += prob
-                continue
-            if free_time <= 0:
-                total_lose += prob
-                continue
 
             prob_div = prob / delay_count
             prob_butter = prob_div * 0.25
             prob_corn = prob_div * 0.75
 
             for d in delays:
-                # 时间推进 d 厘秒
-                # 先消耗 stun
-                stun_after = max(0, stun - d)
-                free_used = max(0, d - stun)  # 只有当 stun < d 时才有自由时间
+                # 时间推进 d 厘秒, 先消耗 stun
+                temp = stun-d
+                if temp > 0:
+                    stun_after = temp
+                    free_used = 0
+                else:
+                    stun_after = 0
+                    free_used = -temp
+                
                 new_free = free_time - free_used
 
                 # 检查僵尸是否在这段时间内吃完
@@ -65,6 +67,8 @@ def corn_thrower_win_prob_bfs(m, t, prob_threshold=1e-70):
                 hp1 = hp - 2
                 if hp1 <= 0:
                     total_win += prob_butter
+                elif throw and hp1 < hp_half and new_free > min_throw_time:
+                    total_throw += prob_butter
                 else:
                     # 状态仍活跃
                     next_states[(hp1, new_free, BUTTER_STUN)] += prob_butter
@@ -73,15 +77,19 @@ def corn_thrower_win_prob_bfs(m, t, prob_threshold=1e-70):
                 hp2 = hp - 1
                 if hp2 <= 0:
                     total_win += prob_corn
+                elif throw and hp2 < hp_half and new_free > min_throw_time:
+                    total_throw += prob_corn
                 else:
                     next_states[(hp2, new_free, stun_after)] += prob_corn
 
         # === 剪枝 ===
         current_states = {}
         pruned_this_round = 0.0
+        current_active = 0.0
         for state, p in next_states.items():
             if p >= prob_threshold:
                 current_states[state] = p
+                current_active += p
             else:
                 pruned_this_round += p
 
@@ -91,23 +99,23 @@ def corn_thrower_win_prob_bfs(m, t, prob_threshold=1e-70):
         if round_count % 10 == 0:
             print(f"Round {round_count}: {len(current_states)} states, pruned {pruned_this_round:.2e}")
         
-        # 安全退出：防止无限循环（理论上会收敛）
-        total_active = sum(current_states.values())
-        if total_active < prob_threshold:
-            total_pruned += total_active
-            print("converged, return results.")
-            break
-        if round_count > 1000:
-            total_pruned += total_active
-            print("Warning: exceeded 1000 rounds, breaking.")
+        # 收敛退出
+        if current_active < prob_threshold:
+            total_pruned += current_active
+            print("=== converged, return results. ===")
+            print(f"t = {t}, m = {m}")
             break
 
-    return total_win,total_lose,total_pruned
+    return total_win,total_lose,total_pruned,total_throw
 
 if __name__ == "__main__":
-    case_list = [(28,3900,1e-10),(65,5200,1e-16),(80,2480,1e-20),(150,5000,1e-30),(300,5000,1e-70)]
-    test_case = 5
+    case_list = [(28,3904,1e-10),
+                 (65,4196,1e-16),(65,6580,1e-16),
+                 (80,2412,1e-20),(80,2516,1e-20),
+                 (150,4022,1e-35,True),(150,6424,1e-30,True),
+                 (300,4022,1e-75,True),(300,6424,1e-65,True)]
+    test_case = 7
     args = case_list[test_case-1]
 
-    prob_win,prob_lose,prob_pruned = corn_thrower_win_prob_bfs(*args)
-    print(f"wins {prob_win:.8e}, loses {prob_lose:.8e}, pruned {prob_pruned:.8e}")
+    prob_win,prob_lose,prob_pruned,prob_throw = corn_thrower_win_prob_bfs(*args)
+    print(f"wins {prob_win:.8e}, loses {prob_lose:.8e}, pruned {prob_pruned:.8e}, throw {prob_throw:.8e}")

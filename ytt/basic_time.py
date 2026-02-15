@@ -10,18 +10,19 @@ full_hp = 2000
 test_count = 2000
 times = np.zeros(10000,dtype=int)
 
-# 6列 平均 3900 cs
-# 出生 平均 5200 cs
+# 6列 平均 3906 cs, 一个波峰, std = 160, 3460-4472
+# 出生 平均 5200 cs, 4196 - 5204 - 6580
 
 def fun(ctler: Controller):
+    piece = '1....'
     iz_test = IzTest(ctler).init_by_str(f'''
         {test_count} -1
         1-1 2-1 3-1 4-1 5-1
-        1....
-        1....
-        1....
-        1....
-        1....
+        {piece}
+        {piece}
+        {piece}
+        {piece}
+        {piece}
         tt tt tt tt tt
         0 0 0 0 0
         1-6 2-6 3-6 4-6 5-6''')
@@ -115,8 +116,8 @@ std = np.sqrt(vari)
 print("mean: ",mean)
 print("std: ",std)
 
-coef = mean / np.sqrt(3*vari)
-print('coef:',coef)
+# coef = mean / np.sqrt(3*vari)
+# print('coef:',coef)
 
 fin_time = fin_time/total
 
